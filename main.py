@@ -1,8 +1,15 @@
 import curses
+import os
 from writing import WritingInterface
 # Optional: from cloud_sync import CloudSync
 from utils import shutdown_device, prompt_for_filename, generate_filename
 from file_manager import FileManager
+
+def ensure_freewrites_directory():
+    freewrites_dir = os.path.join(os.getcwd(), "freewrites")
+    if not os.path.exists(freewrites_dir):
+        os.makedirs(freewrites_dir)
+    return freewrites_dir
 
 # Function to display the main menu
 def main_menu(screen):
@@ -13,7 +20,7 @@ def main_menu(screen):
     #Create an instance of the File Manager class
     file_manager = FileManager("./file_manager.py")
     # Ensure the freewrites directory is created
-    # freewrites_directory = file_manager.ensure_freewrites_directory()
+    freewrites_directory = ensure_freewrites_directory()
 
     current_row = 0  # Current highlighted menu item
 
@@ -43,7 +50,7 @@ def main_menu(screen):
         if selection == 0:
             # Start a new free write
             default_filename = generate_filename()
-            wi = WritingInterface(default_filename)
+            wi = WritingInterface(default_filename,freewrites_directory)
             wi.run(screen)
         elif selection == 1:
             # Continue a previous free write - placeholder for filename selection
