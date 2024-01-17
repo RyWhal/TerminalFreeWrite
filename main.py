@@ -43,7 +43,8 @@ def main_menu(screen):
 
     #Initialize color pair for selected menu item
     curses.start_color()
-    curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_WHITE)
+    curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_WHITE)  # White text on Black background
+    curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_WHITE)  # Black text on white background
 
     #Entry point of the application
     def handle_menu_selection(screen, selection):

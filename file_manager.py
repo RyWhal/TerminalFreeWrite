@@ -37,17 +37,37 @@ class FileManager:
         files = sorted([f for f in os.listdir(self.directory) if f.endswith('.txt')])
         window.clear()
 
-        for idx, filename in enumerate(files):
-            if idx < max_height - 2:  # Leave space for borders, etc.
-                filepath = os.path.join(self.directory, filename)
-                stats = os.stat(filepath)
-                creation_date = datetime.fromtimestamp(stats.st_ctime).strftime('%Y-%m-%d')
-                modified_date = datetime.fromtimestamp(stats.st_mtime).strftime('%Y-%m-%d')
-                size = stats.st_size
-                word_count = self.get_word_count(filepath)
+        while True:
+            key = window.getch()
+            if key == 27:  # ESC key
+                break
+            else:
+                for idx, filename in enumerate(files):
+                    current_row = 0
+                    if idx < max_height - 2:  # Leave space for borders, etc.
+                        if idx == current_row:
+                            window.attron(curses.color_pair(2))  # Use color pair 2 for highlighted text
+                        else:
+                            window.attron(curses.color_pair(1))  # Use color pair 1 otherwise
 
-                file_info = f"{filename} | Created: {creation_date} | Modified: {modified_date} | Size: {size} bytes | Word Count: {word_count}"
-                window.addstr(idx + 1, 1, file_info[:max_width-2])  # Truncate to fit the window
+                        window.addstr(idx + 1, 1, filename)
+
+                        if idx == current_row:
+                            window.attroff(curses.color_pair(2))
+                        else:
+                            window.attroff(curses.color_pair(1))
+
+                        window.refresh()
+                        filepath = os.path.join(self.directory, filename)
+                        stats = os.stat(filepath)
+                        creation_date = datetime.fromtimestamp(stats.st_ctime).strftime('%Y-%m-%d')
+                        modified_date = datetime.fromtimestamp(stats.st_mtime).strftime('%Y-%m-%d')
+                        size = stats.st_size
+                        word_count = self.get_word_count(filepath)
+
+                        file_info = f"{filename} | Created: {creation_date} | Modified: {modified_date} | Size: {size} bytes | Word Count: {word_count}"
+                        window.addstr(idx + 1, 1, file_info[:max_width-2])  # Truncate to fit the window
+                
 
         window.refresh()
         window.getch()  # Wait for keypress to continue
@@ -105,13 +125,35 @@ class FileManager:
         # Rename a specified file
         pass
 
-    def delete_file(self, filename):
-        # Delete a specified file
-        pass
+    def delete_file(self, window):
+        window.clear()
+        window.refresh()
+        window.getch()
+
+        filename_to_delete = self.select_file(window)
+        if filename_to_delete:
+            # Clear window and ask for confirmation
+            window.clear()
+            window.addstr(0, 0, "Are you sure you want to delete {}? (y/n): ".format(filename_to_delete))
+            window.refresh()
+            key = window.getch()
+            if key in [ord('y'), ord('Y')]:
+                os.remove(os.path.join(self.directory, filename_to_delete))
+                window.addstr(1, 0, "File deleted successfully.")
+                window.refresh()
+                window.getch()
+            else:
+                window.addstr(1, 0, "Deletion cancelled.")
+                window.refresh()
+                window.getch()
 
     def cleanup_empty_files(self):
         # Find and delete all 0 size .txt files
-        pass
+        files = [f for f in os.listdir(self.directory) if f.endswith('.txt')]
+        for filename in files:
+            filepath = os.path.join(self.directory, filename)
+            if os.path.getsize(filepath) == 0:
+                os.remove(filepath)
 
     def show_file_management_menu(self, screen):
         
@@ -141,10 +183,12 @@ class FileManager:
                 if current_row == 0:
                     self.view_free_writes(screen)  # Logic to list and select files
                 elif current_row == 1:
-                    self.delete_file()  # Logic to delete a file
+                    break
                 elif current_row == 2:
-                    self.cleanup_empty_files()  # Logic to cleanup empty files
+                    screen.clear()
+                    self.delete_file(screen)  # Call delete_file method
+                    screen.refresh()
                 elif current_row == 3:
-                    break  # Exit menu
+                    self.cleanup_empty_files() # Logic to cleanup empty files
             elif key == 27:  # ESC key
                 break
