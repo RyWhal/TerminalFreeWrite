@@ -28,7 +28,8 @@ class WritingInterface:
             #screen.refresh() 
             if key == curses.KEY_UP or key == curses.KEY_DOWN or key == curses.KEY_LEFT or key == curses.KEY_RIGHT:
                 continue
-            elif key == 5:  # Ctrl+E to exit
+            elif key == 5 or key == 27:  # Ctrl+E to exit
+                self.save_file()
                 break
             elif key == 14: # Ctrl+N to change filename
                 self.change_filename(screen)

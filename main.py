@@ -4,6 +4,7 @@ from writing import WritingInterface
 # Optional: from cloud_sync import CloudSync
 from utils import shutdown_device, prompt_for_filename, generate_filename
 from file_manager import FileManager
+from wifi import WifiManager
 
 def ensure_freewrites_directory():
     freewrites_dir = os.path.join(os.getcwd(), "freewrites")
@@ -74,8 +75,16 @@ def main_menu(screen):
             # Copy to drive - to be implemented
             pass
         elif selection == 5:
-            # Connect to Wifi Networks
-            pass
+            wifi_manager = WifiManager()
+            # List and connect to Wi-Fi
+            networks = wifi_manager.list_wifi_networks()
+            if networks:
+                ssid = wifi_manager.select_network(screen, networks)
+                wifi_manager.connect_to_network(screen, ssid)
+            else:
+                screen.addstr(0, 0, "No Wi-Fi networks found.")
+                screen.refresh()
+                screen.getch()
         elif selection == 6:
             shutdown_device()  # Shutdown the device
 
@@ -90,7 +99,7 @@ def main_menu(screen):
             current_row += 1
         elif key == curses.KEY_ENTER or key in [10, 13]:
             handle_menu_selection(screen, current_row)
-        elif key == 27: # ESC key to exit
+        elif key == 27: # ESC key to exit -- This is fine for now. but I dont want a user to accidentally escape the program
             break
 
 def main():
