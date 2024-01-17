@@ -82,19 +82,19 @@ class WritingInterface:
             self.save_file()
 
     def save_file(self):
-        text_to_save = '\n'.join(self.text)
+        text_to_save = '\n'.join(self.text) # join text into single string
         filepath = os.path.join(self.directory, self.filename)
         with open(filepath, "w") as file:
-            file.write(text_to_save)
+            file.write(text_to_save) #save all text
     
     def change_filename(self, screen):
         # Save the current filename in case the user enters a blank name
         current_filename = self.filename
 
         # Prompt for new filename
-        screen.move(1, 0)  # Move cursor to the top of the screen
+        screen.move(0, 0)  # Move cursor to the top of the screen
         screen.clrtoeol()  # Clear any existing text on the line
-        screen.addstr(1, 0, "Enter new filename: ")
+        screen.addstr(0, 0, "Enter new filename: ")
         screen.refresh()
 
         new_filename = ""
@@ -110,7 +110,7 @@ class WritingInterface:
             # Update display
             screen.move(1, 20)  # Adjust as needed for your layout
             screen.clrtoeol()
-            screen.addstr(1, 20, new_filename)  # Display current filename
+            screen.addstr(0, 20, new_filename)  # Display current filename
             screen.refresh()
 
         # Get and decode user input
