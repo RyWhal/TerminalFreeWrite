@@ -53,10 +53,16 @@ def main_menu(screen):
             wi = WritingInterface(default_filename,freewrites_directory)
             wi.run(screen)
         elif selection == 1:
-            # Continue a previous free write - placeholder for filename selection
-            filename = "example.txt"  # Placeholder, replace with actual file selection logic
-            wi = WritingInterface(filename)
-            wi.run(screen)
+            #continue a previous freewrite
+            file_to_continue = file_manager.select_file(screen)
+            if file_to_continue:
+                filepath = os.path.join(freewrites_directory, file_to_continue)
+                with open(filepath, 'r') as file:
+                    existing_content = file.read()
+    
+            #Open this file in the writing interface
+            writing_interface = WritingInterface(file_to_continue, freewrites_directory, existing_content)
+            writing_interface.run(screen)
         elif selection == 2:
             file_manager.show_file_management_menu(screen)
             pass

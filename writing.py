@@ -4,10 +4,10 @@ import threading
 from datetime import datetime
 
 class WritingInterface:
-    def __init__(self, filename, directory):
+    def __init__(self, filename, directory, existing_content=""):
         self.filename = filename if filename else self.generate_filename()
         self.directory = directory
-        self.text = ""
+        self.text = existing_content
         self.auto_save_interval = 30  # Auto-save interval in seconds
         self.auto_save_thread = threading.Thread(target=self.auto_save)
         self.auto_save_thread.daemon = True  # Daemonize the thread

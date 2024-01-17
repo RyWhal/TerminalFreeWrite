@@ -34,6 +34,7 @@ class FileManager:
     def list_files(self, window):
         max_height, max_width = window.getmaxyx()
         files = [f for f in os.listdir(self.directory) if f.endswith('.txt')]
+        files = sorted([f for f in os.listdir(self.directory) if f.endswith('.txt')])
         window.clear()
 
         for idx, filename in enumerate(files):
@@ -69,6 +70,32 @@ class FileManager:
             words = content.split()
             return len(words)
 
+    def select_file(self, window):
+        files = [f for f in os.listdir(self.directory) if f.endswith('.txt')]
+        files = sorted([f for f in os.listdir(self.directory) if f.endswith('.txt')])
+        current_row = 0
+
+        def print_files():
+            window.clear()
+            for idx, filename in enumerate(files):
+                if idx == current_row:
+                    window.attron(curses.color_pair(1))  # Highlighted
+                    window.addstr(idx + 1, 1, filename)
+                if idx == current_row:
+                    window.attroff(curses.color_pair(1))  # Normal
+            window.refresh()
+
+        while True:
+            print_files()
+            key = window.getch()
+            if key == curses.KEY_UP and current_row > 0:
+                current_row -= 1
+            elif key == curses.KEY_DOWN and current_row < len(files) - 1:
+                current_row += 1
+            elif key == curses.KEY_ENTER or key in [10, 13]:
+                return files[current_row]  # Return the selected filename
+
+        return None
 
     def read_file(self, filename):
         # Open and display the content of the file in read-only mode
