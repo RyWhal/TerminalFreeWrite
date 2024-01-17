@@ -8,26 +8,45 @@ class WritingInterface:
         self.filename = filename if filename else self.generate_filename()
         self.directory = directory
         self.text = existing_content
+
+        #Autosave every 30 seconds
         self.auto_save_interval = 30  # Auto-save interval in seconds
         self.auto_save_thread = threading.Thread(target=self.auto_save)
         self.auto_save_thread.daemon = True  # Daemonize the thread
 
+        # Intializing text scrolling
+        self.text = existing_content.split('\n') if isinstance(existing_content, str) else existing_content  # Split text into lines
+        self.cursor_y = 0  # Vertical cursor position
+        self.top_line = 0  # Top line of the text being displayed
+
     def run(self, screen):
+        max_height, max_width = screen.getmaxyx() # Get Screen Size
         self.auto_save_thread.start()  # Start the auto-save thread
         curses.noecho()  # Turn off automatic echoing of keys to the screen
-        #curses.echo()  # Echo characters typed by the user
         screen.clear()
 
         screen.addstr("[CTRL+E] exit\n[CTRL+U] save\n[CTRL+N] Change Filename\n[CTRL+H] Show this help screen.\nHappy Writing!\n")
         screen.refresh()
 
         while True:
-            screen.addstr(0, 0, self.text + ' ')  # Display the current text
-            key = screen.getch()
-            #screen.addstr(0, 0, f"Last key pressed: {key} ")
-            #screen.refresh() 
+            
+            screen.clear() # Clear anything currently on the screen
+            # Display text lines within the current view
+            for i in range(self.top_line, min(self.top_line + max_height, len(self.text))):
+                screen.addstr(i - self.top_line, 0, self.text[i][:max_width])
+
+            #screen.addstr(0, 0, self.text + ' ')  # Display the current text. Old way before Scrolling implemented.
+            key = screen.getch() # Get Key-presses
+
             if key == curses.KEY_UP or key == curses.KEY_DOWN or key == curses.KEY_LEFT or key == curses.KEY_RIGHT:
                 continue
+            elif key in range(32, 127):  # ASCII printable characters
+                if len(self.text) == 0:
+                    self.text.append("")  # Start with an empty line if text is empty
+                self.text[self.cursor_y] += chr(key)  # Add character to the current line
+            elif key == curses.KEY_ENTER or key in [10, 13]:
+                self.text.insert(self.cursor_y + 1, "")  # Start a new line
+                self.cursor_y += 1
             elif key == 5 or key == 27:  # Ctrl+E to exit
                 self.save_file()
                 break
@@ -37,14 +56,25 @@ class WritingInterface:
                 self.save_file()
             elif key == 263:  # Ctrl+H for help
                 self.show_help(screen)
-            elif key == curses.KEY_BACKSPACE or key == 127:  # Handle backspace
-                self.text = self.text[:-1]
-            else:
-                self.text += chr(key)
+            elif key == curses.KEY_BACKSPACE or key == 127:
+                if self.text[-1]:  # If there is text on the last line
+                    self.text[-1] = self.text[-1][:-1]  # Remove last character
+                elif len(self.text) > 1:  # If the last line is empty and there are previous lines
+                    self.text.pop()  # Remove the last empty line
+                    self.cursor_y -= 1
 
-            screen.clear()
-            screen.addstr(0, 0, self.text)  # Redraw text
-            screen.refresh()
+            #screen.clear()
+            #screen.addstr(0, 0, self.text)  # Redraw text
+            screen.refresh() # Refresh after redrawing text
+
+            # Adjust scrolling
+            if self.cursor_y >= self.top_line + max_height:
+                self.top_line += 1  # Scroll down
+            elif self.cursor_y < self.top_line:
+                self.to
+                p_line -= 1  # Scroll up
+
+            screen.refresh() # Refresh after scrolling
 
     def auto_save(self):
         while True:
@@ -52,9 +82,10 @@ class WritingInterface:
             self.save_file()
 
     def save_file(self):
+        text_to_save = '\n'.join(self.text)
         filepath = os.path.join(self.directory, self.filename)
         with open(filepath, "w") as file:
-            file.write(self.text)
+            file.write(text_to_save)
     
     def change_filename(self, screen):
         # Save the current filename in case the user enters a blank name
