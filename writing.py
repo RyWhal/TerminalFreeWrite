@@ -10,14 +10,7 @@ class WritingInterface:
         self.text = ""
         self.auto_save_interval = 30  # Auto-save interval in seconds
         self.auto_save_thread = threading.Thread(target=self.auto_save)
-        self.auto_save_thread.daemon = True  # Daemonize the thread    
-
-    '''
-    def generate_filename(self):
-        # Generate a timestamped filename
-
-        return datetime.now().strftime("%Y%m%d_%H%M%S.txt")
-        '''
+        self.auto_save_thread.daemon = True  # Daemonize the thread
 
     def run(self, screen):
         self.auto_save_thread.start()  # Start the auto-save thread
@@ -33,7 +26,9 @@ class WritingInterface:
             key = screen.getch()
             #screen.addstr(0, 0, f"Last key pressed: {key} ")
             #screen.refresh() 
-            if key == 5:  # Ctrl+E to exit
+            if key == curses.KEY_UP or key == curses.KEY_DOWN or key == curses.KEY_LEFT or key == curses.KEY_RIGHT:
+                continue
+            elif key == 5:  # Ctrl+E to exit
                 break
             elif key == 14: # Ctrl+N to change filename
                 self.change_filename(screen)

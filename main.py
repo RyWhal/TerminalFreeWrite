@@ -17,10 +17,10 @@ def main_menu(screen):
     menu_items = ["New freewrite", "Continue a freewrite", "File management", 
                   "Sync with cloud", "Copy to external drive", "Wi-fi", "Shutdown"]
     
-    #Create an instance of the File Manager class
-    file_manager = FileManager("./file_manager.py")
     # Ensure the freewrites directory is created
     freewrites_directory = ensure_freewrites_directory()
+    #Create an instance of the File Manager class
+    file_manager = FileManager(freewrites_directory)
 
     current_row = 0  # Current highlighted menu item
 
