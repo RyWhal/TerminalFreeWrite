@@ -15,8 +15,8 @@ def ensure_freewrites_directory():
 # Function to display the main menu
 def main_menu(screen):
     # Menu items
-    menu_items = ["New freewrite", "Continue a freewrite", "File management", 
-                  "Sync with cloud", "Copy to external drive", "Wi-fi", "Shutdown"]
+    menu_items = ["<New freewrite>", "<Continue a freewrite>", "<File management>", 
+                  "<Sync with cloud>", "<Copy to external drive>", "<Wi-fi>", "<Shutdown>"]
     
     # Ensure the freewrites directory is created
     freewrites_directory = ensure_freewrites_directory()
@@ -31,8 +31,8 @@ def main_menu(screen):
         screen.clear()
         h, w = screen.getmaxyx()
         for idx, item in enumerate(menu_items):
-            x = w//2 - len(item)//2
-            y = h//2 - len(menu_items)//2 + idx
+            x = 0  # Start from the left edge
+            y = idx  # Start from the top, and move down by idx
             if idx == selected_row:
                 screen.attron(curses.color_pair(1))
                 screen.addstr(y, x, item)

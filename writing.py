@@ -50,7 +50,7 @@ class WritingInterface:
             elif key == curses.KEY_ENTER or key in [10, 13]:
                 self.text.insert(self.cursor_y + 1, "")  # Start a new line
                 self.cursor_y += 1
-            elif key == 5 or key == 27:  # Ctrl+E to exit
+            elif key == 5 or key == 27:  # Ctrl+E or ESC to exit
                 self.save_file()
                 break
             elif key == 14: # Ctrl+N to change filename

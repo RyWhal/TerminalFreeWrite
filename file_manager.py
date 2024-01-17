@@ -16,42 +16,71 @@ class FileManager:
 
     def view_free_writes(self, screen):
         height, width = 25, 110  # Adjust the size as needed
-        start_y, start_x = 1, 1  # Adjust the position as needed
+        start_y, start_x = 0, 0  # Adjust the position as needed
 
         stats_win = curses.newwin(height, width, start_y, start_x)
         stats_win.box()
+        stats_win.keypad(True)  # Enable keypad mode for scrolling
 
         # Now call the file_manager's list_files method
         self.list_files(stats_win) 
-
+        
+        '''
         stats_win.refresh()
         stats_win.getch() # Wait for key press to 
 
         # clear the window or screen after closing the stats window
         stats_win.clear()
         stats_win.refresh()
+        '''
 
 
     def list_files(self, window):
         max_height, max_width = window.getmaxyx()
-        files = [f for f in os.listdir(self.directory) if f.endswith('.txt')]
-        files = sorted([f for f in os.listdir(self.directory) if f.endswith('.txt')])
+        top_line = 0 
+        files = sorted([f for f in os.listdir(self.directory) if f.endswith('.txt')]) # List .txt files and sort alphabetically
         window.clear()
 
-        for idx, filename in enumerate(files):
-                window.refresh()
-                filepath = os.path.join(self.directory, filename)
-                stats = os.stat(filepath)
-                creation_date = datetime.fromtimestamp(stats.st_ctime).strftime('%Y-%m-%d')
-                modified_date = datetime.fromtimestamp(stats.st_mtime).strftime('%Y-%m-%d')
-                size = stats.st_size
-                word_count = self.get_word_count(filepath)
+        while True:
+            window.clear()
+            for i, filename in enumerate(files[top_line:top_line + max_height - 2]):
+                file_info = self.get_file_info(filename, max_width)
+                window.addstr(i + 1, 1, file_info[:max_width-2])  # Truncate to fit the window
 
-                file_info = f"{filename} | Created: {creation_date} | Modified: {modified_date} | Size: {size} bytes | Word Count: {word_count}"
-                window.addstr(idx + 1, 1, file_info[:max_width-2])  # Truncate to fit the window
+            window.refresh()
+            key = window.getch() # listen for key press
+            # Scroll handling
+            '''
+            if key == curses.KEY_UP and top_line > 0:
+                top_line = max(0, top_line - 1)
+            elif key == curses.KEY_DOWN and top_line < len(files) - max_height + 2:
+                top_line = min(len(files) - max_height + 2, top_line + 1)
+            elif key == 5 or key == 27:  # CTRL+E or ESC key to exit
+                break
+            '''
+            if key == curses.KEY_UP and top_line > 0:
+                top_line -= 1
+            elif key == curses.KEY_DOWN and top_line < len(files) - (max_height - 2):
+                top_line += 1
+            elif key == 27:  # ESC key to exit
+                break
 
+        
+        window.clear()
         window.refresh()
-        window.getch()  # Wait for keypress to continue
+        #window.getch()  # Wait for keypress to continue
+
+    def get_file_info(self, filename, max_width):
+        filepath = os.path.join(self.directory, filename)
+        stats = os.stat(filepath)
+        creation_date = datetime.fromtimestamp(stats.st_ctime).strftime('%Y-%m-%d')
+        modified_date = datetime.fromtimestamp(stats.st_mtime).strftime('%Y-%m-%d')
+        size = stats.st_size
+        word_count = self.get_word_count(filepath)
+
+        file_info = f"{filename} | Created: {creation_date} | Modified: {modified_date} | Size: {size} bytes | Word Count: {word_count}"
+        
+        return file_info
 
     def get_word_count(self, filepath):
         with open(filepath, 'r') as file:
@@ -68,10 +97,11 @@ class FileManager:
             window.clear()
             for idx, filename in enumerate(files):
                 if idx == current_row:
-                    window.attron(curses.color_pair(2))  # Highlighted
-                    window.addstr(idx + 1, 1, filename)
-                if idx == current_row:
-                    window.attroff(curses.color_pair(1))  # Normal
+                    window.attron(curses.color_pair(1))  # Highlighted
+                    window.addstr(idx, 0, filename)
+                    window.attroff(curses.color_pair(1))
+                else:
+                    window.addstr(idx, 0, filename)  # Normal
             window.refresh()
 
         while True:
@@ -168,7 +198,7 @@ class FileManager:
 
     def show_file_management_menu(self, screen):
         
-        file_menu_items = ["View free writes", "Rename free writes", "Delete free writes", "Clean-up blank free writes" ]
+        file_menu_items = ["<List files>", "<Rename free write>", "<Delete free write>", "<Clean-up blank free writes>" ]
         current_row = 0  # Current highlighted menu item
         # Function to print the menu
         def print_menu():
@@ -201,5 +231,5 @@ class FileManager:
                     screen.refresh()
                 elif current_row == 3:
                     self.cleanup_empty_files() # Logic to cleanup empty files
-            elif key == 27:  # ESC key
+            elif key == 5 or key == 27:  # CTRL+E or ESC key to exit
                 break
