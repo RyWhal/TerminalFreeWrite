@@ -2,6 +2,7 @@ import os
 import curses
 from pathlib import Path
 from datetime import datetime
+import re
 
 class FileManager:
     def __init__(self, directory):
@@ -37,52 +38,20 @@ class FileManager:
         files = sorted([f for f in os.listdir(self.directory) if f.endswith('.txt')])
         window.clear()
 
-        while True:
-            key = window.getch()
-            if key == 27:  # ESC key
-                break
-            else:
-                for idx, filename in enumerate(files):
-                    current_row = 0
-                    if idx < max_height - 2:  # Leave space for borders, etc.
-                        if idx == current_row:
-                            window.attron(curses.color_pair(2))  # Use color pair 2 for highlighted text
-                        else:
-                            window.attron(curses.color_pair(1))  # Use color pair 1 otherwise
+        for idx, filename in enumerate(files):
+                window.refresh()
+                filepath = os.path.join(self.directory, filename)
+                stats = os.stat(filepath)
+                creation_date = datetime.fromtimestamp(stats.st_ctime).strftime('%Y-%m-%d')
+                modified_date = datetime.fromtimestamp(stats.st_mtime).strftime('%Y-%m-%d')
+                size = stats.st_size
+                word_count = self.get_word_count(filepath)
 
-                        window.addstr(idx + 1, 1, filename)
-
-                        if idx == current_row:
-                            window.attroff(curses.color_pair(2))
-                        else:
-                            window.attroff(curses.color_pair(1))
-
-                        window.refresh()
-                        filepath = os.path.join(self.directory, filename)
-                        stats = os.stat(filepath)
-                        creation_date = datetime.fromtimestamp(stats.st_ctime).strftime('%Y-%m-%d')
-                        modified_date = datetime.fromtimestamp(stats.st_mtime).strftime('%Y-%m-%d')
-                        size = stats.st_size
-                        word_count = self.get_word_count(filepath)
-
-                        file_info = f"{filename} | Created: {creation_date} | Modified: {modified_date} | Size: {size} bytes | Word Count: {word_count}"
-                        window.addstr(idx + 1, 1, file_info[:max_width-2])  # Truncate to fit the window
-                
+                file_info = f"{filename} | Created: {creation_date} | Modified: {modified_date} | Size: {size} bytes | Word Count: {word_count}"
+                window.addstr(idx + 1, 1, file_info[:max_width-2])  # Truncate to fit the window
 
         window.refresh()
         window.getch()  # Wait for keypress to continue
-
-        '''
-        for filename in files:
-            filepath = os.path.join(self.directory, filename)
-            stats = os.stat(filepath)
-            creation_date = datetime.fromtimestamp(stats.st_ctime).strftime('%Y-%m-%d %H:%M:%S')
-            modified_date = datetime.fromtimestamp(stats.st_mtime).strftime('%Y-%m-%d %H:%M:%S')
-            size = stats.st_size
-            word_count = self.get_word_count(filepath)
-            print("\n")
-            print(f"{filename:20} | Created: {creation_date} | Modified: {modified_date} | Size: {size} bytes | Word Count: {word_count}")
-        '''
 
     def get_word_count(self, filepath):
         with open(filepath, 'r') as file:
@@ -99,7 +68,7 @@ class FileManager:
             window.clear()
             for idx, filename in enumerate(files):
                 if idx == current_row:
-                    window.attron(curses.color_pair(1))  # Highlighted
+                    window.attron(curses.color_pair(2))  # Highlighted
                     window.addstr(idx + 1, 1, filename)
                 if idx == current_row:
                     window.attroff(curses.color_pair(1))  # Normal
@@ -121,9 +90,51 @@ class FileManager:
         # Open and display the content of the file in read-only mode
         pass
 
-    def rename_file(self, old_filename, new_filename):
-        # Rename a specified file
-        pass
+    def rename_file(self, screen):
+        # Check if there are files to rename
+        files = sorted([f for f in os.listdir(self.directory) if f.endswith('.txt')])
+        if not files:
+            screen.clear()
+            screen.addstr(0, 0, "No files available to rename.")
+            screen.refresh()
+            screen.getch()  # Wait for key press
+            return
+
+        # Select the file to rename
+        filename_to_rename = self.select_file(screen)
+        if not filename_to_rename:
+            return  # No file selected
+
+        # Prompt for a new name
+        screen.clear()
+        screen.addstr(0, 0, "Enter the new name for the file (without extension): ")
+        screen.refresh()
+        curses.echo()  # Echo user input to the screen
+        new_name_bytes = screen.getstr(1, 0, 25)  # Limit new name to 25 characters
+        curses.noecho()
+        new_name = new_name_bytes.decode('utf-8')  # Decode to a string
+
+        # verify that characters are aplphanumeric or - _ = + 
+        if not re.match("^[A-Za-z0-9-_+=]+$", new_name):
+            screen.addstr(3, 0, "Invalid filename. Only alphanumeric and -_+= are allowed.")
+            screen.refresh()
+            screen.getch()
+            return
+
+        # Confirm rename
+        screen.addstr(3, 0, f"Are you sure you want to rename '{filename_to_rename}' to '{new_name}'? (y/n): ")
+        screen.refresh()
+        key = screen.getch()
+        if key in [ord('y'), ord('Y')]:
+            old_filepath = os.path.join(self.directory, filename_to_rename)
+            new_filepath = os.path.join(self.directory, new_name + ".txt")
+            os.rename(old_filepath, new_filepath)
+            screen.addstr(5, 0, "File renamed successfully.")
+        else:
+            screen.addstr(5, 0, "Rename cancelled.")
+
+        screen.refresh()
+        screen.getch()  # Wait for key press
 
     def delete_file(self, window):
         window.clear()
@@ -183,7 +194,7 @@ class FileManager:
                 if current_row == 0:
                     self.view_free_writes(screen)  # Logic to list and select files
                 elif current_row == 1:
-                    break
+                    self.rename_file(screen)
                 elif current_row == 2:
                     screen.clear()
                     self.delete_file(screen)  # Call delete_file method
