@@ -25,7 +25,9 @@ class WritingInterface:
         curses.noecho()  # Turn off automatic echoing of keys to the screen
         screen.clear()
 
-        screen.addstr("[CTRL+E] exit\n[CTRL+U] save\n[CTRL+N] Change Filename\n[CTRL+H] Show this help screen.\nHappy Writing!\n")
+        # Display the help text on new Freewrite
+        help_text = "[CTRL+E] exit\n[CTRL+U] save\n[CTRL+N] Change Filename\n[CTRL+H] Show this help screen.\nHappy Writing!\n"
+        screen.addstr(0, 0, help_text)
         screen.refresh()
 
         while True:
@@ -41,9 +43,10 @@ class WritingInterface:
             if key == curses.KEY_UP or key == curses.KEY_DOWN or key == curses.KEY_LEFT or key == curses.KEY_RIGHT:
                 continue
             elif key in range(32, 127):  # ASCII printable characters
-                if len(self.text) == 0:
-                    self.text.append("")  # Start with an empty line if text is empty
-                self.text[self.cursor_y] += chr(key)  # Add character to the current line
+                if len(self.text[-1]) >= max_width - 1:  # Check if the line is at max width
+                    self.text.append("")  # Start a new line
+                    self.cursor_y += 1
+                self.text[-1] += chr(key)  # Add character to the current line
             elif key == curses.KEY_ENTER or key in [10, 13]:
                 self.text.insert(self.cursor_y + 1, "")  # Start a new line
                 self.cursor_y += 1
@@ -73,7 +76,6 @@ class WritingInterface:
             elif self.cursor_y < self.top_line:
                 self.to
                 p_line -= 1  # Scroll up
-
             screen.refresh() # Refresh after scrolling
 
     def auto_save(self):
@@ -112,9 +114,6 @@ class WritingInterface:
             screen.clrtoeol()
             screen.addstr(0, 20, new_filename)  # Display current filename
             screen.refresh()
-
-        # Get and decode user input
-        #new_filename = screen.getstr().decode('utf-8').strip() 
 
         # Use the new filename if provided, otherwise fall back to the current one
         # Validate the filename for special characters
