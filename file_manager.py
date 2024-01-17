@@ -41,6 +41,8 @@ class FileManager:
         files = sorted([f for f in os.listdir(self.directory) if f.endswith('.txt')]) # List .txt files and sort alphabetically
         window.clear()
 
+        #window.addstr(0,0, "   [FILENAME]   |  [CREATED]  |  [MODIFIED]  |  [SIZE]  |  [WORDCOUNT]   ")
+        #window.refresh()
         while True:
             window.clear()
             for i, filename in enumerate(files[top_line:top_line + max_height - 2]):
@@ -81,6 +83,8 @@ class FileManager:
             return len(words)
 
     def select_file(self, window):
+        window.clear()
+        window.refresh()
         files = [f for f in os.listdir(self.directory) if f.endswith('.txt')]
         files = sorted([f for f in os.listdir(self.directory) if f.endswith('.txt')])
         current_row = 0
@@ -105,6 +109,8 @@ class FileManager:
                 current_row += 1
             elif key == curses.KEY_ENTER or key in [10, 13]:
                 return files[current_row]  # Return the selected filename
+            elif key == 5 or key == 27: # CTRL+E or ESC key to exit
+                break
 
         return None
 
@@ -124,6 +130,7 @@ class FileManager:
 
         # Select the file to rename
         filename_to_rename = self.select_file(screen)
+        
         if not filename_to_rename:
             return  # No file selected
 
@@ -159,11 +166,17 @@ class FileManager:
         screen.getch()  # Wait for key press
 
     def delete_file(self, window):
-        window.clear()
-        window.refresh()
-        window.getch()
+        # Check if there are files to rename
+        files = sorted([f for f in os.listdir(self.directory) if f.endswith('.txt')])
+        if not files:
+            screen.clear()
+            screen.addstr(0, 0, "No files available to rename.")
+            screen.refresh()
+            screen.getch()  # Wait for key press
+            return
 
         filename_to_delete = self.select_file(window)
+
         if filename_to_delete:
             # Clear window and ask for confirmation
             window.clear()
@@ -183,6 +196,8 @@ class FileManager:
     def cleanup_empty_files(self, window):
         # Find and delete all 0 size .txt files
         files = [f for f in os.listdir(self.directory) if f.endswith('.txt')]
+       
+        # Check if there are any files to clear
         if not files:
             screen.clear()
             screen.addstr(0, 0, "No files available.")
@@ -193,7 +208,9 @@ class FileManager:
         window.clear()
         window.addstr(0, 0, "Are you sure you want to clean up empty files? (y/n): ")
         window.refresh()
-        key = window.getch()
+        key = window.getch() # Wait for input
+
+        # If 'y' then clean 0 size files
         if key in [ord('y'), ord('Y')]:
             for filename in files:
                 filepath = os.path.join(self.directory, filename)
@@ -238,9 +255,7 @@ class FileManager:
                 elif current_row == 1:
                     self.rename_file(screen)
                 elif current_row == 2:
-                    screen.clear()
                     self.delete_file(screen)  # Call delete_file method
-                    screen.refresh()
                 elif current_row == 3:
                     screen.clear()
                     self.cleanup_empty_files(screen) # Logic to cleanup empty files
