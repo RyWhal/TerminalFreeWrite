@@ -50,14 +50,6 @@ class FileManager:
             window.refresh()
             key = window.getch() # listen for key press
             # Scroll handling
-            '''
-            if key == curses.KEY_UP and top_line > 0:
-                top_line = max(0, top_line - 1)
-            elif key == curses.KEY_DOWN and top_line < len(files) - max_height + 2:
-                top_line = min(len(files) - max_height + 2, top_line + 1)
-            elif key == 5 or key == 27:  # CTRL+E or ESC key to exit
-                break
-            '''
             if key == curses.KEY_UP and top_line > 0:
                 top_line -= 1
             elif key == curses.KEY_DOWN and top_line < len(files) - (max_height - 2):
@@ -188,13 +180,33 @@ class FileManager:
                 window.refresh()
                 window.getch()
 
-    def cleanup_empty_files(self):
+    def cleanup_empty_files(self, window):
         # Find and delete all 0 size .txt files
         files = [f for f in os.listdir(self.directory) if f.endswith('.txt')]
-        for filename in files:
-            filepath = os.path.join(self.directory, filename)
-            if os.path.getsize(filepath) == 0:
-                os.remove(filepath)
+        if not files:
+            screen.clear()
+            screen.addstr(0, 0, "No files available.")
+            screen.refresh()
+            screen.getch()  # Wait for key press
+            return
+        
+        window.clear()
+        window.addstr(0, 0, "Are you sure you want to clean up empty files? (y/n): ")
+        window.refresh()
+        key = window.getch()
+        if key in [ord('y'), ord('Y')]:
+            for filename in files:
+                filepath = os.path.join(self.directory, filename)
+                if os.path.getsize(filepath) == 0:
+                    os.remove(filepath)
+            window.addstr(1, 0, "Files Cleaned")
+            window.refresh()
+            window.getch()
+        else:
+            window.addstr(1, 0, "Aborted")
+            window.refresh()
+            window.getch()
+        
 
     def show_file_management_menu(self, screen):
         
@@ -230,6 +242,8 @@ class FileManager:
                     self.delete_file(screen)  # Call delete_file method
                     screen.refresh()
                 elif current_row == 3:
-                    self.cleanup_empty_files() # Logic to cleanup empty files
+                    screen.clear()
+                    self.cleanup_empty_files(screen) # Logic to cleanup empty files
+                    screen.refresh()
             elif key == 5 or key == 27:  # CTRL+E or ESC key to exit
                 break
