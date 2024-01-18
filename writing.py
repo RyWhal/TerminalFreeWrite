@@ -9,14 +9,16 @@ class WritingInterface:
         self.directory = directory
         self.text = existing_content
 
-        #Autosave every 30 seconds
-        self.auto_save_interval = 30  # Auto-save interval in seconds
+        #Autosave every 60 seconds
+        self.auto_save_interval = 60  # Auto-save interval in seconds
         self.auto_save_thread = threading.Thread(target=self.auto_save)
         self.auto_save_thread.daemon = True  # Daemonize the thread
 
         # Intializing text scrolling
-        self.text = existing_content.split('\n') if isinstance(existing_content, str) else existing_content  # Split text into lines
-        self.cursor_y = 0  # Vertical cursor position
+        self.text = existing_content.split('\n') if existing_content else [""]
+
+        # Initialize cursor position
+        self.cursor_y = len(self.text) - 1  # Start at the end of the existing content
         self.top_line = 0  # Top line of the text being displayed
 
     def run(self, screen):
@@ -24,11 +26,6 @@ class WritingInterface:
         self.auto_save_thread.start()  # Start the auto-save thread
         curses.noecho()  # Turn off automatic echoing of keys to the screen
         screen.clear()
-
-        # Display the help text on new Freewrite
-        help_text = "[CTRL+E] exit\n[CTRL+U] save\n[CTRL+N] Change Filename\n[CTRL+H] Show this help screen.\nHappy Writing!\n"
-        screen.addstr(0, 0, help_text)
-        screen.refresh()
 
         while True:
             
@@ -47,36 +44,39 @@ class WritingInterface:
                     self.text.append("")  # Start a new line
                     self.cursor_y += 1
                 self.text[-1] += chr(key)  # Add character to the current line
-            elif key == curses.KEY_ENTER or key in [10, 13]:
-                self.text.insert(self.cursor_y + 1, "")  # Start a new line
-                self.cursor_y += 1
             elif key == 5 or key == 27:  # Ctrl+E or ESC to exit
                 self.save_file()
                 break
             elif key == 14: # Ctrl+N to change filename
                 self.change_filename(screen)
-            elif key == ord('s') and curses.key_modifiers() == curses.KEY_CTRL:
-            #elif key == 21:  # Ctrl+U to save
-                self.save_file()
-            elif key == ord('h') and curses.key_modifiers() == curses.KEY_CTRL:
-            #elif key == 263:  # Ctrl+H for help
-                self.show_help(screen)
+            elif key == curses.KEY_ENTER or key in [10, 13]:
+                self.text.insert(self.cursor_y + 1, "")  # Insert a new empty line
+                self.cursor_y += 1  # Move cursor to the new line
+                if self.cursor_y >= self.top_line + max_height - 1:
+                    self.top_line += 1  # Scroll down if cursor moves off screen
             elif key == curses.KEY_BACKSPACE or key == 127 or key == 27:
-                if key in [curses.KEY_BACKSPACE, 127, 8]:
-                    if self.text[-1]:  # If there is text on the last line
-                        self.text[-1] = self.text[-1][:-1]  # Remove last character
-                    elif len(self.text) > 1:  # If the last line is empty and there are previous lines
-                        self.text.pop()  # Remove the last empty line
-                        self.cursor_y -= 1
+                if len(self.text) > 0 and len(self.text[-1]) > 0:
+                    self.text[-1] = self.text[-1][:-1]  # Remove last character of the last line
+                elif len(self.text) > 1:
+                    self.text.pop()  # Remove the last line if it's empty and there are other lines
+                    self.cursor_y -= 1  # Adjust cursor position
+                    if self.cursor_y < self.top_line:
+                        self.top_line = max(0, self.top_line - 1)
+                elif len(self.text) == 1 and len(self.text[0]) == 0:
+                    # Do nothing if there's only one line and it's empty
+                    pass
 
             screen.refresh() # Refresh after redrawing text
+
+            screen.clear()
+            for i in range(self.top_line, min(self.top_line + max_height, len(self.text))):
+                screen.addstr(i - self.top_line, 0, self.text[i][:max_width])
 
             # Adjust scrolling
             if self.cursor_y >= self.top_line + max_height:
                 self.top_line += 1  # Scroll down
             elif self.cursor_y < self.top_line:
-                self.to
-                p_line -= 1  # Scroll up
+                self.top_line = max(0, self.top_line - 1)  # Scroll up
             screen.refresh() # Refresh after scrolling
 
     def auto_save(self):
