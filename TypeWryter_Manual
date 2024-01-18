@@ -1,0 +1,16 @@
+Welcome to TypeWryter; A simple, distraction free, writing tool. It's remeniscent of using a type writer, hence the name. 
+Removing most tools for editing forces you to focus on free-writing and making progress with whatever you might be 
+writing. 
+
+Global Controls: 
+'esc' or 'CTRL+E' will always escape you back to the previous screen.
+
+
+While TypeWryting:
+CTRL+N - Rename the file you're currently working on (Default name is the date/time the file was created)
+CTRL+U - Save the file
+CTRL+H - display the TypeWryter controls
+CTRL+BACKSPACE - Delete the previous word
+CTRL+SHIFT+BACKSPACE - Delete the entire current line of text
+CTRL+E - Exit the TypeWryter window
+ESC - Exit the TypeWryter window

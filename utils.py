@@ -27,3 +27,9 @@ def prompt_for_filename():
 def connect_wifi():
     #TBD - connect device to a wifi network
     pass
+
+def ensure_freewrites_directory():
+    freewrites_dir = os.path.join(os.getcwd(), "TypeWrytes")
+    if not os.path.exists(freewrites_dir):
+        os.makedirs(freewrites_dir)
+    return freewrites_dir

@@ -55,7 +55,8 @@ class WritingInterface:
                 break
             elif key == 14: # Ctrl+N to change filename
                 self.change_filename(screen)
-            elif key == 21:  # Ctrl+U to save
+            elif key == ord('s') and curses.key_modifiers() == curses.KEY_CTRL:
+            #elif key == 21:  # Ctrl+U to save
                 self.save_file()
             elif key == ord('h') and curses.key_modifiers() == curses.KEY_CTRL:
             #elif key == 263:  # Ctrl+H for help
