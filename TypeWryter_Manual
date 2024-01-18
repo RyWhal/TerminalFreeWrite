@@ -10,10 +10,10 @@ Global Controls:
 
 While TypeWryting:
     CTRL+N - Rename the file you're currently working on (Default name is the date/time the file was created)
-    CTRL+BACKSPACE - Delete the previous word (not implemented yet)
-    CTRL+SHIFT+BACKSPACE - Delete the entire current line of text (not implemented yet)
-    CTRL+E - Exit the TypeWryter window
-    ESC - Exit the TypeWryter window
+    CTRL+W - Delete the previous word
+    CTRL+L - Delete the entire current line of text
+    CTRL+E - Exit the TypeWryter window (current file is saved on exit)
+    ESC - Exit the TypeWryter window (current file is saved on exit)
 
 
 Saving:

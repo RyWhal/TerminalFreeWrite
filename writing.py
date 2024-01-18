@@ -39,22 +39,34 @@ class WritingInterface:
 
             if key == curses.KEY_UP or key == curses.KEY_DOWN or key == curses.KEY_LEFT or key == curses.KEY_RIGHT:
                 continue
-            elif key in range(32, 127):  # ASCII printable characters
+            elif key == 9:  # Tab key
+                self.text[self.cursor_y] += "     "  # Add 5 spaces to the current line
+            elif key == 23:  # ASCII code for CTRL+W  
+                words = self.text[self.cursor_y].split()
+                if words:
+                    self.text[self.cursor_y] = ' '.join(words[:-1]) # Remove the last word and join the remaining words
+            elif key == 12:  # ASCII code for CTRL+L
+                if len(self.text) > 1:
+                    self.text.pop(self.cursor_y)  # Remove the current line
+                    self.cursor_y = max(0, self.cursor_y - 1)  # Move cursor up
+                elif len(self.text) == 1:
+                    self.text[self.cursor_y] = ""  # Clear the line if it's the only one
+            elif key == 5 or key == 27:  # Ctrl+E or ESC
+                self.save_file()
+                break
+            elif key == 14: # Ctrl+N
+                self.change_filename(screen)
+            elif key in range(32, 127):  # All ASCII printable characters
                 if len(self.text[-1]) >= max_width - 1:  # Check if the line is at max width
                     self.text.append("")  # Start a new line
                     self.cursor_y += 1
                 self.text[-1] += chr(key)  # Add character to the current line
-            elif key == 5 or key == 27:  # Ctrl+E or ESC to exit
-                self.save_file()
-                break
-            elif key == 14: # Ctrl+N to change filename
-                self.change_filename(screen)
-            elif key == curses.KEY_ENTER or key in [10, 13]:
+            elif key == curses.KEY_ENTER or key in [10, 13]: # Enter/Return
                 self.text.insert(self.cursor_y + 1, "")  # Insert a new empty line
                 self.cursor_y += 1  # Move cursor to the new line
                 if self.cursor_y >= self.top_line + max_height - 1:
                     self.top_line += 1  # Scroll down if cursor moves off screen
-            elif key == curses.KEY_BACKSPACE or key == 127 or key == 27:
+            elif key == curses.KEY_BACKSPACE or key == 127 or key == 27: # Backspace
                 if len(self.text) > 0 and len(self.text[-1]) > 0:
                     self.text[-1] = self.text[-1][:-1]  # Remove last character of the last line
                 elif len(self.text) > 1:
