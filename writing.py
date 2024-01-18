@@ -4,34 +4,54 @@ import threading
 from datetime import datetime
 
 class WritingInterface:
-    def __init__(self, filename=""):
+    def __init__(self, filename, directory, existing_content=""):
         self.filename = filename if filename else self.generate_filename()
-        self.text = ""
+        self.directory = directory
+        self.text = existing_content
+
+        #Autosave every 30 seconds
         self.auto_save_interval = 30  # Auto-save interval in seconds
         self.auto_save_thread = threading.Thread(target=self.auto_save)
         self.auto_save_thread.daemon = True  # Daemonize the thread
 
-    '''
-    def generate_filename(self):
-        # Generate a timestamped filename
-        return datetime.now().strftime("%Y%m%d_%H%M%S.txt")
-        '''
+        # Intializing text scrolling
+        self.text = existing_content.split('\n') if isinstance(existing_content, str) else existing_content  # Split text into lines
+        self.cursor_y = 0  # Vertical cursor position
+        self.top_line = 0  # Top line of the text being displayed
 
     def run(self, screen):
+        max_height, max_width = screen.getmaxyx() # Get Screen Size
         self.auto_save_thread.start()  # Start the auto-save thread
         curses.noecho()  # Turn off automatic echoing of keys to the screen
-        #curses.echo()  # Echo characters typed by the user
         screen.clear()
 
-        screen.addstr("[CTRL+E] exit\n[CTRL+U] save\n[CTRL+N] Change Filename\n[CTRL+H] Show this help screen.\nHappy Writing!\n")
+        # Display the help text on new Freewrite
+        help_text = "[CTRL+E] exit\n[CTRL+U] save\n[CTRL+N] Change Filename\n[CTRL+H] Show this help screen.\nHappy Writing!\n"
+        screen.addstr(0, 0, help_text)
         screen.refresh()
 
         while True:
-            screen.addstr(0, 0, self.text + ' ')  # Display the current text
-            key = screen.getch()
-            #screen.addstr(0, 0, f"Last key pressed: {key} ")
-            #screen.refresh() 
-            if key == 5:  # Ctrl+E to exit
+            
+            screen.clear() # Clear anything currently on the screen
+            # Display text lines within the current view
+            for i in range(self.top_line, min(self.top_line + max_height, len(self.text))):
+                screen.addstr(i - self.top_line, 0, self.text[i][:max_width])
+
+            #screen.addstr(0, 0, self.text + ' ')  # Display the current text. Old way before Scrolling implemented.
+            key = screen.getch() # Get Key-presses
+
+            if key == curses.KEY_UP or key == curses.KEY_DOWN or key == curses.KEY_LEFT or key == curses.KEY_RIGHT:
+                continue
+            elif key in range(32, 127):  # ASCII printable characters
+                if len(self.text[-1]) >= max_width - 1:  # Check if the line is at max width
+                    self.text.append("")  # Start a new line
+                    self.cursor_y += 1
+                self.text[-1] += chr(key)  # Add character to the current line
+            elif key == curses.KEY_ENTER or key in [10, 13]:
+                self.text.insert(self.cursor_y + 1, "")  # Start a new line
+                self.cursor_y += 1
+            elif key == 5 or key == 27:  # Ctrl+E or ESC to exit
+                self.save_file()
                 break
             elif key == 14: # Ctrl+N to change filename
                 self.change_filename(screen)
@@ -39,14 +59,22 @@ class WritingInterface:
                 self.save_file()
             elif key == 263:  # Ctrl+H for help
                 self.show_help(screen)
-            elif key == curses.KEY_BACKSPACE or key == 127:  # Handle backspace
-                self.text = self.text[:-1]
-            else:
-                self.text += chr(key)
+            elif key == curses.KEY_BACKSPACE or key == 127:
+                if self.text[-1]:  # If there is text on the last line
+                    self.text[-1] = self.text[-1][:-1]  # Remove last character
+                elif len(self.text) > 1:  # If the last line is empty and there are previous lines
+                    self.text.pop()  # Remove the last empty line
+                    self.cursor_y -= 1
 
-            screen.clear()
-            screen.addstr(0, 0, self.text)  # Redraw text
-            screen.refresh()
+            screen.refresh() # Refresh after redrawing text
+
+            # Adjust scrolling
+            if self.cursor_y >= self.top_line + max_height:
+                self.top_line += 1  # Scroll down
+            elif self.cursor_y < self.top_line:
+                self.to
+                p_line -= 1  # Scroll up
+            screen.refresh() # Refresh after scrolling
 
     def auto_save(self):
         while True:
@@ -54,17 +82,19 @@ class WritingInterface:
             self.save_file()
 
     def save_file(self):
-        with open(self.filename, "w") as file:
-            file.write(self.text)
+        text_to_save = '\n'.join(self.text) # join text into single string
+        filepath = os.path.join(self.directory, self.filename)
+        with open(filepath, "w") as file:
+            file.write(text_to_save) #save all text
     
     def change_filename(self, screen):
         # Save the current filename in case the user enters a blank name
         current_filename = self.filename
 
         # Prompt for new filename
-        screen.move(1, 0)  # Move cursor to the top of the screen
+        screen.move(0, 0)  # Move cursor to the top of the screen
         screen.clrtoeol()  # Clear any existing text on the line
-        screen.addstr(1, 0, "Enter new filename: ")
+        screen.addstr(0, 0, "Enter new filename: ")
         screen.refresh()
 
         new_filename = ""
@@ -80,11 +110,8 @@ class WritingInterface:
             # Update display
             screen.move(1, 20)  # Adjust as needed for your layout
             screen.clrtoeol()
-            screen.addstr(1, 20, new_filename)  # Display current filename
+            screen.addstr(0, 20, new_filename)  # Display current filename
             screen.refresh()
-
-        # Get and decode user input
-        #new_filename = screen.getstr().decode('utf-8').strip() 
 
         # Use the new filename if provided, otherwise fall back to the current one
         # Validate the filename for special characters
