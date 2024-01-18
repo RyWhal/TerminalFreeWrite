@@ -57,14 +57,16 @@ class WritingInterface:
                 self.change_filename(screen)
             elif key == 21:  # Ctrl+U to save
                 self.save_file()
-            elif key == 263:  # Ctrl+H for help
+            elif key == ord('h') and curses.key_modifiers() == curses.KEY_CTRL:
+            #elif key == 263:  # Ctrl+H for help
                 self.show_help(screen)
             elif key == curses.KEY_BACKSPACE or key == 127 or key == 27:
-                if self.text[-1]:  # If there is text on the last line
-                    self.text[-1] = self.text[-1][:-1]  # Remove last character
-                elif len(self.text) > 1:  # If the last line is empty and there are previous lines
-                    self.text.pop()  # Remove the last empty line
-                    self.cursor_y -= 1
+                if key in [curses.KEY_BACKSPACE, 127, 8]:
+                    if self.text[-1]:  # If there is text on the last line
+                        self.text[-1] = self.text[-1][:-1]  # Remove last character
+                    elif len(self.text) > 1:  # If the last line is empty and there are previous lines
+                        self.text.pop()  # Remove the last empty line
+                        self.cursor_y -= 1
 
             screen.refresh() # Refresh after redrawing text
 
