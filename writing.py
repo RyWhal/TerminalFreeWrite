@@ -59,7 +59,7 @@ class WritingInterface:
                 self.save_file()
             elif key == 263:  # Ctrl+H for help
                 self.show_help(screen)
-            elif key == curses.KEY_BACKSPACE or key == 127:
+            elif key == curses.KEY_BACKSPACE or key == 127 or key == 27:
                 if self.text[-1]:  # If there is text on the last line
                     self.text[-1] = self.text[-1][:-1]  # Remove last character
                 elif len(self.text) > 1:  # If the last line is empty and there are previous lines
