@@ -66,8 +66,6 @@ class WritingInterface:
                     self.text.pop()  # Remove the last empty line
                     self.cursor_y -= 1
 
-            #screen.clear()
-            #screen.addstr(0, 0, self.text)  # Redraw text
             screen.refresh() # Refresh after redrawing text
 
             # Adjust scrolling

@@ -61,7 +61,6 @@ class FileManager:
         
         window.clear()
         window.refresh()
-        #window.getch()  # Wait for keypress to continue
 
     def get_file_info(self, filename, max_width):
         filepath = os.path.join(self.directory, filename)
