@@ -1,13 +1,13 @@
 import curses
 import os
 from writing import WritingInterface
-from utils import shutdown_device, prompt_for_filename, generate_filename,ensure_freewrites_directory
+from utils import display_manual, shutdown_device, prompt_for_filename, generate_filename, ensure_freewrites_directory
 from file_manager import FileManager
 from settings_menu import settings_menu_screen
 
 def main_menu_screen(screen):
     # Menu items
-    menu_items = ["<New freewrite>", "<Continue a freewrite>", "<Settings>", "TypeWryter Manual"]
+    menu_items = ["<New freewrite>", "<Continue a freewrite>", "<Settings>", "<TypeWryter Manual>"]
     
     # Ensure the freewrites directory is created
     freewrites_directory = ensure_freewrites_directory()
@@ -59,7 +59,7 @@ def main_menu_screen(screen):
         elif selection == 2:
             settings_menu_screen(screen)
         elif selection == 3:
-            pass
+            display_manual(screen, 'TypeWryter_Manual')
 
 
     # Main loop for menu navigation

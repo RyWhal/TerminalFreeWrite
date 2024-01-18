@@ -1,4 +1,13 @@
-Welcome to TypeWryter; 
+    .----------------------------------------------------------------------------------------------------.
+    |     _________          _______  _______           _______          _________ _______  _______      |
+    |     \__   __/|\     /|(  ____ )(  ____ \|\     /|(  ____ )|\     /|\__   __/(  ____ \(  ____ )     |
+    |        ) (   ( \   / )| (    )|| (    \/| )   ( || (    )|( \   / )   ) (   | (    \/| (    )|     |
+    |        | |    \ (_) / | (____)|| (__    | | _ | || (____)| \ (_) /    | |   | (__    | (____)|     |
+    |        | |     \   /  |  _____)|  __)   | |( )| ||     __)  \   /     | |   |  __)   |     __)     |
+    |        | |      ) (   | (      | (      | || || || (\ (      ) (      | |   | (      | (\ (        |
+    |        | |      | |   | )      | (____/\| () () || ) \ \__   | |      | |   | (____/\| ) \ \__     |
+    |        )_(      \_/   |/       (_______/(_______)|/   \__/   \_/      )_(   (_______/|/   \__/     |
+    '----------------------------------------------------------------------------------------------------'
 
 A simple, distraction free, writing tool. It's remeniscent of using a type writer, hence the name. 
 Removing most tools for editing forces you to focus on free-writing and making progress with whatever you might be 
@@ -15,8 +24,20 @@ While TypeWryting:
     CTRL+E - Exit the TypeWryter window (current file is saved on exit)
     ESC - Exit the TypeWryter window (current file is saved on exit)
 
+Settings:
+    File Manager - settings for managing your TypeWryter files
+    Connect to Wifi - Connect to Wifi from within the TypeWryter application 
+                    (Raspberry Pi Zero only supports 2.4Ghz networks)
+    Google Docs Sync -
+    Shutdown Device - Turn off your TypeWryter
+
+File Manager:
+    List Files - shows all saved files (Filename | Created Date | Modified Date | Size on Disk | Word Count)
+    Rename - Rename any TypeWryte
+    Delete - Delete any TypeWryte
+    Clean-up - Deletes all TypeWrytes with a size of 0
 
 Saving:
-While TypeWryting the open file will auto save, overwriting whatever you had, every 30 seconds. It will also 
-auto-save on a proper exit (ESC or CTRL+E). There is NO VERSIONING; only the most current save is kept. 
-If you delete, overwrite, or erase something, its GONE. 
+    While TypeWryting the open file will auto save, overwriting whatever you had, every 60 seconds. It will also 
+    auto-save on a proper exit (ESC or CTRL+E). There is NO VERSIONING; only the most current save is kept. 
+    If you delete, overwrite, or erase something, its GONE. 

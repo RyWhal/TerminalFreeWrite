@@ -1,25 +1,17 @@
 import curses
-from file_manager import FileManager
-from sync_menu import sync_menu_screen
-from utils import shutdown_device, ensure_freewrites_directory
+from cloud_sync import sync_functions
 
-def settings_menu_screen(screen):
+def sync_menu_screen(screen):
     # Menu items
-    menu_items = ["<File_manager>", "<Connect to WiFi>", "<Google Docs Sync>", "<Shutdown Device>"]
-    
-    # Ensure the freewrites directory is created
-    freewrites_directory = ensure_freewrites_directory()
-    #Create an instance of the File Manager class
-    file_manager = FileManager(freewrites_directory)
-
+    menu_items = ["<Authenticate Google Drive>", "<pick a file to sync>"]
     current_row = 0  # Current highlighted menu item
-    
+    sync_manager = sync_functions()
+
     # Function to print the menu
     def print_menu(screen, selected_row):
         screen.clear()
         h, w = screen.getmaxyx()
         for idx, item in enumerate(menu_items):
-
             x = 0  # Start from the left edge
             y = idx  # Start from the top, and move down by idx
             if idx == selected_row:
@@ -38,22 +30,9 @@ def settings_menu_screen(screen):
     #Entry point of the application
     def handle_menu_selection(screen, selection):
         if selection == 0:
-            file_manager.show_file_management_menu(screen)
+            service = sync_manager.authenticate_google_docs()
         elif selection == 1:
-            wifi_manager = WifiManager()
-            # List and connect to Wi-Fi
-            networks = wifi_manager.list_wifi_networks()
-            if networks:
-                ssid = wifi_manager.select_network(screen, networks)
-                wifi_manager.connect_to_network(screen, ssid)
-            else:
-                screen.addstr(0, 0, "No Wi-Fi networks found.")
-                screen.refresh()
-                screen.getch()
-        elif selection == 2:
-            sync_menu_screen(screen)
-        elif selection == 3:
-            shutdown_device()  # Shutdown the device         
+            pass       
 
     # Main loop for menu navigation
     while True:
@@ -66,5 +45,5 @@ def settings_menu_screen(screen):
             current_row += 1
         elif key == curses.KEY_ENTER or key in [10, 13]:
             handle_menu_selection(screen, current_row)
-        elif key == 27: # ESC key to exit -- This is fine for now. but I dont want a user to accidentally escape the program
+        elif key == 27:
             break
