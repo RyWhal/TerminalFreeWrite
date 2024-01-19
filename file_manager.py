@@ -3,6 +3,8 @@ import curses
 from pathlib import Path
 from datetime import datetime
 import re
+from local_file_browser import start_server, stop_server, shutdown
+from utils import wait_for_escape
 
 class FileManager:
     def __init__(self, directory):
@@ -222,7 +224,8 @@ class FileManager:
 
     def show_file_management_menu(self, screen):
         
-        file_menu_items = ["<List files>", "<Rename free write>", "<Delete free write>", "<Clean-up blank free writes>" ]
+        file_menu_items = ["<List files>", "<Rename free write>", "<Delete free write>", 
+                           "<Download Files>","<Clean-up blank free writes>" ]
         current_row = 0  # Current highlighted menu item
         # Function to print the menu
         def print_menu():
@@ -252,6 +255,13 @@ class FileManager:
                 elif current_row == 2:
                     self.delete_file(screen)  # Call delete_file method
                 elif current_row == 3:
+                    start_server()
+                    wait_for_escape(screen.getch())
+                    stop_server()
+                    shutdown()
+
+                    pass
+                elif current_row == 4:
                     screen.clear()
                     self.cleanup_empty_files(screen) # Logic to cleanup empty files
                     screen.refresh()

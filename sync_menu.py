@@ -3,7 +3,7 @@ from cloud_sync import sync_functions
 
 def sync_menu_screen(screen):
     # Menu items
-    menu_items = ["<Authenticate Google Drive>", "<pick a file to sync>"]
+    menu_items = ["<Browse Files from anoter device>", "<More Sync Options coming>"]
     current_row = 0  # Current highlighted menu item
     sync_manager = sync_functions()
 
@@ -30,7 +30,7 @@ def sync_menu_screen(screen):
     #Entry point of the application
     def handle_menu_selection(screen, selection):
         if selection == 0:
-            service = sync_manager.authenticate_google_docs()
+            pass
         elif selection == 1:
             pass       
 

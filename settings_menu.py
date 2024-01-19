@@ -5,7 +5,7 @@ from utils import shutdown_device, ensure_freewrites_directory
 
 def settings_menu_screen(screen):
     # Menu items
-    menu_items = ["<File_manager>", "<Connect to WiFi>", "<Google Docs Sync>", "<Shutdown Device>"]
+    menu_items = ["<File_manager>", "<Connect to WiFi>", "<Shutdown Device>"]
     
     # Ensure the freewrites directory is created
     freewrites_directory = ensure_freewrites_directory()
@@ -51,8 +51,6 @@ def settings_menu_screen(screen):
                 screen.refresh()
                 screen.getch()
         elif selection == 2:
-            sync_menu_screen(screen)
-        elif selection == 3:
             shutdown_device()  # Shutdown the device         
 
     # Main loop for menu navigation
@@ -66,5 +64,5 @@ def settings_menu_screen(screen):
             current_row += 1
         elif key == curses.KEY_ENTER or key in [10, 13]:
             handle_menu_selection(screen, current_row)
-        elif key == 27: # ESC key to exit -- This is fine for now. but I dont want a user to accidentally escape the program
+        elif key == 27: # ESC key to exit
             break
