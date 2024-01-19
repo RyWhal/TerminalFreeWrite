@@ -8,3 +8,5 @@ External battery - https://www.amazon.com/gp/product/B08D678XPR
 
 **System Settings**
 
+Run it with:
+$ python main.py
