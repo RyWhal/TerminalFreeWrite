@@ -3,6 +3,7 @@ from datetime import datetime
 import curses
 import requests
 import subprocess
+import socket
 
 def generate_filename():
     """
@@ -80,7 +81,7 @@ def shorten_url(long_url):
 def wait_for_escape(key):
     # Wait for user input
     while True:
-        if key == 27:  # Escape key
+        if key == 27 or curses.ascii.ctrl('e'):  # Escape key
             break
 
 def generate_qr_code(url):
@@ -96,20 +97,57 @@ def generate_qr_code(url):
         return None
 
 def show_qr_code(screen, qr_code_lines):
-    #qr_code_lines = generate_qr_code(qr_code)
     if qr_code_lines:
-        screen.clear()
-        screen.addstr("Scan this QR Code to Authenticate to Google. Press 'esc' to close.\n")
+        #screen.clear()
         height, width = screen.getmaxyx()
-
         # Display each line of the QR code
         for i, line in enumerate(qr_code_lines):
             if i + 2 < height:  # Check if within the vertical limit of the window
-                screen.addstr(i + 2, 0, line[:width])  # Add line, truncated to window width
-
+                screen.addstr(i + 4, 1, line[:width])  # Add line, truncated to window width
+        
         screen.refresh()
         wait_for_escape(screen.getch())
     else:
         screen.addstr("Failed to generate QR code.")
         screen.refresh()
         wait_for_escape(screen.getch())
+
+def get_local_ip_address():
+    # Create a socket object
+    with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
+        # Connect to an external server (does not actually create a connection)
+        s.connect(("8.8.8.8", 80))  # Google DNS as an example
+        local_ip = s.getsockname()[0] # Get the local IP address
+    return local_ip
+
+def display_web_window(screen):
+    # Get local IP address
+    local_ip = get_local_ip_address()
+
+    # Clear screen
+    screen.clear()
+
+    # Display the message
+    message_lines = [
+        "Use a web browser on the same wifi network as your TypeWryter to browse and download files.\n",
+        "Scan the QR Code or visit the URL below:",
+        f"http://{local_ip}:8080",
+        "Press ESC or CTRL+E to end"
+    ]
+
+    # Display the help message
+    start_y = 0
+    for line in message_lines:
+        screen.addstr(start_y, 0, line)
+        start_y += 1  # Increment the line number for each message
+
+    # Generate and display QR code
+    url = f"http://{local_ip}:8080"
+    qr_code_lines = generate_qr_code(url)
+    show_qr_code(screen, qr_code_lines)
+
+    wait_for_escape(screen.getch())
+
+    # Clear and refresh screen before exit
+    screen.clear()
+    screen.refresh()

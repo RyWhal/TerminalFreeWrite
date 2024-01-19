@@ -2,6 +2,8 @@ from flask import Flask, send_from_directory, render_template_string
 from threading import Thread
 import os
 import requests
+import logging
+import sys
 
 app = Flask(__name__)
 freewrites_dir = os.path.join(os.getcwd(), "TypeWrytes")
@@ -23,7 +25,12 @@ def download_file(filename):
     return send_from_directory(freewrites_dir, filename)
 
 def run_server():
-    app.run(host='0.0.0.0', port=8080, use_reloader=False)
+    # Redirect stdout and stderr to a log file
+    log_file = 'web_server.log'
+    with open(log_file, 'a') as log:
+        sys.stdout = log
+        sys.stderr = log
+        app.run(host='0.0.0.0', port=8080, use_reloader=False)
 
 def start_server():
     global server_thread
@@ -37,6 +44,9 @@ def stop_server():
         requests.get('http://localhost:8080/shutdown')
         server_thread.join()
         server_thread = None
+        # Restore stdout and stderr
+    sys.stdout = sys.__stdout__
+    sys.stderr = sys.__stderr__
 
 @app.route('/shutdown', methods=['GET'])
 def shutdown():

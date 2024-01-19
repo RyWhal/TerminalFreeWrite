@@ -3,8 +3,9 @@ import curses
 from pathlib import Path
 from datetime import datetime
 import re
-from local_file_browser import start_server, stop_server, shutdown
-from utils import wait_for_escape
+from local_file_browser import start_server, stop_server, shutdown, run_server
+from utils import wait_for_escape, display_web_window
+from threading import Thread
 
 class FileManager:
     def __init__(self, directory):
@@ -255,12 +256,10 @@ class FileManager:
                 elif current_row == 2:
                     self.delete_file(screen)  # Call delete_file method
                 elif current_row == 3:
-                    start_server()
-                    wait_for_escape(screen.getch())
+                    start_server()  # This starts the Flask server in a separate thread
+                    display_web_window(screen)
+                    #wait_for_escape(screen.getch())
                     stop_server()
-                    shutdown()
-
-                    pass
                 elif current_row == 4:
                     screen.clear()
                     self.cleanup_empty_files(screen) # Logic to cleanup empty files

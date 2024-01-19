@@ -1,6 +1,5 @@
 import curses
 from file_manager import FileManager
-from sync_menu import sync_menu_screen
 from utils import shutdown_device, ensure_freewrites_directory
 
 def settings_menu_screen(screen):
