@@ -10,3 +10,9 @@ External battery - https://www.amazon.com/gp/product/B08D678XPR
 
 Run it with:
 $ python main.py
+
+
+Python Dependencies:
+Flask
+
+Linux Dependencies:
