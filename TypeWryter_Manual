@@ -28,13 +28,13 @@ Settings:
     File Manager - settings for managing your TypeWryter files
     Connect to Wifi - Connect to Wifi from within the TypeWryter application 
                     (Raspberry Pi Zero only supports 2.4Ghz networks)
-    Google Docs Sync -
     Shutdown Device - Turn off your TypeWryter
 
 File Manager:
     List Files - shows all saved files (Filename | Created Date | Modified Date | Size on Disk | Word Count)
     Rename - Rename any TypeWryte
     Delete - Delete any TypeWryte
+    Download - Launches a webserver accessible from local networks. for example browse from your phone. 
     Clean-up - Deletes all TypeWrytes with a size of 0
 
 Saving:
