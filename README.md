@@ -13,6 +13,7 @@ $ python main.py
 
 
 Python Dependencies:
-Flask
+pip install Flask 
 
 Linux Dependencies:
+brew install qrencode
