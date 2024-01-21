@@ -18,6 +18,12 @@ For more info on the current issues, see https://github.com/RyWhal/TypeWryter/is
 *note: This application is meant to act almost as the OS for my WriterDeck, FreeWrite, TypeWryter, whatever. The plan is for the Raspberry Pi to boot straight into this software when you turn it on. So the software needs to handle some of the things the OS would usually handle. These things that I cant do yet (wifi, bluetooth) only matter if you're not doing them ahead of time in the OS. 
 
 
+## Browsing files on the local network
+If you navigate to Settings --> File Manager --> Download Files: 
+A local Flask webserver will spin up on whatever device is running TypeWryter (note the Flask package must be installed on your machine via `pip install Flask`)
+TypeWryter will present you with a url and QR code. You can either visit the URL or Scan the QR code to see the files on your TypeWryter.
+
+
 ## Parts list for my device:
 1. Raspberry Pi Zero 2W -  https://www.raspberrypi.com/products/raspberry-pi-zero-2-w/
 2. 4 inch E-ink display -  https://www.amazon.com/gp/product/B074NR1SW2
