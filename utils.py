@@ -130,7 +130,7 @@ def display_web_window(screen):
     # Display the message
     message_lines = [
         "Use a web browser on the same wifi network as your TypeWryter to browse and download files.\n",
-        "Scan the QR Code or visit the URL below:",
+        "Visit the URL below:",
         f"http://{local_ip}:8080",
         "Press ESC or CTRL+E to end"
     ]

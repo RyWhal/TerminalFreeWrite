@@ -1,11 +1,9 @@
 import os
 import curses
-from pathlib import Path
 from datetime import datetime
 import re
-from local_file_browser import start_server, stop_server, shutdown, run_server
-from utils import wait_for_escape, display_web_window
-from threading import Thread
+from local_file_browser import start_server, stop_server
+from utils import display_web_window
 
 class FileManager:
     def __init__(self, directory):
@@ -26,8 +24,8 @@ class FileManager:
             screen.getch()  # Wait for key press
             return
 
-    def view_free_writes(self):
-        height, width = 25, 110  # Adjust the size as needed
+    def view_free_writes(self, screen):
+        height, width = screen.getmaxyx()  # Adjust the size as needed
         start_y, start_x = 0, 0  # Adjust the position as needed
 
         stats_win = curses.newwin(height, width, start_y, start_x)
@@ -140,14 +138,14 @@ class FileManager:
         if new_name and new_name + ".txt" not in os.listdir(self.directory):
             pass
         else:
-            screen.addstr(2, 0, "Filename already exists or is invalid. Please enter a different name.")
-            while new_name + ".txt" not in os.listdir(self.directory):
+            screen.clear
+            screen.addstr(0, 0, "Filename already exists or is invalid. Please enter a different name.")
+            while new_name + ".txt" in os.listdir(self.directory):
                 # Prompt for a new name
-                screen.clear()
                 screen.refresh()
-                screen.addstr(0, 0, "Enter the new name for the file (without extension): ")
+                screen.addstr(1, 0, "Enter the new name for the file (without extension): ")
                 curses.echo()  # Echo user input to the screen
-                new_name_bytes = screen.getstr(1, 0, 25)  # Limit new name to 25 characters
+                new_name_bytes = screen.getstr(1, 53, 25)  # Limit new name to 25 characters
                 curses.noecho()
                 new_name = new_name_bytes.decode('utf-8')  # Decode to a string
             screen.getch()  # Wait for keypress before asking again

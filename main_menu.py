@@ -73,5 +73,5 @@ def main_menu_screen(screen):
             current_row += 1
         elif key == curses.KEY_ENTER or key in [10, 13]:
             handle_menu_selection(screen, current_row)
-        elif key == 27: # ESC key to exit -- This is fine for now. but I dont want a user to accidentally escape the program
+        elif key == 27: # ESC key to exit
             break
