@@ -1,7 +1,7 @@
 import curses
 import os
 from writing import WritingInterface
-from utils import display_manual, shutdown_device, prompt_for_filename, generate_filename, ensure_freewrites_directory
+from utils import display_manual, generate_filename, ensure_freewrites_directory
 from file_manager import FileManager
 from settings_menu import settings_menu_screen
 

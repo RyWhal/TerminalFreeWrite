@@ -1,7 +1,7 @@
 import curses
 import os
 import threading
-from datetime import datetime
+
 
 class WritingInterface:
     def __init__(self, filename, directory, existing_content=""):

@@ -2,7 +2,6 @@ from flask import Flask, send_from_directory, render_template_string
 from threading import Thread
 import os
 import requests
-import logging
 import sys
 
 app = Flask(__name__)
