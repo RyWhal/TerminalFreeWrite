@@ -51,7 +51,7 @@ class base_menu:
         update_area = self.find_update_area(self.prev_image, new_image)
 
         if update_area is not None:
-            self.epd.displayPartial(self.epd.getbuffer(new_image.crop(update_area)), x=10, y=10 + 30 * self.current_selection)
+            self.epd.display_Partial(self.epd.getbuffer(new_image.crop(update_area)), x=10, y=10 + 30 * self.current_selection)
         else:
             self.epd.display(self.epd.getbuffer(new_image))
 
@@ -60,7 +60,7 @@ class base_menu:
         # Update previous selection for next iteration
         self.previous_selection = self.current_selection
 
-    def find_update_area(current_image, new_image):
+    def find_update_area(self, current_image, new_image):
         """
         Find the area that needs to be updated on the e-ink display.
         :param current_image: Image currently displayed.
