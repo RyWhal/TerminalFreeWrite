@@ -27,6 +27,7 @@ class base_menu:
 
         # Initialize vars
         self.current_selection = 0
+        self.previous_selection = 0
         self.title = title
         self.options = options
 
