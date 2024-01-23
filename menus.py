@@ -1,6 +1,6 @@
 import RPi.GPIO as GPIO
 from PIL import Image, ImageDraw, ImageFont
-from waveshare_epd import epd4in2_V2  # Adjust based on your specific Waveshare model
+from waveshare_epd import epd4in2_V2, epd4in2_V3  # Adjust based on your specific Waveshare model
 import keyboard
 import time
 
@@ -8,7 +8,7 @@ import time
 class base_menu:
     def __init__(self, title, options):
         # Initialize the E-ink display
-        self.epd = epd4in2_V2.EPD()
+        self.epd = epd4in2_V3.EPD()
         self.epd.init()
         
         # Initialize vars
