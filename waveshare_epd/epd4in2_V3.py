@@ -51,7 +51,7 @@
 # 
 
 import logging
-from . import epdconfig_new
+from . import epdconfig
 from PIL import Image
 import RPi.GPIO as GPIO
 import time
@@ -75,10 +75,10 @@ logger = logging.getLogger(__name__)
 
 class EPD:
     def __init__(self):
-        self.reset_pin = epdconfig_new.RST_PIN
-        self.dc_pin = epdconfig_new.DC_PIN
-        self.busy_pin = epdconfig_new.BUSY_PIN
-        self.cs_pin = epdconfig_new.CS_PIN
+        self.reset_pin = epdconfig.RST_PIN
+        self.dc_pin = epdconfig.DC_PIN
+        self.busy_pin = epdconfig.BUSY_PIN
+        self.cs_pin = epdconfig.CS_PIN
         self.width = EPD_WIDTH
         self.height = EPD_HEIGHT
         self.GRAY1 = GRAY1  # white
@@ -294,45 +294,45 @@ class EPD:
 
     # Hardware reset
     def reset(self):
-        epdconfig_new.digital_write(self.reset_pin, 1)
-        epdconfig_new.delay_ms(10)
-        epdconfig_new.digital_write(self.reset_pin, 0)
-        epdconfig_new.delay_ms(10)
-        epdconfig_new.digital_write(self.reset_pin, 1)
-        epdconfig_new.delay_ms(10)
-        epdconfig_new.digital_write(self.reset_pin, 0)
-        epdconfig_new.delay_ms(10)
-        epdconfig_new.digital_write(self.reset_pin, 1)
-        epdconfig_new.delay_ms(10)
-        epdconfig_new.digital_write(self.reset_pin, 0)
-        epdconfig_new.delay_ms(10)
-        epdconfig_new.digital_write(self.reset_pin, 1)
-        epdconfig_new.delay_ms(10)
+        epdconfig.digital_write(self.reset_pin, 1)
+        epdconfig.delay_ms(10)
+        epdconfig.digital_write(self.reset_pin, 0)
+        epdconfig.delay_ms(10)
+        epdconfig.digital_write(self.reset_pin, 1)
+        epdconfig.delay_ms(10)
+        epdconfig.digital_write(self.reset_pin, 0)
+        epdconfig.delay_ms(10)
+        epdconfig.digital_write(self.reset_pin, 1)
+        epdconfig.delay_ms(10)
+        epdconfig.digital_write(self.reset_pin, 0)
+        epdconfig.delay_ms(10)
+        epdconfig.digital_write(self.reset_pin, 1)
+        epdconfig.delay_ms(10)
 
     def send_command(self, command):
-        epdconfig_new.digital_write(self.dc_pin, 0)
-        epdconfig_new.digital_write(self.cs_pin, 0)
-        epdconfig_new.spi_writebyte([command])
-        epdconfig_new.digital_write(self.cs_pin, 1)
+        epdconfig.digital_write(self.dc_pin, 0)
+        epdconfig.digital_write(self.cs_pin, 0)
+        epdconfig.spi_writebyte([command])
+        epdconfig.digital_write(self.cs_pin, 1)
 
     def send_data(self, data):
-        epdconfig_new.digital_write(self.dc_pin, 1)
-        epdconfig_new.digital_write(self.cs_pin, 0)
-        epdconfig_new.spi_writebyte([data])
-        epdconfig_new.digital_write(self.cs_pin, 1)
+        epdconfig.digital_write(self.dc_pin, 1)
+        epdconfig.digital_write(self.cs_pin, 0)
+        epdconfig.spi_writebyte([data])
+        epdconfig.digital_write(self.cs_pin, 1)
 
     # send a lot of data   
     def send_data2(self, data):
-        epdconfig_new.digital_write(self.dc_pin, 1)
-        epdconfig_new.digital_write(self.cs_pin, 0)
-        epdconfig_new.spi_writebyte2(data)
-        epdconfig_new.digital_write(self.cs_pin, 1)
+        epdconfig.digital_write(self.dc_pin, 1)
+        epdconfig.digital_write(self.cs_pin, 0)
+        epdconfig.spi_writebyte2(data)
+        epdconfig.digital_write(self.cs_pin, 1)
 
     def ReadBusy(self):
         self.send_command(0x71)
-        while epdconfig_new.digital_read(self.busy_pin) == 0:  # 0: idle, 1: busy
+        while epdconfig.digital_read(self.busy_pin) == 0:  # 0: idle, 1: busy
             self.send_command(0x71)
-            epdconfig_new.delay_ms(20)
+            epdconfig.delay_ms(20)
 
     def set_lut(self):
         self.send_command(0x20)  # vcom
@@ -402,7 +402,7 @@ class EPD:
         self.send_data2(self.EPD_4IN2_4Gray_lut_ww)
 
     def init(self):
-        if epdconfig_new.module_init() != 0:
+        if epdconfig.module_init() != 0:
             return -1
         # EPD hardware init start
         self.reset()
@@ -446,7 +446,7 @@ class EPD:
         return 0
 
     def init_Partial(self):
-        if epdconfig_new.module_init() != 0:
+        if epdconfig.module_init() != 0:
             return -1
         # EPD hardware init start
         self.reset()
@@ -555,5 +555,5 @@ class EPD:
         self.send_command(0x07)  # DEEP_SLEEP
         self.send_data(0XA5)
 
-        epdconfig_new.delay_ms(2000)
-        epdconfig_new.module_exit()
+        epdconfig.delay_ms(2000)
+        epdconfig.module_exit()
