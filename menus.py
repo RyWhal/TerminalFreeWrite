@@ -18,7 +18,7 @@ class base_menu:
         self.selected_index = 0
         self.prev_image = None
 
-    def display_menu(self):
+    def display_full_menu(self):
         # Declare forst image of menu
         image = Image.new('1', (self.epd.width, self.epd.height), 255)
         draw = ImageDraw.Draw(image)
@@ -32,7 +32,7 @@ class base_menu:
                 draw.text((10, 10 + 30 * i), "  " + option, font=font, fill=0)
 
         self.epd.display(self.epd.getbuffer(image))
-        self.prev_image = image
+        self.prev_image = image.copy()  # Store a copy of the image
         self.first_run = False
 
     def update_selection(self):
@@ -91,13 +91,14 @@ class base_menu:
     def get_user_input(self):
         while True:
             if keyboard.is_pressed('up arrow') or keyboard.is_pressed('w'):
-                self.current_selection = (self.current_selection - 1) % len(self.options)
-                self.display_menu()
+                self.current_selection = (self.current_selection - 1 + len(self.options)) % len(self.options)
+                self.update_selection()
             elif keyboard.is_pressed('down arrow') or keyboard.is_pressed('s'):
                 self.current_selection = (self.current_selection + 1) % len(self.options)
-                self.display_menu()
+                self.update_selection()
             elif keyboard.is_pressed('enter'):
                 return self.options[self.current_selection]
+
 
 class main_menu(base_menu):
     def __init__(self):
@@ -160,7 +161,7 @@ class MenuManager:
 
 # Initialize and run the app
 app = main_menu()
-app.display_menu()
+app.display_full_menu()
 while True:
     user_choice = app.get_user_input()
     app.handle_user_input(user_choice)
