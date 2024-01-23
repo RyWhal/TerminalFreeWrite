@@ -1,25 +1,31 @@
 from waveshare_epd import epd4in2_V2
 from PIL import Image, ImageDraw, ImageFont
 
-def main_menu():
-    epd = epd4in2_V2.EPD()  # create an EPD instance
-    epd.init()  # initialize the display
+class Menu:
+    def __init__(self):
+        self.epd = epd4in2_V3.EPD()
+        self.epd.init()
+        self.font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', 24)
+        self.menu_options = ["New Type Wryte", "Continue Type Wryte", "Settings", "Manual"]
+        self.selected_index = 0
 
-    # Create an empty image to draw on
-    image = Image.new('1', (epd.width, epd.height), 255)  # 255: clear the frame
-    draw = ImageDraw.Draw(image)
+    def draw_menu(self):
+        image = Image.new('1', (self.epd.width, self.epd.height), 255)
+        draw = ImageDraw.Draw(image)
+        for i, option in enumerate(self.menu_options):
+            prefix = "> " if i == self.selected_index else "  "
+            draw.text((10, 10 + i * 30), prefix + option, font=self.font, fill=0)
+        self.epd.display(self.epd.getbuffer(image))
 
-    # Set font size and type
-    font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', 24)
+    def navigate_menu(self):
+        while True:
+            self.draw_menu()
+            if keyboard.is_pressed('up') or keyboard.is_pressed('w'):
+                self.selected_index = max(self.selected_index - 1, 0)
+            elif keyboard.is_pressed('down') or keyboard.is_pressed('s'):
+                self.selected_index = min(self.selected_index + 1, len(self.menu_options) - 1)
+            elif keyboard.is_pressed('enter'):
+                break
 
-    # Menu options
-    menu_options = ["New Type Wryte", "Continue Type Wryte", "Settings", "Manual"]
-    spacing = 30  # Vertical spacing between menu options
-
-    # Draw each menu option on the image
-    for i, option in enumerate(menu_options):
-        draw.text((10, 10 + i * spacing), option, font=font, fill=0)
-
-    # Display the image on the e-ink screen
-    epd.display(epd.getbuffer(image))
-    epd.sleep()  # Put the display to sleep to prevent damage
+    def cleanup(self):
+        self.epd.sleep()
