@@ -1,11 +1,11 @@
 from waveshare_epd import epd4in2_V2
 from PIL import Image, ImageDraw, ImageFont
 
-class Menu:
+class menu:
     def __init__(self):
         self.epd = epd4in2_V3.EPD()
         self.epd.init()
-        self.font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', 24)
+        self.font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', 12)
         self.menu_options = ["New Type Wryte", "Continue Type Wryte", "Settings", "Manual"]
         self.selected_index = 0
 
