@@ -20,9 +20,6 @@ class base_menu:
         #Display settings like font size, spacing, etc.
         self.display_start_line = 0
         self.font24 = ImageFont.truetype('Courier Prime.ttf', 16) #24
-        self.textWidth=16
-        self.linespacing = 22
-        self.lines_on_screen = 12
         self.last_display_update = time.time()
 
         # Initialize vars
@@ -33,6 +30,14 @@ class base_menu:
 
         #file directory setup: "/data/cache.txt"
         self.file_path = os.path.join(os.path.dirname(__file__), 'data', 'cache.txt')
+
+    def update_partial_buffer(self):
+        # Generate the display buffer from the current image
+        partial_buffer = self.epd.getbuffer(self.image)
+
+        # Update the e-Paper display with the new buffer
+        self.epd.display(partial_buffer)
+
 
     def display_full_menu(self):
         # Declare forst image of menu
@@ -64,12 +69,11 @@ class base_menu:
             y_position = 10 + 30 * i  # Calculate the y position based on the selection
             if i == self.current_selection:
                 new_draw.text((10, y_position), "> " + self.options[i], font=font, fill=0)
-                self.update_display()
             else:
                 new_draw.text((10, y_position), "  " + self.options[i], font=font, fill=0)
-                self.update_display()
 
         self.previous_selection = self.current_selection
+        self.update_display()
 
     # Function to get keyboard input for menu navigation
     def get_user_input(self):
@@ -89,19 +93,8 @@ class base_menu:
         # Clear the main display area -- also clears input line (270-300)
         self.display_draw.rectangle((0, 0, 400, 300), fill=255)
         
-        #generate display buffer for display
-        partial_buffer = self.epd.getbuffer(self.image)
-        self.epd.display(partial_buffer)
-
-        self.last_display_update = time.time()
-        self.display_updating= False
-        self.needs_display_update = False
-
-    def handle_interrupt(self):
-        keyboard.unhook_all()
-        self.epd.init()
-        self.epd.Clear()
-        exit(0)
+        #update the partial buffer
+        self.update_partial_buffer()
 
 class main_menu(base_menu):
     def __init__(self):
@@ -140,38 +133,9 @@ class main_menu(base_menu):
         # Logic for displaying the manual
         pass
 
-#Startup Stuff ---
-#keyboard.on_press(handle_key_down, suppress=False) #handles modifiers and shortcuts
-#keyboard.on_release(handle_key_press, suppress=True)
-#signal.signal(signal.SIGINT, handle_interrupt)
-
-
-
-
 # Initialize and run the app
 app = main_menu()
 app.display_full_menu()
 while True:
     user_choice = app.get_user_input()
     app.handle_user_input()
-
-
-#mainloop
-'''
-try:
-    while True:
-        
-        if exit_cleanup:
-            break
-                
-        if needs_display_update and not display_updating:
-            update_display()
-            needs_diplay_update=False
-            typing_last_time = time.time()
-            
-        elif (time.time()-typing_last_time)<(.5): #if not doing a full refresh, do partials
-            #the screen enters a high refresh mode when there has been keyboard input
-            if not updating_input_area and scrollindex==1:
-                #update_input_area()
-        time.sleep(0.05) #the sleep here seems to help the processor handle things, especially on 64-bit installs
-'''
