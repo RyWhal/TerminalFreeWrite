@@ -135,13 +135,14 @@ class base_menu:
         for line in reversed(temp[-self.lines_on_screen:]):
         self.display_draw.text((10, y_position), line[:self.max_chars_per_line], font=self.font24, fill=0)
         y_position -= self.linespacing
-        '''
+        
 
         #Display Console Message
         if console_message != "":
             self.display_draw.rectangle((300, 270, 400, 300), fill=255)
             self.display_draw.text((300, 270), console_message, font=self.font24, fill=0)
             console_message = ""
+        '''
         
         #generate display buffer for display
         partial_buffer = self.epd.getbuffer(self.display_image)
