@@ -13,6 +13,8 @@ class display_menu:
 
     def draw_menu(self):
         #create the image
+        # Clear the main display area -- also clears input line (270-300)
+        draw.rectangle((0, 0, 400, 300), fill=255)
         image = Image.new('1', (self.epd.width, self.epd.height), 255)
         draw = ImageDraw.Draw(image)
 
