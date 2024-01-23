@@ -1,77 +1,70 @@
-import curses
-import os
-from writing import WritingInterface
-from utils import display_manual, generate_filename, ensure_freewrites_directory
-from file_manager import FileManager
-from settings_menu import settings_menu_screen
+import RPi.GPIO as GPIO
+from PIL import Image, ImageDraw, ImageFont
+from waveshare_epd import epd4in2_V2  # Adjust based on your specific Waveshare model
 
-def main_menu_screen(screen):
-    # Menu items
-    menu_items = ["<New freewrite>", "<Continue a freewrite>", "<Settings>", "<TypeWryter Manual>"]
+# Constants for GPIO pins (adjust these based on your setup)
+BUTTON_UP = 5
+BUTTON_DOWN = 6
+BUTTON_SELECT = 13
+
+# Initialize the e-ink display
+epd = epd2in13_V2.EPD()
+epd.init(epd.FULL_UPDATE)
+epd.Clear(0xFF)
+
+# Menu items and current selection
+menu_items = ["New Freewrite", "Continue Freewrite", "Settings", "Help"]
+current_selection = 0
+
+def display_menu():
+    # Create a blank image for drawing
+    image = Image.new('1', (epd.height, epd.width), 255)
+    draw = ImageDraw.Draw(image)
     
-    # Ensure the freewrites directory is created
-    freewrites_directory = ensure_freewrites_directory()
-    #Create an instance of the File Manager class
-    file_manager = FileManager(freewrites_directory)
+    # Define font (adjust path as needed)
+    font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', 12)
 
-    current_row = 0  # Current highlighted menu item
+    # Draw each menu item
+    for i, item in enumerate(menu_items):
+        if i == current_selection:
+            draw.rectangle([(0, i*20), (epd.height, (i+1)*20)], fill=0)
+            draw.text((10, i*20), item, font=font, fill=255)
+        else:
+            draw.text((10, i*20), item, font=font, fill=0)
 
-    
-    # Function to print the menu
-    def print_menu(screen, selected_row):
-        screen.clear()
-        h, w = screen.getmaxyx()
-        for idx, item in enumerate(menu_items):
-            x = 0  # Start from the left edge
-            y = idx  # Start from the top, and move down by idx
-            if idx == selected_row:
-                screen.attron(curses.color_pair(1))
-                screen.addstr(y, x, item)
-                screen.attroff(curses.color_pair(1))
-            else:
-                screen.addstr(y, x, item)
-        screen.refresh()
+    # Update the display with the new image
+    epd.display(epd.getbuffer(image))
 
+def button_callback(channel):
+    global current_selection
+    if channel == BUTTON_UP:
+        current_selection = (current_selection - 1) % len(menu_items)
+    elif channel == BUTTON_DOWN:
+        current_selection = (current_selection + 1) % len(menu_items)
+    elif channel == BUTTON_SELECT:
+        execute_selected_item()
+    display_menu()
 
-    #Initialize color pair for selected menu item
-    curses.start_color()
-    curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_WHITE)  # White text on Black background
-    curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_WHITE)  # Black text on white background
+def execute_selected_item():
+    selected_item = menu_items[current_selection]
+    print(f"Selected: {selected_item}")
+    # Add functionality for each menu item here
 
-    #Entry point of the application
-    def handle_menu_selection(screen, selection):
-        if selection == 0:
-            # Start a new free write
-            default_filename = generate_filename()
-            wi = WritingInterface(default_filename,freewrites_directory)
-            wi.run(screen)
-        elif selection == 1:
-            #continue a previous freewrite
-            file_to_continue = file_manager.select_file(screen)
-            if file_to_continue:
-                filepath = os.path.join(freewrites_directory, file_to_continue)
-                with open(filepath, 'r') as file:
-                    existing_content = file.read()
-    
-            #Open this file in the writing interface
-            writing_interface = WritingInterface(file_to_continue, freewrites_directory, existing_content)
-            writing_interface.run(screen)
-        elif selection == 2:
-            settings_menu_screen(screen)
-        elif selection == 3:
-            display_manual(screen, 'TypeWryter_Manual')
+# Setup GPIO
+GPIO.setmode(GPIO.BCM)
+GPIO.setup([BUTTON_UP, BUTTON_DOWN, BUTTON_SELECT], GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.add_event_detect(BUTTON_UP, GPIO.FALLING, callback=button_callback, bouncetime=200)
+GPIO.add_event_detect(BUTTON_DOWN, GPIO.FALLING, callback=button_callback, bouncetime=200)
+GPIO.add_event_detect(BUTTON_SELECT, GPIO.FALLING, callback=button_callback, bouncetime=200)
 
+# Initial display
+display_menu()
 
-    # Main loop for menu navigation
+try:
     while True:
-        print_menu(screen, current_row)
-        key = screen.getch()
-
-        if key == curses.KEY_UP and current_row > 0:
-            current_row -= 1
-        elif key == curses.KEY_DOWN and current_row < len(menu_items) - 1:
-            current_row += 1
-        elif key == curses.KEY_ENTER or key in [10, 13]:
-            handle_menu_selection(screen, current_row)
-        elif key == 27: # ESC key to exit
-            break
+        # Keep the script running
+        pass
+except KeyboardInterrupt:
+    print("Exiting application")
+    GPIO.cleanup()
+    epd.sleep()
