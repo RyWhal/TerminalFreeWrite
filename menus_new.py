@@ -8,6 +8,20 @@ import os
 class base_menu:
     def __init__(self, title, options):
         
+        # Initialize the e-Paper display
+        # clear refreshes whole screen, should be done on slow init()
+        epd = epd4in2_V3.EPD()
+        epd.init()
+        epd.Clear()
+        
+        #init_display routine
+        app.epd.init()
+        app.epd.Clear
+        #previous_lines = app.load_previous_lines(file_path)#('previous_lines.txt')
+        app.epd.init_Partial()
+        app.epd.Clear
+        needs_display_update = True
+        needs_input_update = False
 
         #Initialize display-related variables)
         display_image = Image.new('1', (epd.width,epd.height), 255)
@@ -147,12 +161,6 @@ class base_menu:
 
 class main_menu(base_menu):
     def __init__(self):
-        # Initialize the e-Paper display
-        # clear refreshes whole screen, should be done on slow init()
-        epd = epd4in2_V3.EPD()
-        epd.init()
-        epd.Clear()
-
         #initialize menu items
         super().__init__("Main Menu", ["New freewrite", "Continue a freewrite", "Settings", "TypeWryter Manual"])
     
@@ -198,15 +206,6 @@ class main_menu(base_menu):
 
 # Initialize and run the app
 app = main_menu()
-#init_display routine
-app.epd.init()
-app.epd.Clear
-#previous_lines = app.load_previous_lines(file_path)#('previous_lines.txt')
-app.epd.init_Partial()
-app.epd.Clear
-needs_display_update = True
-needs_input_update = False
-
 app.display_full_menu()
 while True:
     user_choice = app.get_user_input()
