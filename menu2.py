@@ -1,8 +1,8 @@
-from waveshare_epd import epd4in2_V3
+from waveshare_epd import epd4in2_V2
 from PIL import Image, ImageDraw, ImageFont
 
 def main_menu():
-    epd = epd4in2_V3.EPD()  # create an EPD instance
+    epd = epd4in2_V2.EPD()  # create an EPD instance
     epd.init()  # initialize the display
 
     # Create an empty image to draw on
