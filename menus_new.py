@@ -7,11 +7,7 @@ import os
 
 class base_menu:
     def __init__(self, title, options):
-        # Initialize the e-Paper display
-        # clear refreshes whole screen, should be done on slow init()
-        epd = epd4in2_V3.EPD()
-        epd.init()
-        epd.Clear()
+        
 
         #Initialize display-related variables)
         display_image = Image.new('1', (epd.width,epd.height), 255)
@@ -151,6 +147,13 @@ class base_menu:
 
 class main_menu(base_menu):
     def __init__(self):
+        # Initialize the e-Paper display
+        # clear refreshes whole screen, should be done on slow init()
+        epd = epd4in2_V3.EPD()
+        epd.init()
+        epd.Clear()
+
+        #initialize menu items
         super().__init__("Main Menu", ["New freewrite", "Continue a freewrite", "Settings", "TypeWryter Manual"])
     
     def handle_user_input(user_input):
