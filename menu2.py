@@ -31,7 +31,6 @@ class display_menu:
                 print("Enter")
             elif keyboard.is_pressed('enter'):
                 break
-            keyboard.sleep(0.1)
 
     def cleanup(self):
         self.epd.sleep()
