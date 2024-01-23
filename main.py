@@ -1,8 +1,8 @@
 # main.py
-from menu2 import menu
+from menu2 import display_menu
 
 def main():
-    menu = menu()
+    menu = display_menu()
     menu.navigate_menu()
     menu.cleanup()
 

@@ -1,7 +1,7 @@
 from waveshare_epd import epd4in2_V2
 from PIL import Image, ImageDraw, ImageFont
 
-class menu:
+class display_menu:
     def __init__(self):
         self.epd = epd4in2_V3.EPD()
         self.epd.init()
