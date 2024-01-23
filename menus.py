@@ -43,21 +43,17 @@ class base_menu:
 
         # re-draw only current and previous selections
         for i in [self.current_selection, self.previous_selection]:
+            y_position = 10 + 30 * i  # Calculate the y position based on the selection
             if i == self.current_selection:
-                new_draw.text((10, 0), "> " + self.options[i], font=font, fill=0)
+                new_draw.text((10, y_position), "> " + self.options[i], font=font, fill=0)
             else:
-                new_draw.text((10, 0), "  " + self.options[i], font=font, fill=0)
+                new_draw.text((10, y_position), "  " + self.options[i], font=font, fill=0)
 
-        update_area = self.find_update_area(self.prev_image, new_image)
 
-        if update_area is not None:
-            self.epd.display_Partial(self.epd.getbuffer(new_image.crop(update_area)), x=10, y=10 + 30 * self.current_selection)
-        else:
-            self.epd.display(self.epd.getbuffer(new_image))
+        # Update the e-paper display
+        self.epd.display_Partial(self.epd.getbuffer(new_image))
 
         self.prev_image = new_image
-
-        # Update previous selection for next iteration
         self.previous_selection = self.current_selection
 
     def find_update_area(self, current_image, new_image):
