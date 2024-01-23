@@ -3,7 +3,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 class display_menu:
     def __init__(self):
-        self.epd = epd4in2_V3.EPD()
+        self.epd = epd4in2_V2.EPD()
         self.epd.init()
         self.font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', 12)
         self.menu_options = ["New Type Wryte", "Continue Type Wryte", "Settings", "Manual"]
