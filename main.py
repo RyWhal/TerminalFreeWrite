@@ -2,7 +2,7 @@
 from menu2 import menu
 
 def main():
-    menu = Menu()
+    menu = menu()
     menu.navigate_menu()
     menu.cleanup()
 
