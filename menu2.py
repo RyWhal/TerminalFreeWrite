@@ -6,18 +6,23 @@ class display_menu:
     def __init__(self):
         self.epd = epd4in2_V3.EPD()
         self.epd.init()
-        self.font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', 12)
+        self.font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold=.ttf', 12)
         self.menu_options = ["New Type Wryte", "Continue Type Wryte", "Settings", "Manual"]
         self.selected_index = 0
         #self.epd.TurnOnDisplay_Fast()
 
     def draw_menu(self):
+        #create the image
         image = Image.new('1', (self.epd.width, self.epd.height), 255)
         draw = ImageDraw.Draw(image)
+
         for i, option in enumerate(self.menu_options):
             prefix = "> " if i == self.selected_index else "  "
             draw.text((10, 10 + i * 30), prefix + option, font=self.font, fill=0)
-        self.epd.display(self.epd.getbuffer(image))
+
+        #self.epd.display(self.epd.getbuffer(image))
+        partial_buffer = self.epd.getbuffer(image)
+        self.epd.display(partial_buffer)
 
     def navigate_menu(self):
         while True:
