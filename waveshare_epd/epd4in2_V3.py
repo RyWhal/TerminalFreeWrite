@@ -26,7 +26,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 #
-# Zerowriter (https://github.com/zerowriter/zerowriter1) Project disclaimer:
+# Zerowriter((https://github.com/zerowriter/zerowriter1)) Project disclaimer:
 #
 # This original driver has been modified for use in the Zerowriter project.
 # The changes made push the display configuration outside of the recommended
@@ -557,3 +557,5 @@ class EPD:
 
         epdconfig.delay_ms(2000)
         epdconfig.module_exit()
+
+### END OF FILE ###
