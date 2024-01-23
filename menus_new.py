@@ -72,7 +72,7 @@ class base_menu:
 
     def display_full_menu(self):
         # Declare forst image of menu
-        image = Image.new('1', (self.epd.width, self.epd.height), 255)
+        image = Image.new('1', (400, 300), 255)
         draw = ImageDraw.Draw(image)
         font = ImageFont.truetype(self.font24, 12)
 
@@ -89,7 +89,7 @@ class base_menu:
 
     def update_selection(self):
         # Create a partial image for updating the selection
-        new_image = Image.new('1', (self.epd.width, 30), 255)
+        new_image = Image.new('1', (400, 30), 255)
         new_draw = ImageDraw.Draw(new_image)
         font = ImageFont.truetype(self.font24, 12)
 
