@@ -27,7 +27,7 @@ class base_menu:
 
         #Display settings like font size, spacing, etc.
         self.display_start_line = 0
-        self.font24 = ImageFont.truetype('Courier Prime.ttf', 18) #24
+        self.font24 = ImageFont.truetype('Courier Prime.ttf', 16) #24
         self.textWidth=16
         self.linespacing = 22
         chars_per_line = 32 #28
@@ -74,7 +74,7 @@ class base_menu:
         # Declare forst image of menu
         image = Image.new('1', (400, 300), 255)
         draw = ImageDraw.Draw(image)
-        font = ImageFont.truetype(self.font24, 12)
+        font = self.font24
 
         # Drawing the complete menu
         for i, option in enumerate(self.options):
@@ -91,7 +91,7 @@ class base_menu:
         # Create a partial image for updating the selection
         new_image = Image.new('1', (400, 30), 255)
         new_draw = ImageDraw.Draw(new_image)
-        font = ImageFont.truetype(self.font24, 12)
+        font = self.font24
 
         # Redraw only current and previous selections
         for i in [self.current_selection, self.previous_selection]:
