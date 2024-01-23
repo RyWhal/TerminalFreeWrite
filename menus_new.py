@@ -36,8 +36,8 @@ class base_menu:
     def display_full_menu(self):
         # Declare forst image of menu
         image = Image.new('1', (400, 300), 255)
-        draw = ImageDraw.Draw(image)
-        font = self.font24
+        self.draw = ImageDraw.Draw(image)
+        self.font = self.font24
 
         self.draw.rectangle((0, 0, self.epd.width, self.epd.height), fill=255)  # Clear the display
         self.draw.text((10, 10), self.title, font=self.font, fill=0)
