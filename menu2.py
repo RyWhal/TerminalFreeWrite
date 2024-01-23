@@ -17,7 +17,7 @@ class display_menu:
         for i, option in enumerate(self.menu_options):
             prefix = "> " if i == self.selected_index else "  "
             draw.text((10, 10 + i * 30), prefix + option, font=self.font, fill=0)
-        self.epd.display(self.epd.getbuffer(image))
+        self.epd.display_Partial(self.epd.getbuffer(image))
 
     def navigate_menu(self):
         while True:
