@@ -2,7 +2,6 @@ import time
 import keyboard
 from PIL import Image, ImageDraw, ImageFont
 from waveshare_epd import epd4in2_V3
-import signal
 import os
 
 class base_menu:
@@ -10,62 +9,26 @@ class base_menu:
         
         # Initialize the e-Paper display
         # clear refreshes whole screen, should be done on slow init()
-        epd = epd4in2_V3.EPD()
-        epd.init()
-        epd.Clear()
-        
-        #init_display routine
-        epd.init()
-        epd.Clear
-        #previous_lines = app.load_previous_lines(file_path)#('previous_lines.txt')
-        epd.init_Partial()
-        epd.Clear
+        self.epd = epd4in2_V3.EPD()
+        self.epd.init()
+        self.epd.Clear()
 
         #Initialize display-related variables)
-        display_image = Image.new('1', (epd.width,epd.height), 255)
-        self.display_draw = ImageDraw.Draw(display_image)
+        self.image = Image.new('1', (epd.width,epd.height), 255)
+        self.display_draw = ImageDraw.Draw(image)
 
         #Display settings like font size, spacing, etc.
         self.display_start_line = 0
         self.font24 = ImageFont.truetype('Courier Prime.ttf', 16) #24
         self.textWidth=16
         self.linespacing = 22
-        chars_per_line = 32 #28
         self.lines_on_screen = 12
         self.last_display_update = time.time()
 
-        #display related
-        self.needs_display_update = True
-        self.needs_input_update = True
-        self.updating_input_area = False
-        self.input_catchup = False
-        self.display_catchup = False
-        self.display_updating = False
-        self.shift_active = False
-        self.control_active = False
-        self.exit_cleanup = False
-        self.console_message = ""
-        self.scrollindex=1
-
-        # Initialize cursor position
-        self.cursor_position = 0
-
-        # Initialize text matrix (size of text file)
-        self.max_lines = 100  # Maximum number of lines, adjust as needed
-        self.max_chars_per_line = chars_per_line  # Maximum characters per line, adjust as needed
-        self.text_content=""
-        self.temp_content=""
-        self.input_content=""
-        self.previous_lines = []
-        self.typing_last_time = time.time()  # Timestamp of last key press
-        
         # Initialize vars
         self.current_selection = 0
-        self.previous_selection = 0
         self.title = title
         self.options = options
-        self.selected_index = 0
-        self.prev_image = None
 
         #file directory setup: "/data/cache.txt"
         self.file_path = os.path.join(os.path.dirname(__file__), 'data', 'cache.txt')
@@ -76,16 +39,18 @@ class base_menu:
         draw = ImageDraw.Draw(image)
         font = self.font24
 
+        self.draw.rectangle((0, 0, self.epd.width, self.epd.height), fill=255)  # Clear the display
+        self.draw.text((10, 10), self.title, font=self.font, fill=0)
+
         # Drawing the complete menu
         for i, option in enumerate(self.options):
+            y_position = 40 + 30 * i
             if i == self.current_selection:
-                draw.text((10, 10 + 30 * i), "> " + option, font=font, fill=0)
-                self.update_display()
+                self.draw.text((10, y_position), "> " + option, font=self.font, fill=0)
             else:
-                draw.text((10, 10 + 30 * i), "  " + option, font=font, fill=0)
-                self.update_display()
+                self.draw.text((10, y_position), "  " + option, font=self.font, fill=0)
 
-        
+        self.update_display()
 
     def update_selection(self):
         # Create a partial image for updating the selection
@@ -123,29 +88,8 @@ class base_menu:
         # Clear the main display area -- also clears input line (270-300)
         self.display_draw.rectangle((0, 0, 400, 300), fill=255)
         
-        '''
-        # Display the previous lines
-        y_position = 270 - self.linespacing  # leaves room for cursor input
-
-        #Make a temp array from previous_lines. And then reverse it and display as usual.
-        current_line=max(0,len(previous_lines)-self.lines_on_screen*self.scrollindex)
-        temp=previous_lines[current_line:current_line+self.lines_on_screen]
-        print(temp)# to debug if you change the font parameters (size, chars per line, etc)
-
-        for line in reversed(temp[-self.lines_on_screen:]):
-        self.display_draw.text((10, y_position), line[:self.max_chars_per_line], font=self.font24, fill=0)
-        y_position -= self.linespacing
-        
-
-        #Display Console Message
-        if console_message != "":
-            self.display_draw.rectangle((300, 270, 400, 300), fill=255)
-            self.display_draw.text((300, 270), console_message, font=self.font24, fill=0)
-            console_message = ""
-        '''
-        
         #generate display buffer for display
-        partial_buffer = self.epd.getbuffer(self.display_image)
+        partial_buffer = self.epd.getbuffer(self.image)
         self.epd.display(partial_buffer)
 
         self.last_display_update = time.time()
@@ -208,7 +152,7 @@ app = main_menu()
 app.display_full_menu()
 while True:
     user_choice = app.get_user_input()
-    app.handle_user_input(user_choice)
+    app.handle_user_input()
 
 
 #mainloop
