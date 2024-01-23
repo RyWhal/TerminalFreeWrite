@@ -7,6 +7,7 @@ class TypeWryterApp:
         # Initialize the E-ink display
         self.epd = epd4in2_V2.EPD()
         self.epd.init()
+        self.current_selection = 0
         self.options = ["New freewrite", "Continue a freewrite", "Settings", "TypeWryter Manual"]
 
     def display_menu(self):
