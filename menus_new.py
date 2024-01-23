@@ -15,13 +15,11 @@ class base_menu:
         epd.Clear()
         
         #init_display routine
-        app.epd.init()
-        app.epd.Clear
+        epd.init()
+        epd.Clear
         #previous_lines = app.load_previous_lines(file_path)#('previous_lines.txt')
-        app.epd.init_Partial()
-        app.epd.Clear
-        needs_display_update = True
-        needs_input_update = False
+        epd.init_Partial()
+        epd.Clear
 
         #Initialize display-related variables)
         display_image = Image.new('1', (epd.width,epd.height), 255)
