@@ -1,4 +1,4 @@
-from menus_new import main_menu
+from menu2 import main_menu
 
 def main():
     main_menu()
