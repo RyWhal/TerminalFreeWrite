@@ -12,6 +12,7 @@ class base_menu:
         
         # Initialize vars
         self.current_selection = 0
+        self.previous_selection = 0
         self.title = title
         self.options = options
         self.selected_index = 0
@@ -30,39 +31,34 @@ class base_menu:
             else:
                 draw.text((10, 10 + 30 * i), "  " + option, font=font, fill=0)
 
-        # Partial image for updating selection
-        new_image = Image.new('1', (self.epd.width, 30), 255)  # Adjust size as needed
-        new_draw = ImageDraw.Draw(new_image)
+        self.epd.display(self.epd.getbuffer(image))
+        self.prev_image = image
+        self.first_run = False
 
-        # Draw only the current and previous selections
+    def update_selection(self):
+        # Partial image for updating selection
+        new_image = Image.new('1', (self.epd.width, 30), 255)
+        new_draw = ImageDraw.Draw(new_image)
+        font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf', 16)
+
+        # re-draw only current and previous selections
         for i in [self.current_selection, self.previous_selection]:
             if i == self.current_selection:
                 new_draw.text((10, 0), "> " + self.options[i], font=font, fill=0)
             else:
                 new_draw.text((10, 0), "  " + self.options[i], font=font, fill=0)
 
-        # Display the full image on firest run; otherwise only partial update 
-        if self.first_run:
-            self.epd.display(self.epd.getbuffer(image))
-            self.first_run = False
+        update_area = self.find_update_area(self.prev_image, new_image)
+
+        if update_area is not None:
+            self.epd.displayPartial(self.epd.getbuffer(new_image.crop(update_area)), x=10, y=10 + 30 * self.current_selection)
         else:
-            # Update only the selection part
-            self.epd.display_partial(self.epd.getbuffer(new_image), x=10, y=10 + 30 * self.current_selection)  # Adjust x, y positions as needed
+            self.epd.display(self.epd.getbuffer(new_image))
+
+        self.prev_image = new_image
 
         # Update previous selection for next iteration
         self.previous_selection = self.current_selection
-
-        # Compare with the previous image and update only if there are changes
-        if self.prev_image is not None:
-            # Find the area that needs updating
-            update_area = self.find_update_area(self.prev_image, new_image)
-
-            if update_area is not None:
-                # Partial update
-                self.epd.displayPartial(self.epd.getbuffer(new_image.crop(update_area)))
-        else:
-            # Full update for the first time
-            self.epd.display(self.epd.getbuffer(new_image))
 
     def find_update_area(current_image, new_image):
         """
@@ -91,6 +87,7 @@ class base_menu:
 
         return min_x, min_y, update_width, update_height
 
+    # Function to get keyboard input for menu navigation
     def get_user_input(self):
         while True:
             if keyboard.is_pressed('up arrow') or keyboard.is_pressed('w'):
@@ -108,7 +105,8 @@ class main_menu(base_menu):
     
     def handle_user_input(user_input):
         if user_choice == "New freewrite":
-            self.new_freewrite()
+            #self.new_freewrite()
+            pass
         elif user_choice == "Continue a freewrite":
             #self.continue_freewrite()
             pass
