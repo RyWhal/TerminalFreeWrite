@@ -51,7 +51,7 @@ class base_menu:
                 new_draw.text((10, y_position), "  " + self.options[i], font=font, fill=0)
 
         # Update the e-paper display with the new partial image
-        # self.epd.display_Partial(self.epd.getbuffer(new_image))
+        #self.epd.display_Partial(self.epd.getbuffer(new_image))
 
         # Calculate the update area
         update_area = self.find_update_area(self.prev_image, new_image)
@@ -59,7 +59,7 @@ class base_menu:
             # Update only the changed area on the e-paper display
             x, y, width, height = update_area
             cropped_image = new_image.crop((x, y, x + width, y + height))
-            self.epd.display_Partial(self.epd.getbuffer(cropped_image), x, y)
+            self.epd.display_Partial(self.epd.getbuffer(cropped_image))
 
         self.prev_image = new_image
         self.previous_selection = self.current_selection
