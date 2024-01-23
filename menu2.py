@@ -1,4 +1,4 @@
-from waveshare_epd import epd4in2_V2
+from waveshare_epd import epd4in2_V3
 from PIL import Image, ImageDraw, ImageFont
 
 def main_menu():
