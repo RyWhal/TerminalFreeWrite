@@ -1,6 +1,7 @@
 import RPi.GPIO as GPIO
 from PIL import Image, ImageDraw, ImageFont
 from waveshare_epd import epd4in2_V2  # Adjust based on your specific Waveshare model
+import keyboard
 
 class TypeWryterApp:
     def __init__(self):
