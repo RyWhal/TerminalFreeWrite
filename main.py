@@ -4,7 +4,7 @@ from menu2 import display_menu
 def main():
     menu = display_menu()
     menu.navigate_menu()
-    menu.cleanup()
+    #menu.cleanup()
 
 if __name__ == '__main__':
     main()
