@@ -17,7 +17,7 @@ class display_menu:
         for i, option in enumerate(self.menu_options):
             prefix = "> " if i == self.selected_index else "  "
             draw.text((10, 10 + i * 30), prefix + option, font=self.font, fill=0)
-        self.epd.display_Partial(self.epd.getbuffer(image))
+        self.epd.display(self.epd.getbuffer(image))
 
     def navigate_menu(self):
         while True:
@@ -28,8 +28,8 @@ class display_menu:
             elif keyboard.is_pressed('down') or keyboard.is_pressed('s'):
                 print("down or S pressed")
                 self.selected_index = min(self.selected_index + 1, len(self.menu_options) - 1)
-                print("Enter")
             elif keyboard.is_pressed('enter'):
+                print("Enter")
                 break
 
     def cleanup(self):
