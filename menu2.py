@@ -1,5 +1,6 @@
 from waveshare_epd import epd4in2_V2
 from PIL import Image, ImageDraw, ImageFont
+import keyboard
 
 class display_menu:
     def __init__(self):
