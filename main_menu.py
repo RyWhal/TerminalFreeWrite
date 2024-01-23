@@ -2,69 +2,61 @@ import RPi.GPIO as GPIO
 from PIL import Image, ImageDraw, ImageFont
 from waveshare_epd import epd4in2_V2  # Adjust based on your specific Waveshare model
 
-# Constants for GPIO pins (adjust these based on your setup)
-BUTTON_UP = 5
-BUTTON_DOWN = 6
-BUTTON_SELECT = 13
+class TypeWryterApp:
+    def __init__(self):
+        # Initialize the E-ink display
+        self.epd = epd4in2_V2.EPD()
+        self.epd.init()
 
-# Initialize the e-ink display
-epd = epd2in13_V2.EPD()
-epd.init(epd.FULL_UPDATE)
-epd.Clear(0xFF)
+    def display_menu(self):
+        # Display the main menu on the E-ink screen
+        options = ["New freewrite", "Continue a freewrite", "Settings", "TypeWryter Manual"]
+        image = Image.new('1', (self.epd.width, self.epd.height), 255)  # 255: clear the frame
+        draw = ImageDraw.Draw(image)
+        font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf', 16)
+        
+        # Draw each option on the screen
+        for i, option in enumerate(options):
+            draw.text((10, 10 + 30 * i), option, font = font, fill = 0)
+        
+        self.epd.display(self.epd.getbuffer(image))
 
-# Menu items and current selection
-menu_items = ["New Freewrite", "Continue Freewrite", "Settings", "Help"]
-current_selection = 0
+    def get_user_input(self):
+        # Placeholder for capturing user input
+        # In a real scenario, this would involve GPIO buttons or keyboard input
+        # Return a string that matches one of the menu options
+        return "New freewrite"
 
-def display_menu():
-    # Create a blank image for drawing
-    image = Image.new('1', (epd.height, epd.width), 255)
-    draw = ImageDraw.Draw(image)
-    
-    # Define font (adjust path as needed)
-    font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', 12)
-
-    # Draw each menu item
-    for i, item in enumerate(menu_items):
-        if i == current_selection:
-            draw.rectangle([(0, i*20), (epd.height, (i+1)*20)], fill=0)
-            draw.text((10, i*20), item, font=font, fill=255)
-        else:
-            draw.text((10, i*20), item, font=font, fill=0)
-
-    # Update the display with the new image
-    epd.display(epd.getbuffer(image))
-
-def button_callback(channel):
-    global current_selection
-    if channel == BUTTON_UP:
-        current_selection = (current_selection - 1) % len(menu_items)
-    elif channel == BUTTON_DOWN:
-        current_selection = (current_selection + 1) % len(menu_items)
-    elif channel == BUTTON_SELECT:
-        execute_selected_item()
-    display_menu()
-
-def execute_selected_item():
-    selected_item = menu_items[current_selection]
-    print(f"Selected: {selected_item}")
-    # Add functionality for each menu item here
-
-# Setup GPIO
-GPIO.setmode(GPIO.BCM)
-GPIO.setup([BUTTON_UP, BUTTON_DOWN, BUTTON_SELECT], GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.add_event_detect(BUTTON_UP, GPIO.FALLING, callback=button_callback, bouncetime=200)
-GPIO.add_event_detect(BUTTON_DOWN, GPIO.FALLING, callback=button_callback, bouncetime=200)
-GPIO.add_event_detect(BUTTON_SELECT, GPIO.FALLING, callback=button_callback, bouncetime=200)
-
-# Initial display
-display_menu()
-
-try:
-    while True:
-        # Keep the script running
+    # Define methods for each menu option
+    def new_freewrite(self):
+        # Logic for creating a new freewrite
         pass
-except KeyboardInterrupt:
-    print("Exiting application")
-    GPIO.cleanup()
-    epd.sleep()
+
+    def continue_freewrite(self):
+        # Logic for continuing an existing freewrite
+        pass
+
+    def settings(self):
+        # Logic for adjusting settings
+        pass
+
+    def manual(self):
+        # Logic for displaying the manual
+        pass
+
+    def handle_user_input(self):
+        user_choice = self.get_user_input()
+        if user_choice == "New freewrite":
+            self.new_freewrite()
+        elif user_choice == "Continue a freewrite":
+            self.continue_freewrite()
+        elif user_choice == "Settings":
+            self.settings()
+        elif user_choice == "TypeWryter Manual":
+            self.manual()
+
+# Initialize and run the app
+app = TypeWryterApp()
+app.display_menu()
+while True:
+    app.handle_user_input()
