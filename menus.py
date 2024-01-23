@@ -2,6 +2,7 @@ import RPi.GPIO as GPIO
 from PIL import Image, ImageDraw, ImageFont
 from waveshare_epd import epd4in2_V2  # Adjust based on your specific Waveshare model
 import keyboard
+import time
 
 
 class base_menu:
@@ -36,12 +37,12 @@ class base_menu:
         self.first_run = False
 
     def update_selection(self):
-        # Partial image for updating selection
+        # Create a partial image for updating the selection
         new_image = Image.new('1', (self.epd.width, 30), 255)
         new_draw = ImageDraw.Draw(new_image)
         font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf', 16)
 
-        # re-draw only current and previous selections
+        # Redraw only current and previous selections
         for i in [self.current_selection, self.previous_selection]:
             y_position = 10 + 30 * i  # Calculate the y position based on the selection
             if i == self.current_selection:
@@ -49,9 +50,16 @@ class base_menu:
             else:
                 new_draw.text((10, y_position), "  " + self.options[i], font=font, fill=0)
 
+        # Update the e-paper display with the new partial image
+        # self.epd.display_Partial(self.epd.getbuffer(new_image))
 
-        # Update the e-paper display
-        self.epd.display_Partial(self.epd.getbuffer(new_image))
+        # Calculate the update area
+        update_area = self.find_update_area(self.prev_image, new_image)
+        if update_area is not None:
+            # Update only the changed area on the e-paper display
+            x, y, width, height = update_area
+            cropped_image = new_image.crop((x, y, x + width, y + height))
+            self.epd.display_Partial(self.epd.getbuffer(cropped_image), x, y)
 
         self.prev_image = new_image
         self.previous_selection = self.current_selection
@@ -86,6 +94,7 @@ class base_menu:
     # Function to get keyboard input for menu navigation
     def get_user_input(self):
         while True:
+            time.sleep(0.1)
             if keyboard.is_pressed('up arrow') or keyboard.is_pressed('w'):
                 self.current_selection = (self.current_selection - 1 + len(self.options)) % len(self.options)
                 self.update_selection()
