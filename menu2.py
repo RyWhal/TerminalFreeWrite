@@ -9,6 +9,7 @@ class display_menu:
         self.font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', 12)
         self.menu_options = ["New Type Wryte", "Continue Type Wryte", "Settings", "Manual"]
         self.selected_index = 0
+        self.epd.TurnOnDisplay_Fast()
 
     def draw_menu(self):
         image = Image.new('1', (self.epd.width, self.epd.height), 255)
@@ -16,7 +17,7 @@ class display_menu:
         for i, option in enumerate(self.menu_options):
             prefix = "> " if i == self.selected_index else "  "
             draw.text((10, 10 + i * 30), prefix + option, font=self.font, fill=0)
-        self.epd.display(self.epd.getbuffer(image))
+        self.epd.display_Fast(self.epd.getbuffer(image))
 
     def navigate_menu(self):
         while True:
