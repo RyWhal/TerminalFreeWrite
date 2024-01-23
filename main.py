@@ -1,9 +1,7 @@
-import curses
-from main_menu import main_menu_screen
+from menus import main_menu
 
-
-def main(screen):
-    main_menu_screen(screen)
+def main():
+    main_menu()
 
 if __name__ == "__main__":
-    curses.wrapper(main)
+    main()
