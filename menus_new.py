@@ -14,8 +14,8 @@ class base_menu:
         self.epd.Clear()
 
         #Initialize display-related variables)
-        self.image = Image.new('1', (epd.width,epd.height), 255)
-        self.display_draw = ImageDraw.Draw(image)
+        self.image = Image.new('1', (self.epd.width,self.epd.height), 255)
+        self.display_draw = ImageDraw.Draw(self.image)
 
         #Display settings like font size, spacing, etc.
         self.display_start_line = 0
