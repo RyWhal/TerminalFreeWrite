@@ -58,48 +58,6 @@ class base_menu:
         self.prev_image = self.new_image
         self.previous_selection = self.current_selection
 
-    '''
-    def partial_update_buffer(self, update_image):
-        #generate display buffer for display
-        self.draw.rectangle((0, 0, self.epd.height, self.epd.width), fill=255)
-        partial_buffer = self.epd.getbuffer(update_image)
-        self.epd.display_Partial(partial_buffer)
-
-    def full_update_buffer(self, update_image):
-        #generate display buffer for display
-        self.draw.rectangle((0, 0, self.epd.height, self.epd.width), fill=255)
-        partial_buffer = self.epd.getbuffer(update_image)
-        self.epd.display(partial_buffer)
-
-    
-    def find_update_area(self, current_image, new_image):
-        """
-        Find the area that needs to be updated on the e-ink display.
-        :param current_image: Image currently displayed.
-        :param new_image: New image to display.
-        :return: Tuple of (x, y, width, height) for the update area.
-        """
-        min_x, min_y = new_image.size
-        max_x = max_y = 0
-
-        for x in range(new_image.width):
-            for y in range(new_image.height):
-                if current_image.getpixel((x, y)) != new_image.getpixel((x, y)):
-                    min_x = min(min_x, x)
-                    max_x = max(max_x, x)
-                    min_y = min(min_y, y)
-                    max_y = max(max_y, y)
-
-        # Check if there are any changes
-        if min_x > max_x or min_y > max_y:
-            return None  # No update needed
-
-        update_width = max_x - min_x + 1
-        update_height = max_y - min_y + 1
-
-        return min_x, min_y, update_width, update_height
-        '''
-
     # Function to get keyboard input for menu navigation
     def get_user_input(self):
         while True:
@@ -135,24 +93,6 @@ class main_menu(base_menu):
         elif user_choice == "TypeWryter Manual":
             #self.manual()
             pass
-
-
-    # Define methods for each menu option
-    def new_freewrite(self):
-        # Logic for creating a new freewrite
-        pass
-
-    def continue_freewrite(self):
-        # Logic for continuing an existing freewrite
-        pass
-
-    def settings(self):
-        # Logic for adjusting settings
-        pass
-
-    def manual(self):
-        # Logic for displaying the manual
-        pass 
 
 class MenuManager:
     def __init__(self):
