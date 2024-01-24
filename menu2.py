@@ -1,13 +1,13 @@
-from waveshare_epd import epd4in2_V2
+from waveshare_epd import epd4in2_V3
 from PIL import Image, ImageDraw, ImageFont
 import keyboard
 import time
 
 class display_menu:
     def __init__(self):
-        self.epd = epd4in2_V2.EPD()
-        #self.epd.init()
-        self.epd.init_fast(self.epd.Seconds_1_5S)
+        self.epd = epd4in2_V3.EPD()
+        self.epd.init()
+        #self.epd.init_fast(self.epd.Seconds_1_5S)
         self.epd.Clear()
         self.font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', 11)
         self.menu_options = ["New Type Wrytes", "Continue Type Wryte", "Settings", "Manual"]
@@ -19,8 +19,8 @@ class display_menu:
         self.draw = ImageDraw.Draw(self.image)
 
     def update_buffer(self):
-        self.epd.display_Partial(self.epd.getbuffer(self.image))
-        time.sleep(.3)
+        self.epd.display(self.epd.getbuffer(self.image))
+        time.sleep(.1)
 
     def draw_menu(self):
         # Create the image
@@ -45,6 +45,7 @@ class display_menu:
             elif keyboard.is_pressed('enter'):
                 print("Enter")
                 break
+            time.sleep(.05)
 
     def cleanup(self):
         self.epd.sleep()
