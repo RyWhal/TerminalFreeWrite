@@ -61,7 +61,6 @@ class base_menu:
     # Function to get keyboard input for menu navigation
     def get_user_input(self):
         while True:
-            time.sleep(0.3)
             if keyboard.is_pressed('up arrow') or keyboard.is_pressed('w'):
                 print("up arrow")
                 self.current_selection = (self.current_selection - 1 + len(self.options)) % len(self.options)
