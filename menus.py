@@ -10,6 +10,9 @@ class base_menu:
         # Initialize the E-ink display
         self.epd = epd4in2_V2.EPD()
         self.epd.init()
+        self.epd.Clear()
+
+        self.font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf', 12)
         
         # Initialize vars
         self.current_selection = 0
@@ -21,9 +24,9 @@ class base_menu:
 
     def display_full_menu(self):
         # Declare forst image of menu
-        image = Image.new('1', (self.epd.width, self.epd.height), 255)
-        draw = ImageDraw.Draw(image)
-        font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf', 16)
+        self.image = Image.new('1', (self.epd.width, self.epd.height), 255)
+        self.draw = ImageDraw.Draw(self.image)
+        
 
         # Drawing the complete menu
         for i, option in enumerate(self.options):
@@ -32,15 +35,14 @@ class base_menu:
             else:
                 draw.text((10, 10 + 30 * i), "  " + option, font=font, fill=0)
 
-        self.epd.display(self.epd.getbuffer(image))
-        self.prev_image = image.copy()  # Store a copy of the image
+        self.epd.display(self.epd.getbuffer(self.image))
+        self.prev_image = self.image.copy()  # Store a copy of the image
         self.first_run = False
 
     def update_selection(self):
         # Create a partial image for updating the selection
         new_image = Image.new('1', (self.epd.width, 30), 255)
         new_draw = ImageDraw.Draw(new_image)
-        font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf', 16)
 
         # Redraw only current and previous selections
         for i in [self.current_selection, self.previous_selection]:
@@ -55,6 +57,18 @@ class base_menu:
 
         self.prev_image = new_image
         self.previous_selection = self.current_selection
+
+    def partial_update_buffer(self):
+        #generate display buffer for display
+        self.draw.rectangle((0, 0, self.epd.height, self.epd.width), fill=255)
+        partial_buffer = self.epd.getbuffer(self.image)
+        self.epd.display_Partial(partial_buffer)
+
+    def full_update_buffer(self):
+        #generate display buffer for display
+        self.draw.rectangle((0, 0, self.epd.height, self.epd.width), fill=255)
+        partial_buffer = self.epd.getbuffer(self.image)
+        self.epd.display(partial_buffer)
 
     def find_update_area(self, current_image, new_image):
         """
@@ -88,13 +102,17 @@ class base_menu:
         while True:
             time.sleep(0.1)
             if keyboard.is_pressed('up arrow') or keyboard.is_pressed('w'):
+                print("up arrow")
                 self.current_selection = (self.current_selection - 1 + len(self.options)) % len(self.options)
                 self.update_selection()
             elif keyboard.is_pressed('down arrow') or keyboard.is_pressed('s'):
+                print("down arrow")
                 self.current_selection = (self.current_selection + 1) % len(self.options)
                 self.update_selection()
             elif keyboard.is_pressed('enter'):
-                return self.options[self.current_selection]
+                print("enter")
+                self.epd.sleep()
+                #return self.options[self.current_selection]
 
 
 class main_menu(base_menu):
@@ -131,18 +149,7 @@ class main_menu(base_menu):
 
     def manual(self):
         # Logic for displaying the manual
-        pass
-
-class settings_menu(base_menu):
-    def __init__(self):
-        super().__init__("Settings", ["", ""])
-        # Further initialization
-
-class file_menu(base_menu):
-    def __init__(self):
-        super().__init__("File_Manager", ["", ""])
-        # Further initialization    
-
+        pass 
 
 class MenuManager:
     def __init__(self):
