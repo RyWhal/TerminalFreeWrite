@@ -34,8 +34,7 @@ class display_menu:
     def draw_menu(self):
         #self.draw.text((10, 30), "TESTING", font=self.font, fill=0)
         #self.draw.rectangle((0, 0, self.epd.width, self.epd.height), fill=255)
-        #self.partial_update_buffer()
-
+        self.partial_update_buffer()
 
         for i, option in enumerate(self.menu_options):
             prefix = "> " if i == self.selected_index else "  "
@@ -43,8 +42,7 @@ class display_menu:
         
         self.partial_update_buffer()
     
-    def navigate_menu(self):
-        self.full_update_buffer()       
+    def navigate_menu(self):      
         while True:
             self.draw_menu()
             if keyboard.is_pressed('up') or keyboard.is_pressed('w'):
