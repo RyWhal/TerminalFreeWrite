@@ -39,9 +39,9 @@ class display_menu:
         '''
     
     def navigate_menu(self):
+        self.draw_menu()
+        '''
         while True:
-            self.draw_menu()
-            '''
             if keyboard.is_pressed('up') or keyboard.is_pressed('w'):
                 print("Up or W pressed")
                 self.selected_index = max(self.selected_index - 1, 0)
