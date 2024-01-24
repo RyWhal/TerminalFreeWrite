@@ -35,27 +35,31 @@ class base_menu:
                 self.draw.text((10, 10 + 30 * i), "  " + option, font=self.font, fill=0)
 
         #self.partial_update_buffer(self.image)
-        self.epd.display(self.epd.getbuffer(self.image))
+        #self.epd.display(self.epd.getbuffer(self.image))
+        self.full_update_buffer(self.image)
+
         self.prev_image = self.image.copy()  # Store a copy of the image
 
     def update_selection(self):
         # Create a partial image for updating the selection
-        new_image = Image.new('1', (self.epd.width, 30), 255)
-        new_draw = ImageDraw.Draw(new_image)
+        self.new_image = Image.new('1', (self.epd.width, 30), 255)
+        self.new_draw = ImageDraw.Draw(self.new_image)
 
         # Redraw only current and previous selections
         for i in [self.current_selection, self.previous_selection]:
             y_position = 10 + 30 * i  # Calculate the y position based on the selection
             if i == self.current_selection:
-                new_draw.text((10, y_position), "> " + self.options[i], font=self.font, fill=0)
+                self.new_draw.text((10, y_position), "> " + self.options[i], font=self.font, fill=0)
             else:
-                new_draw.text((10, y_position), "  " + self.options[i], font=self.font, fill=0)
+                self.new_draw.text((10, y_position), "  " + self.options[i], font=self.font, fill=0)
 
         # Update the e-paper display with the new partial image
-        self.epd.display(self.epd.getbuffer(new_image))
+        #self.epd.display(self.epd.getbuffer(new_image))
 
-        self.prev_image = new_image
+        self.prev_image = self.new_image
         self.previous_selection = self.current_selection
+
+        self.partial_update_buffer(self.new_image)
 
     def partial_update_buffer(self):
         #generate display buffer for display
