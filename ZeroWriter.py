@@ -23,7 +23,6 @@ import textwrap
 import subprocess
 import signal
 import os
-from pathlib import Path
 
 
 # Initialize the e-Paper display
@@ -359,7 +358,7 @@ def handle_key_press(e):
     input_catchup==True
     needs_input_update = True
     
-def handle_interrupt(signal, frame):
+def handle_interrupt():
     keyboard.unhook_all()
     epd.init()
     epd.Clear()
