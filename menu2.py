@@ -7,8 +7,7 @@ class display_menu:
     def __init__(self):
         self.epd = epd2in9_V2.EPD()
         self.epd.init()
-        #self.epd.init_Fast()
-        self.epd.Clear()
+        self.epd.Clear(0xFF)
         self.font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', 11)
         self.menu_options = ["New Type Wrytes", "Continue Type Wryte", "Settings", "Manual"]
         self.selected_index = 0
@@ -33,6 +32,7 @@ class display_menu:
         self.update_buffer()
     
     def navigate_menu(self):
+        self.epd.init_Fast()
         while True:
             self.draw_menu()
             if keyboard.is_pressed('up') or keyboard.is_pressed('w'):
