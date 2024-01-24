@@ -1,11 +1,11 @@
-from waveshare_epd import epd4in2_V2
+from waveshare_epd import epd4in2_V2,epd2in9_V2
 from PIL import Image, ImageDraw, ImageFont
 import keyboard
 import time
 
 class display_menu:
     def __init__(self):
-        self.epd = epd4in2_V2.EPD()
+        self.epd = epd2in9_V2.EPD()
         #self.epd.init()
         self.epd.init_fast(self.epd.Seconds_1_5S)
         self.epd.Clear()
