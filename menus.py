@@ -52,7 +52,7 @@ class base_menu:
                 new_draw.text((10, y_position), "  " + self.options[i], font=self.font, fill=0)
 
         # Update the e-paper display with the new partial image
-        self.epd.display_Partial(self.epd.getbuffer(new_image))
+        self.epd.display(self.epd.getbuffer(new_image))
 
         self.prev_image = new_image
         self.previous_selection = self.current_selection
@@ -101,7 +101,7 @@ class base_menu:
     # Function to get keyboard input for menu navigation
     def get_user_input(self):
         while True:
-            time.sleep(0.1)
+            time.sleep(0.3)
             if keyboard.is_pressed('up arrow') or keyboard.is_pressed('w'):
                 print("up arrow")
                 self.current_selection = (self.current_selection - 1 + len(self.options)) % len(self.options)
