@@ -14,9 +14,9 @@ class display_menu:
 
         #Initialize display-related variables)
         self.image = Image.new('1', (self.epd.height,self.epd.width), 255)
-        self.image = Image.ROTATE_270(self.image)
-        self.draw = ImageDraw.Draw(self.image)
-        #self.display_draw = ImageDraw.Draw(self.image)
+        self.image = self.image.rotate(270)
+        #self.draw = ImageDraw.Draw(self.image)
+        self.display_draw = ImageDraw.Draw(self.image)
         
     
     def partial_update_buffer(self):
