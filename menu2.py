@@ -15,6 +15,7 @@ class display_menu:
         #Initialize display-related variables)
         self.image = Image.new('1', (self.epd.width, self.epd.height), 255)
         self.draw = ImageDraw.Draw(self.image)
+        self.draw=self.draw.transpose(Image.ROTATE_180)
 
     def partial_update_buffer(self):
         #generate display buffer for display
@@ -28,12 +29,13 @@ class display_menu:
     
     def draw_menu(self):
         #self.draw.text((10, 30), "TESTING", font=self.font, fill=0)
-        self.draw.rectangle((0, 0, 400, 300), fill=255)
+        self.draw.rectangle((0, 0, self.epd.width, self.epd.height), fill=255)
         self.partial_update_buffer()
 
         # Create the image
         # Clear the main display area -- also clears input line (270-300)
-        self.draw.rectangle((0, 0, 400, 300), fill=255)
+        self.draw.rectangle((0, 0, self.epd.width, self.epd.height), fill=255)
+
 
         for i, option in enumerate(self.menu_options):
             prefix = "> " if i == self.selected_index else "  "
