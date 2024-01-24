@@ -7,7 +7,6 @@ class display_menu:
     def __init__(self):
         self.epd = epd2in9_V2.EPD()
         self.epd.init()
-        self.epd.Clear(0xFF)
         self.font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', 11)
         self.menu_options = ["New Type Wrytes", "Continue Type Wryte", "Settings", "Manual"]
         self.selected_index = 0
@@ -18,7 +17,9 @@ class display_menu:
         self.draw = ImageDraw.Draw(self.image)
 
     def update_buffer(self):
-        self.epd.display_Partial(self.epd.getbuffer(self.image))
+        #generate display buffer for display
+        partial_buffer = self.epd.getbuffer(self.image)
+        self.epd.display(partial_buffer)
 
     def draw_menu(self):
         # Create the image
@@ -45,7 +46,6 @@ class display_menu:
                 print("Enter")
                 self.epd.sleep()
                 break
-            time.sleep(.05)
 
     def cleanup(self):
         self.epd.sleep()
