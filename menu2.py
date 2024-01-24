@@ -1,10 +1,10 @@
-from waveshare_epd import epd4in2_V3
+from waveshare_epd import epd4in2_V2
 from PIL import Image, ImageDraw, ImageFont
 import keyboard
 
 class display_menu:
     def __init__(self):
-        self.epd = epd4in2_V3.EPD()
+        self.epd = epd4in2_V2.EPD()
         self.epd.init()
         self.font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', 12)
         self.menu_options = ["New Type Wrytes", "Continue Type Wryte", "Settings", "Manual"]
@@ -16,8 +16,7 @@ class display_menu:
         self.draw = ImageDraw.Draw(self.image)
 
     def update_buffer(self):
-        partial_buffer = self.epd.getbuffer(self.image)
-        self.epd.display(partial_buffer)   
+        self.epd.display_Partial(self.epd.getbuffer(self.image))
 
     def draw_menu(self):
         # Create the image
