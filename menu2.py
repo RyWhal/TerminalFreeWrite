@@ -13,9 +13,10 @@ class display_menu:
         
 
         #Initialize display-related variables)
-        self.image = Image.new('1', (self.epd.width, self.epd.height), 255)
+        self.image = Image.new('1', (self.epd.height,self.epd.width), 255)
+        self.image = Image.Transpose.ROTATE_270
         self.draw = ImageDraw.Draw(self.image)
-        self.draw=self.draw.transpose(Image.ROTATE_180)
+        
 
     def partial_update_buffer(self):
         #generate display buffer for display
