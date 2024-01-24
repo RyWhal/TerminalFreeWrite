@@ -19,8 +19,7 @@ class display_menu:
         self.draw = ImageDraw.Draw(self.image)
 
     def update_buffer(self):
-        self.epd.display_Fast(self.epd.getbuffer(self.image))
-        time.sleep(.05)
+        self.epd.display_Partial(self.epd.getbuffer(self.image))
 
     def draw_menu(self):
         # Create the image
