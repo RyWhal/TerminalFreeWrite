@@ -7,7 +7,7 @@ class display_menu:
         self.epd = epd4in2_V3.EPD()
         self.epd.init()
         self.font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', 12)
-        self.menu_options = ["New Type Wryte", "Continue Type Wryte", "Settings", "Manual"]
+        self.menu_options = ["New Type Wrytes", "Continue Type Wryte", "Settings", "Manual"]
         self.selected_index = 0
         #self.epd.TurnOnDisplay_Fast()
 
@@ -20,7 +20,7 @@ class display_menu:
         self.epd.display(partial_buffer)   
 
     def draw_menu(self):
-        #create the image
+        # Create the image
         # Clear the main display area -- also clears input line (270-300)
         self.draw.rectangle((0, 0, 400, 300), fill=255)
 
