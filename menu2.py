@@ -19,7 +19,7 @@ class display_menu:
     def update_buffer(self):
         #generate display buffer for display
         partial_buffer = self.epd.getbuffer(self.image)
-        self.epd.display(partial_buffer)
+        self.epd.display_Partial(partial_buffer)
 
     
     def draw_menu(self):
@@ -38,10 +38,10 @@ class display_menu:
         self.update_buffer()
         '''
     
-    def navigate_menu(self):
-        self.draw_menu()
-        '''
+    def navigate_menu(self):       
         while True:
+            self.draw_menu()
+        '''
             if keyboard.is_pressed('up') or keyboard.is_pressed('w'):
                 print("Up or W pressed")
                 self.selected_index = max(self.selected_index - 1, 0)
