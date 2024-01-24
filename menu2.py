@@ -24,7 +24,7 @@ class display_menu:
     
     def draw_menu(self):
         self.draw.rectangle((0, 0, 400, 300), fill=255)
-        self.draw.text((10, 10 + i * 30), "Does this work?", font=self.font, fill=0)
+        self.draw.text((10, 30), "Does this work?", font=self.font, fill=0)
         self.update_buffer()
         '''
         # Create the image
