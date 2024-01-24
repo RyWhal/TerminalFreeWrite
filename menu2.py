@@ -7,7 +7,7 @@ class display_menu:
     def __init__(self):
         self.epd = epd2in9_V2.EPD()
         #self.epd.init()
-        self.epd.init_fast(self.epd.Seconds_1_5S)
+        self.epd.init_Fast()
         self.epd.Clear()
         self.font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', 11)
         self.menu_options = ["New Type Wrytes", "Continue Type Wryte", "Settings", "Manual"]
