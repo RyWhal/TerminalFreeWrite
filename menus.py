@@ -18,6 +18,7 @@ class base_menu:
         self.title = title
         self.options = options
         self.selected_index = 0
+        self.current_selection = 0
         self.prev_image = None
 
         # Declare image
