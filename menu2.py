@@ -6,8 +6,8 @@ import time
 class display_menu:
     def __init__(self):
         self.epd = epd4in2_V2.EPD()
-        self.epd.init()
-        #self.epd.init_fast(self.epd.Seconds_1_5S)
+        #self.epd.init()
+        self.epd.init_fast(self.epd.Seconds_1_5S)
         self.epd.Clear()
         self.font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', 11)
         self.menu_options = ["New Type Wrytes", "Continue Type Wryte", "Settings", "Manual"]
@@ -19,8 +19,7 @@ class display_menu:
         self.draw = ImageDraw.Draw(self.image)
 
     def update_buffer(self):
-        #self.epd.TurnOnDisplay_Partial()
-        self.epd.display(self.epd.getbuffer(self.image))
+        self.epd.display_Fast(self.epd.getbuffer(self.image))
         time.sleep(.05)
 
     def draw_menu(self):
