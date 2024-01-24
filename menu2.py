@@ -36,10 +36,6 @@ class display_menu:
         #self.draw.rectangle((0, 0, self.epd.width, self.epd.height), fill=255)
         #self.partial_update_buffer()
 
-        # Create the image
-        # Clear the main display area -- also clears input line (270-300)
-        self.draw.rectangle((0, 0, self.epd.width, self.epd.height), fill=255)
-
 
         for i, option in enumerate(self.menu_options):
             prefix = "> " if i == self.selected_index else "  "
