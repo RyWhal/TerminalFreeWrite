@@ -31,9 +31,9 @@ class base_menu:
         # Drawing the complete menu
         for i, option in enumerate(self.options):
             if i == self.current_selection:
-                draw.text((10, 10 + 30 * i), "> " + option, font=font, fill=0)
+                self.draw.text((10, 10 + 30 * i), "> " + option, font=font, fill=0)
             else:
-                draw.text((10, 10 + 30 * i), "  " + option, font=font, fill=0)
+                self.draw.text((10, 10 + 30 * i), "  " + option, font=font, fill=0)
 
         self.epd.display(self.epd.getbuffer(self.image))
         self.prev_image = self.image.copy()  # Store a copy of the image
