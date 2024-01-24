@@ -4,3 +4,5 @@ TypeWrytes
 __pycache__
 client_secret.json
 web_server.log
+.DS_store
+waveshare_epd/.DS_Store
