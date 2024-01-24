@@ -1,7 +1,9 @@
 import RPi.GPIO as GPIO
 from PIL import Image, ImageDraw, ImageFont
 from waveshare_epd import epd4in2_V2  # Adjust based on your specific Waveshare model
-import keyboard
+#import keyboard
+import threading
+from pynput import keyboard
 import time
 
 
@@ -21,6 +23,10 @@ class base_menu:
         self.current_selection = 0
         self.previous_selection = 0
         self.prev_image = None
+
+        # init keyboard listener in a thread 
+        self.input_thread = threading.Thread(target=self.get_user_input)
+        self.input_thread.start()
 
         # Declare image
         self.image = Image.new('1', (self.epd.width, self.epd.height), 255)
@@ -58,7 +64,33 @@ class base_menu:
         self.prev_image = self.new_image
         self.previous_selection = self.current_selection
 
+    def on_key_press(self, key):
+        try:
+            key_char = key.char
+        except AttributeError:
+            print("key inpout error")
+            key_char = key
+
+        if key_char == keyboard.Key.up or key_char == 'w':
+            print("up arrow")
+            self.current_selection = (self.current_selection - 1 + len(self.options)) % len(self.options)
+            self.update_selection()
+        elif key_char == keyboard.Key.down or key_char == 's':
+            print("down arrow")
+            self.current_selection = (self.current_selection + 1) % len(self.options)
+            self.update_selection()
+        elif key_char == keyboard.Key.enter:
+            print("enter")
+            self.listener.stop()
+            return self.options[self.current_selection]
+        
     # Function to get keyboard input for menu navigation
+    def get_user_input(self):
+        # Keep the main thread alive while the listener thread is running
+        with keyboard.Listener(on_press=self.on_key_press) as listener:
+            listener.join()  # Wait for the listener to complete
+
+    '''
     def get_user_input(self):
         while True:
             if keyboard.is_pressed('up arrow') or keyboard.is_pressed('w'):
@@ -71,9 +103,8 @@ class base_menu:
                 self.update_selection()
             elif keyboard.is_pressed('enter'):
                 print("enter")
-                self.epd.sleep()
-                #return self.options[self.current_selection]
-
+                return self.options[self.current_selection]
+        '''
 
 class main_menu(base_menu):
     def __init__(self):
@@ -106,6 +137,10 @@ class MenuManager:
 # Initialize and run the app
 app = main_menu()
 app.display_full_menu()
+app.get_user_input()
+
+'''
 while True:
     user_choice = app.get_user_input()
     app.handle_user_input(user_choice)
+    '''
