@@ -11,23 +11,25 @@ class display_menu:
         self.selected_index = 0
         #self.epd.TurnOnDisplay_Fast()
 
+        #Initialize display-related variables)
+        self.image = Image.new('1', (self.epd.width, self.epd.height), 255)
+        self.draw = ImageDraw.Draw(self.image)
+
+    def update_buffer(self):
+        partial_buffer = self.epd.getbuffer(self.image)
+        self.epd.display(partial_buffer)   
+
     def draw_menu(self):
         #create the image
         # Clear the main display area -- also clears input line (270-300)
-        
-        image = Image.new('1', (self.epd.width, self.epd.height), 255)
-        draw = ImageDraw.Draw(image)
-        draw.rectangle((0, 0, 400, 300), fill=255)
+        self.draw.rectangle((0, 0, 400, 300), fill=255)
 
         for i, option in enumerate(self.menu_options):
             prefix = "> " if i == self.selected_index else "  "
-            draw.text((10, 10 + i * 30), prefix + option, font=self.font, fill=0)
-
-
-        #self.epd.display(self.epd.getbuffer(image))
-        partial_buffer = self.epd.getbuffer(image)
-        self.epd.display(partial_buffer)
-
+            self.draw.text((10, 10 + i * 30), prefix + option, font=self.font, fill=0)
+        
+        self.update_buffer()
+    
     def navigate_menu(self):
         while True:
             self.draw_menu()
