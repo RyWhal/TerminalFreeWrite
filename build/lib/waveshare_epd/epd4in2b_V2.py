@@ -1,11 +1,11 @@
 # *****************************************************************************
-# * | File        :	  epd7in5bc.py
+# * | File        :	  epd4in2bc.py
 # * | Author      :   Waveshare team
 # * | Function    :   Electronic paper driver
 # * | Info        :
 # *----------------
-# * | This version:   V4.0
-# * | Date        :   2019-06-20
+# * | This version:   V4.1
+# * | Date        :   2022-08-10
 # # | Info        :   python demo
 # -----------------------------------------------------------------------------
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -27,13 +27,12 @@
 # THE SOFTWARE.
 #
 
-
 import logging
 from . import epdconfig
 
 # Display resolution
-EPD_WIDTH       = 640
-EPD_HEIGHT      = 384
+EPD_WIDTH       = 400
+EPD_HEIGHT      = 300
 
 logger = logging.getLogger(__name__)
 
@@ -66,11 +65,20 @@ class EPD:
         epdconfig.digital_write(self.cs_pin, 0)
         epdconfig.spi_writebyte([data])
         epdconfig.digital_write(self.cs_pin, 1)
+
+    # send a lot of data   
+    def send_data2(self, data):
+        epdconfig.digital_write(self.dc_pin, 1)
+        epdconfig.digital_write(self.cs_pin, 0)
+        epdconfig.spi_writebyte2(data)
+        epdconfig.digital_write(self.cs_pin, 1)
         
     def ReadBusy(self):
         logger.debug("e-Paper busy")
-        while(epdconfig.digital_read(self.busy_pin) == 0):      # 0: idle, 1: busy
-            epdconfig.delay_ms(100)
+        self.send_command(0x71)
+        while(epdconfig.digital_read(self.busy_pin) == 0): # 0: idle, 1: busy
+            self.send_command(0x71)
+            epdconfig.delay_ms(20)
         logger.debug("e-Paper busy release")
             
     def init(self):
@@ -78,43 +86,12 @@ class EPD:
             return -1
             
         self.reset()
-
-        self.send_command(0x01) # POWER_SETTING
-        self.send_data(0x37)
-        self.send_data(0x00)
         
-        self.send_command(0x00) # PANEL_SETTING
-        self.send_data(0xCF)
-        self.send_data(0x08)
-        
-        self.send_command(0x30) # PLL_CONTROL
-        self.send_data(0x3A) # PLL:  0-15:0x3C, 15+:0x3A
-        
-        self.send_command(0x82) # VCM_DC_SETTING
-        self.send_data(0x28) #all temperature  range
+        self.send_command(0x04); 
+        self.ReadBusy();
 
-        self.send_command(0x06) # BOOSTER_SOFT_START
-        self.send_data(0xc7)
-        self.send_data(0xcc)
-        self.send_data(0x15)
-
-        self.send_command(0x50) # VCOM AND DATA INTERVAL SETTING
-        self.send_data(0x77)
-
-        self.send_command(0x60) # TCON_SETTING
-        self.send_data(0x22)
-
-        self.send_command(0x65) # FLASH CONTROL
-        self.send_data(0x00)
-
-        self.send_command(0x61) # TCON_RESOLUTION
-        self.send_data(self.width >> 8) # source 640
-        self.send_data(self.width & 0xff)
-        self.send_data(self.height >> 8) # gate 384
-        self.send_data(self.height & 0xff)
-
-        self.send_command(0xe5) # FLASH MODE
-        self.send_data(0x03)
+        self.send_command(0x00);
+        self.send_data(0x0f);
         
         return 0
 
@@ -124,7 +101,7 @@ class EPD:
         image_monocolor = image.convert('1')
         imwidth, imheight = image_monocolor.size
         pixels = image_monocolor.load()
-        logger.debug('imwidth = %d  imheight =  %d ',imwidth, imheight)
+        # logger.debug("imwidth = %d, imheight = %d",imwidth,imheight)
         if(imwidth == self.width and imheight == self.height):
             logger.debug("Horizontal")
             for y in range(imheight):
@@ -144,59 +121,39 @@ class EPD:
 
     def display(self, imageblack, imagered):
         self.send_command(0x10)
-        for i in range(0, int(self.width / 8 * self.height)):
-            temp1 = imageblack[i]
-            temp2 = imagered[i]
-            j = 0
-            while (j < 8):
-                if ((temp2 & 0x80) == 0x00):
-                    temp3 = 0x04                #red
-                elif ((temp1 & 0x80) == 0x00):
-                    temp3 = 0x00                #black
-                else:
-                    temp3 = 0x03                #white
-					
-                temp3 = (temp3 << 4) & 0xFF
-                temp1 = (temp1 << 1) & 0xFF
-                temp2 = (temp2 << 1) & 0xFF
-                j += 1
-                if((temp2 & 0x80) == 0x00):
-                    temp3 |= 0x04              #red
-                elif ((temp1 & 0x80) == 0x00):
-                    temp3 |= 0x00              #black
-                else:
-                    temp3 |= 0x03              #white
-                temp1 = (temp1 << 1) & 0xFF
-                temp2 = (temp2 << 1) & 0xFF
-                self.send_data(temp3)
-                j += 1
-                
-        self.send_command(0x04) # POWER ON
-        self.ReadBusy()
-        self.send_command(0x12) # display refresh
-        epdconfig.delay_ms(100)
+        self.send_data2(imageblack)
+        
+        self.send_command(0x13)
+        self.send_data2(imagered)
+        
+        self.send_command(0x12) 
+        epdconfig.delay_ms(20)
         self.ReadBusy()
         
     def Clear(self):
+        if self.width%8 == 0:
+            linewidth = int(self.width/8)
+        else:
+            linewidth = int(self.width/8) + 1
+
         self.send_command(0x10)
-        for i in range(0, int(self.width / 8 * self.height)):
-            self.send_data(0x33)
-            self.send_data(0x33)
-            self.send_data(0x33)
-            self.send_data(0x33)
+        self.send_data2([0xff] * int(self.height * linewidth))
             
-        self.send_command(0x04) # POWER ON
-        self.ReadBusy()
-        self.send_command(0x12) # display refresh
-        epdconfig.delay_ms(100)
+        self.send_command(0x13)
+        self.send_data2([0xff] * int(self.height * linewidth))
+        
+        self.send_command(0x12) 
+        epdconfig.delay_ms(20)
         self.ReadBusy()
 
     def sleep(self):
-        self.send_command(0x02) # POWER_OFF
-        self.ReadBusy()
-        
-        self.send_command(0x07) # DEEP_SLEEP
-        self.send_data(0XA5)
+        self.send_command(0X50)
+        self.send_data(0xf7)		#border floating	
+
+        self.send_command(0X02)  	#power off
+        self.ReadBusy() #waiting for the electronic paper IC to release the idle signal
+        self.send_command(0X07)  	#deep sleep
+        self.send_data(0xA5)
         
         epdconfig.delay_ms(2000)
         epdconfig.module_exit()
