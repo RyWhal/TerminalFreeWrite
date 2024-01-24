@@ -35,8 +35,7 @@ class base_menu:
                 self.draw.text((10, 10 + 30 * i), "  " + option, font=self.font, fill=0)
 
         #self.partial_update_buffer(self.image)
-        #self.epd.display(self.epd.getbuffer(self.image))
-        self.full_update_buffer(self.image)
+        self.epd.display(self.epd.getbuffer(self.image))
 
         self.prev_image = self.image.copy()  # Store a copy of the image
 
@@ -54,13 +53,12 @@ class base_menu:
                 self.new_draw.text((10, y_position), "  " + self.options[i], font=self.font, fill=0)
 
         # Update the e-paper display with the new partial image
-        #self.epd.display(self.epd.getbuffer(new_image))
+        self.epd.display(self.epd.getbuffer(self.new_image))
 
         self.prev_image = self.new_image
         self.previous_selection = self.current_selection
 
-        self.partial_update_buffer(self.new_image)
-
+    '''
     def partial_update_buffer(self, update_image):
         #generate display buffer for display
         self.draw.rectangle((0, 0, self.epd.height, self.epd.width), fill=255)
@@ -73,7 +71,7 @@ class base_menu:
         partial_buffer = self.epd.getbuffer(update_image)
         self.epd.display(partial_buffer)
 
-    '''
+    
     def find_update_area(self, current_image, new_image):
         """
         Find the area that needs to be updated on the e-ink display.
