@@ -1,3 +1,12 @@
+from TypeWryter import main_app_loop
+
+def main():
+    main_app_loop()
+
+if __name__ == "__main__":
+    main()
+
+'''
 from menus import main_menu
 
 def main():
@@ -6,7 +15,7 @@ def main():
 
 if __name__ == "__main__":
     main()
-'''
+
 
 # main.py
 from menu2 import display_menu
