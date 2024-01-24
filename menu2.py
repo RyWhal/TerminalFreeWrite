@@ -33,7 +33,6 @@ class display_menu:
         self.update_buffer()
     
     def navigate_menu(self):
-        self.epd.init_Fast()
         while True:
             self.draw_menu()
             if keyboard.is_pressed('up') or keyboard.is_pressed('w'):
