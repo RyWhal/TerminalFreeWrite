@@ -14,7 +14,7 @@ class display_menu:
 
         #Initialize display-related variables)
         self.image = Image.new('1', (self.epd.height,self.epd.width), 255)
-        self.image = Image.Transpose.ROTATE_270
+        self.image = Image.ROTATE_270
         self.draw = ImageDraw.Draw(self.image)
         
 
@@ -57,6 +57,7 @@ class display_menu:
                 print("Enter")
                 self.epd.sleep()
                 break
+            time.sleep(.1)
 
     def cleanup(self):
         self.epd.sleep()
