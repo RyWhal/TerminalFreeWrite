@@ -61,16 +61,16 @@ class base_menu:
 
         self.partial_update_buffer(self.new_image)
 
-    def partial_update_buffer(self):
+    def partial_update_buffer(self, update_image):
         #generate display buffer for display
         self.draw.rectangle((0, 0, self.epd.height, self.epd.width), fill=255)
-        partial_buffer = self.epd.getbuffer(self.image)
+        partial_buffer = self.epd.getbuffer(update_image)
         self.epd.display_Partial(partial_buffer)
 
-    def full_update_buffer(self):
+    def full_update_buffer(self, update_image):
         #generate display buffer for display
         self.draw.rectangle((0, 0, self.epd.height, self.epd.width), fill=255)
-        partial_buffer = self.epd.getbuffer(self.image)
+        partial_buffer = self.epd.getbuffer(update_image)
         self.epd.display(partial_buffer)
 
     '''
