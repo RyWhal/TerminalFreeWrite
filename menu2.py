@@ -20,7 +20,7 @@ class display_menu:
 
     def update_buffer(self):
         #self.epd.TurnOnDisplay_Partial()
-        self.epd.display_Partial(self.epd.getbuffer(self.image))
+        self.epd.display(self.epd.getbuffer(self.image))
         time.sleep(.05)
 
     def draw_menu(self):
