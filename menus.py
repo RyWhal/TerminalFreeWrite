@@ -12,22 +12,19 @@ class base_menu:
         self.epd.init()
         self.epd.Clear()
 
-        self.font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf', 12)
+        self.font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf', 13)
         
         # Initialize vars
-        self.current_selection = 0
-        self.previous_selection = 0
         self.title = title
         self.options = options
         self.selected_index = 0
         self.prev_image = None
 
-    def display_full_menu(self):
-        # Declare forst image of menu
+        # Declare image
         self.image = Image.new('1', (self.epd.width, self.epd.height), 255)
         self.draw = ImageDraw.Draw(self.image)
-        
 
+    def display_full_menu(self):
         # Drawing the complete menu
         for i, option in enumerate(self.options):
             if i == self.current_selection:
@@ -35,9 +32,9 @@ class base_menu:
             else:
                 self.draw.text((10, 10 + 30 * i), "  " + option, font=self.font, fill=0)
 
+        #self.partial_update_buffer(self.image)
         self.epd.display(self.epd.getbuffer(self.image))
         self.prev_image = self.image.copy()  # Store a copy of the image
-        self.first_run = False
 
     def update_selection(self):
         # Create a partial image for updating the selection
@@ -70,6 +67,7 @@ class base_menu:
         partial_buffer = self.epd.getbuffer(self.image)
         self.epd.display(partial_buffer)
 
+    '''
     def find_update_area(self, current_image, new_image):
         """
         Find the area that needs to be updated on the e-ink display.
@@ -96,6 +94,7 @@ class base_menu:
         update_height = max_y - min_y + 1
 
         return min_x, min_y, update_width, update_height
+        '''
 
     # Function to get keyboard input for menu navigation
     def get_user_input(self):
@@ -160,8 +159,6 @@ class MenuManager:
             self.current_menu.display_menu()
             user_input = self.current_menu.get_user_input()
             self.current_menu = self.current_menu.handle_user_input(user_input)
-
-
 
 # Initialize and run the app
 app = main_menu()
