@@ -33,7 +33,7 @@ class display_menu:
     
     def draw_menu(self):
         #self.draw.text((10, 30), "TESTING", font=self.font, fill=0)
-        self.draw.rectangle((0, 0, self.epd.width, self.epd.height), fill=255)
+        #self.draw.rectangle((0, 0, self.epd.width, self.epd.height), fill=255)
         #self.partial_update_buffer()
 
         # Create the image
@@ -64,4 +64,5 @@ class display_menu:
             time.sleep(.1)
 
     def cleanup(self):
+        self.epd.Clear()
         self.epd.sleep()
