@@ -31,9 +31,9 @@ class base_menu:
         # Drawing the complete menu
         for i, option in enumerate(self.options):
             if i == self.current_selection:
-                self.draw.text((10, 10 + 30 * i), "> " + option, font=font, fill=0)
+                self.draw.text((10, 10 + 30 * i), "> " + option, font=self.font, fill=0)
             else:
-                self.draw.text((10, 10 + 30 * i), "  " + option, font=font, fill=0)
+                self.draw.text((10, 10 + 30 * i), "  " + option, font=self.font, fill=0)
 
         self.epd.display(self.epd.getbuffer(self.image))
         self.prev_image = self.image.copy()  # Store a copy of the image
@@ -48,9 +48,9 @@ class base_menu:
         for i in [self.current_selection, self.previous_selection]:
             y_position = 10 + 30 * i  # Calculate the y position based on the selection
             if i == self.current_selection:
-                new_draw.text((10, y_position), "> " + self.options[i], font=font, fill=0)
+                new_draw.text((10, y_position), "> " + self.options[i], font=self.font, fill=0)
             else:
-                new_draw.text((10, y_position), "  " + self.options[i], font=font, fill=0)
+                new_draw.text((10, y_position), "  " + self.options[i], font=self.font, fill=0)
 
         # Update the e-paper display with the new partial image
         self.epd.display_Partial(self.epd.getbuffer(new_image))
