@@ -18,7 +18,7 @@ class display_menu:
 
     def update_buffer(self):
         #generate display buffer for display
-        partial_buffer = self.epd.getbuffer(self.image)
+        partial_buffer = self.epd.getbuffer(self.draw)
         self.epd.display(partial_buffer)
 
     def draw_menu(self):
