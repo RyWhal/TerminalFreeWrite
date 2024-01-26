@@ -31,13 +31,13 @@ def init_image(epd):
     draw = ImageDraw.Draw(draw_image)
     return draw,draw_image
 
-'''def handle_key_down(e, shift_active, control_active): #keys being held, ie modifier keys
-    #global shift_active,control_active
-    if e.name == 'shift': #if shift is released
+def handle_key_down(e, shift_active, control_active): #keys being held, ie modifier keys
+    global shift_active,control_active
+    if e.name == 'shift': #if shift is pressed
         shift_active = True
-    if e.name == 'ctrl': #if shift is released
+    if e.name == 'ctrl': #if shift is pressed
         control_active = True
-    return shift_active,control_active'''
+    return shift_active,control_active
 
 
 '''def get_input_text(e):
@@ -63,21 +63,23 @@ def init_image(epd):
     time.sleep(.05)'''
 
 def get_text(e):
-    global text_lines, current_line
-    shift_active = False
-    control_active = False
+    global text_lines, current_line, shift_active, control_active
     logging.info("get_text")
     '''while True:
     event = keyboard.read_event()
     if event.event_type == keyboard.KEY_DOWN:
-        key = event.name'''
+        key = event.name
     if e.name == 'shift':
         shift_active = True
         logging.info("Shift pressed: " + str(shift_active) )
     elif e.name == 'ctrl':
-        control_active = True
-    elif e.name == 'backspace':
+        control_active = True'''
+    if e.name == 'backspace':
         handle_backspace()
+    if e.name == 'ctrl': #if control is released
+        control_active = False 
+    if e.name == 'shift': #if shift is released
+        shift_active = False
     elif e.name == 'delete' and control_active:
         handle_delete_word()
     elif e.name == 'delete' and shift_active:
@@ -90,10 +92,7 @@ def get_text(e):
             char = ' '
             if len(text_lines[current_line]) < chars_per_line:
                 text_lines[current_line] += char
-    elif len(e.name) == 1:  # Regular character
-        logging.info("Key Pressed: " + e.name)
-        #char = keymaps.shift_mapping[e.name] if shift_active else e.name
-        logging.info("Shift pressed: " + str(shift_active) )
+    elif len(e.name) == 1 and control_active == False:  # Regular character
         char = e.name
         if shift_active == True:
             logging.info("getting shift keymaps")
