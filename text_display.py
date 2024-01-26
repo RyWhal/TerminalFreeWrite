@@ -12,6 +12,7 @@ from datetime import datetime
 #initialize some vars
 logging.basicConfig(level=logging.INFO)
 font16 = ImageFont.truetype('Courier Prime.ttf', 16)
+
 text_lines = [""]  # List of text lines
 chars_per_line = 40
 max_lines_on_screen = 15
@@ -37,21 +38,13 @@ def save_text_to_file(text_lines, filename):
     with open(filename, 'w') as file:
         file.write('\n'.join(text_lines))
 
-def handle_key_down(e):
-    global shift_active, control_active
-    if e.name == 'shift':
-        shift_active = True
-        logging.info("shift ON")
-    if e.name == 'ctrl':
-        control_active = True
-
-'''def handle_key_up(e):
+def handle_key_up(e):
     global shift_active, control_active
     if e.name == 'shift':
         shift_active = False
         logging.info("shift OFF")
     if e.name == 'ctrl':
-        control_active = False'''
+        control_active = False
         
 def get_text(e):
     global text_lines, current_line, shift_active, control_active,filename
@@ -76,8 +69,8 @@ def get_text(e):
         char = e.name
         logging.info("if len(e.name) shift_active: " + str(shift_active))
         if shift_active == True:
-            #logging.info("getting shift keymaps")
-            #logging.info("if shift_active: " + str(shift_active))
+            logging.info("getting shift keymaps")
+            logging.info("if shift_active: " + str(shift_active))
             char = keymaps.shift_mapping.get(e.name) 
         if len(text_lines[current_line]) < chars_per_line:
             text_lines[current_line] += char
@@ -117,12 +110,17 @@ def handle_delete_line():
         current_line -= 1
 
 def partial_update_text(epd, draw, draw_image, text_lines):
-    #logging.info("partial_update_start")
+    logging.info("partial_update_start")
     draw.rectangle((0, 0, 400, 300), fill = 255)
+    #draw.text((0, 0), text, font = font16, fill=0)
+    #epd.display_Partial(epd.getbuffer(draw_image))
+
+    # Draw text lines on the image
     for i, line in enumerate(text_lines[-max_lines_on_screen:]):
         draw.text((1, 1 + i * 20), line, font=font16, fill=0)
+    
     epd.display_Partial(epd.getbuffer(draw_image))
-    #logging.info("partial_update_complete")
+    logging.info("partial_update_complete")
 
 def full_update_text(draw, draw_image,text, epd):
     logging.info("full update")
