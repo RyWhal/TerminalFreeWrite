@@ -31,12 +31,13 @@ def init_image(epd):
     draw = ImageDraw.Draw(draw_image)
     return draw,draw_image
 
-'''def handle_key_down(e, shift_active, control_active): #keys being held, ie modifier keys
+def handle_key_down(e, shift_active, control_active): #keys being held, ie modifier keys
+    #global shift_active,control_active
     if e.name == 'shift': #if shift is released
         shift_active = True
     if e.name == 'ctrl': #if shift is released
         control_active = True
-    return shift_active,control_active'''
+    return shift_active,control_active
 
 
 '''def get_input_text(e):
@@ -64,16 +65,16 @@ def init_image(epd):
 def get_text(e):
     global text_lines, current_line, shift_active, control_active
     logging.info("get_text")
-    #while True:
-    #event = keyboard.read_event()
-    #if event.event_type == keyboard.KEY_DOWN:
-        #key = event.name
+    '''while True:
+    event = keyboard.read_event()
+    if event.event_type == keyboard.KEY_DOWN:
+        key = event.name
     if e.name == 'shift':
         shift_active = True
         logging.info("Shift pressed: " + str(shift_active) )
     elif e.name == 'ctrl':
-        control_active = True
-    elif e.name == 'backspace':
+        control_active = True'''
+    if e.name == 'backspace':
         handle_backspace()
     elif e.name == 'delete' and control_active:
         handle_delete_word()
@@ -98,10 +99,10 @@ def get_text(e):
         if len(text_lines[current_line]) < chars_per_line:
             text_lines[current_line] += char
     #partial_update_text(epd, text_lines)
-    if e.name == 'shift' or e.name == 'ctrl':
-        shift_active = False
-        control_active = False
-        logging.info("shift Pressed: " + str(shift_active))
+  
+    shift_active = False
+    control_active = False
+        
 
 def handle_backspace():
     logging.info("handle backspace")
