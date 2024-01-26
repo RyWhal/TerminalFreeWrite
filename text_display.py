@@ -74,16 +74,15 @@ def get_text(e):
             char = keymaps.shift_mapping.get(e.name) 
         if len(text_lines[current_line]) < chars_per_line:
             text_lines[current_line] += char
-            
+        shift_active = False
+    
     # Check and wrap to the next line if the current line is full
     if len(text_lines[current_line]) >= chars_per_line:
         current_line += 1
         if current_line >= len(text_lines):
             text_lines.append("")
-    
-    shift_active = False
-    control_active = False
-        
+
+    #control_active = False    
 
 def handle_backspace():
     logging.info("handle backspace")
