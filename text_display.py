@@ -42,25 +42,14 @@ def handle_key_down(e):
     global shift_active, control_active
     if e.name == 'shift':
         shift_active = True
-        logging.info("shift ON")
+        logging.info("shift_active:" + str(shift_active))
     if e.name == 'ctrl':
         control_active = True
+        logging.info("control_active:" + str(control_active))
 
-def handle_key_up(e):
-    global shift_active, control_active
-    if e.name == 'shift':
-        shift_active = False
-        logging.info("shift OFF")
-    if e.name == 'ctrl':
-        control_active = False
-        
 def get_text(e):
     global text_lines, current_line, shift_active, control_active,filename
-    event = keyboard.read_event()
-    if event.event_type == keyboard.KEY_DOWN:
-        key = event.name
-        logging.info("key is: " + key)
-    elif e.name == 'backspace':
+    if e.name == 'backspace':
         handle_backspace()
     elif e.name == 'delete' and control_active:
         handle_delete_word()
@@ -122,7 +111,7 @@ def handle_delete_line():
         current_line -= 1
 
 def partial_update_text(epd, draw, draw_image, text_lines):
-    logging.info("partial_update_start")
+    #logging.info("partial_update_start")
     draw.rectangle((0, 0, 400, 300), fill = 255)
     #draw.text((0, 0), text, font = font16, fill=0)
     #epd.display_Partial(epd.getbuffer(draw_image))
@@ -132,10 +121,10 @@ def partial_update_text(epd, draw, draw_image, text_lines):
         draw.text((1, 1 + i * 20), line, font=font16, fill=0)
     
     epd.display_Partial(epd.getbuffer(draw_image))
-    logging.info("partial_update_complete")
+    #logging.info("partial_update_complete")
 
 def full_update_text(draw, draw_image,text, epd):
-    logging.info("full update")
+    #logging.info("full update")
     draw.rectangle((0, 0, 400, 300), fill = 255)
     draw.text((0, 0), text, font = font16, fill=0)
     epd.display(epd.getbuffer(draw_image))
