@@ -31,14 +31,14 @@ def init_image(epd):
     draw = ImageDraw.Draw(draw_image)
     return draw,draw_image
 
-def handle_key_down(e, shift_active, control_active): #keys being held, ie modifier keys
+'''def handle_key_down(e, shift_active, control_active): #keys being held, ie modifier keys
     if e.name == 'shift': #if shift is released
         shift_active = True
     if e.name == 'ctrl': #if shift is released
         control_active = True
-    return shift_active,control_active
+    return shift_active,control_active'''
 
-# Not currently working. This method is displaying some of the CLI for some reason. 
+
 '''def get_input_text(e):
     global text
     global shift_active
@@ -63,36 +63,39 @@ def handle_key_down(e, shift_active, control_active): #keys being held, ie modif
 
 def get_text(e):
     global text_lines, current_line
-    while True:
-        event = keyboard.read_event()
-        if event.event_type == keyboard.KEY_DOWN:
-            key = event.name
-            if e.name == 'shift':
-                shift_active = True
-            elif e.name == 'ctrl':
-                control_active = True
-            elif e.name == 'backspace':
-                handle_backspace()
-            elif e.name == 'delete' and control_active:
-                handle_delete_word()
-            elif e.name == 'delete' and shift_active:
-                handle_delete_line()
-            elif e.name == 'enter':
-                current_line += 1
-                if current_line >= len(text_lines):
-                    text_lines.append("")
-            elif len(e.name) == 1:  # Regular character
-                char = keymaps.shift_mapping[e.name] if shift_active else e.name
-                if len(text_lines[current_line]) < chars_per_line:
-                    text_lines[current_line] += char
-            #partial_update_text(epd, text_lines)
-            if key == 'shift' or key == 'ctrl':
-                shift_active = False
-                control_active = False
+    logging.info("get_text")
+    #while True:
+    #event = keyboard.read_event()
+    #if event.event_type == keyboard.KEY_DOWN:
+        #key = event.name
+    if e.name == 'shift':
+        shift_active = True
+    elif e.name == 'ctrl':
+        control_active = True
+    elif e.name == 'backspace':
+        handle_backspace()
+    elif e.name == 'delete' and control_active:
+        handle_delete_word()
+    elif e.name == 'delete' and shift_active:
+        handle_delete_line()
+    elif e.name == 'enter':
+        current_line += 1
+        if current_line >= len(text_lines):
+            text_lines.append("")
+    elif len(e.name) == 1:  # Regular character
+        logging.info("Key Pressed: " + e.name)
+        char = keymaps.shift_mapping[e.name] if shift_active else e.name
+        if len(text_lines[current_line]) < chars_per_line:
+            text_lines[current_line] += char
+    #partial_update_text(epd, text_lines)
+    if e.name == 'shift' or e.name == 'ctrl':
+        shift_active = False
+        control_active = False
 
 
 
 def handle_backspace():
+    logging.info("handle backspace")
     global text_lines, current_line
     if len(text_lines[current_line]) > 0:
         text_lines[current_line] = text_lines[current_line][:-1]
@@ -100,6 +103,7 @@ def handle_backspace():
         current_line -= 1
 
 def handle_delete_word():
+    logging.info("handle_delete_word")
     global text_lines, current_line
     words = text_lines[current_line].split()
     if words:
@@ -108,13 +112,14 @@ def handle_delete_word():
         current_line -= 1
     
 def handle_delete_line():
+    logging.info("handle_delete_line")
     global text_lines, current_line
     if current_line > 0:
         text_lines.pop(current_line)
         current_line -= 1
 
 def partial_update_text(epd, draw, draw_image, text_lines):
-    logging.info("draw text")
+    logging.info("partial_update_start")
     draw.rectangle((0, 0, 400, 300), fill = 255)
     #draw.text((0, 0), text, font = font16, fill=0)
     #epd.display_Partial(epd.getbuffer(draw_image))
@@ -124,6 +129,7 @@ def partial_update_text(epd, draw, draw_image, text_lines):
         draw.text((10, 10 + i * 20), line, font=font16, fill=0)
     
     epd.display_Partial(epd.getbuffer(draw_image))
+    logging.info("partial_update_complete")
 
 def full_update_text(draw, draw_image,text, epd):
     logging.info("full update")
