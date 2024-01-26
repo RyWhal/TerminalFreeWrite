@@ -31,13 +31,13 @@ def init_image(epd):
     draw = ImageDraw.Draw(draw_image)
     return draw,draw_image
 
-def handle_key_down(e): #keys being held, ie modifier keys
+'''def handle_key_down(e): #keys being held, ie modifier keys
     global shift_active,control_active
     if e.name == 'shift': #if shift is pressed
         shift_active = True
         logging.info("shift ON")
     if e.name == 'ctrl': #if shift is pressed
-        control_active = True
+        control_active = True'''
 
 
 '''def get_input_text(e):
@@ -80,7 +80,7 @@ def get_text(e):
         control_active = False 
     if e.name == 'shift': #if shift is released
         shift_active = False
-        logging.info("shift OFF")
+        logging.info("shift ON")
     elif e.name == 'delete' and control_active:
         handle_delete_word()
     elif e.name == 'delete' and shift_active:
