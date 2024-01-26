@@ -32,7 +32,7 @@ def init__menu_image(epd):
     draw = ImageDraw.Draw(draw_image)
     return draw,draw_image
 
-def get_keyboard_input(e):
+def get_keyboard_input(e, epd):
     global current_selection, main_menu_options
     if e.name == 'up': 
         if current_selection >= 0 and current_selection < menu_length:
@@ -44,7 +44,7 @@ def get_keyboard_input(e):
     elif e.name == 'enter':
         trigger_function_based_on_selection()
     elif e.name == 'esc':
-        cleanup()
+        cleanup(epd)
 
 def display_full_menu(epd,draw,draw_image):
     # Drawing the complete menu
@@ -67,7 +67,7 @@ def partial_update_menu(epd, draw, draw_image):
         elif i == previous_selection:
             draw.text((1, 1 + 30 * i), "  " + option, font=font20, fill=0)
     
-    epd.display_Partial(epd.getbuffer(draw_image))
+    epd.display_Fast(epd.getbuffer(draw_image))
     previous_selection = current_selection
 
 # Function to be called based on the selection
@@ -149,7 +149,6 @@ def main():
     while True:
         time.sleep(.1)
         partial_update_menu(epd, draw, draw_image)
-
 
 if __name__ == '__main__':
     try:
