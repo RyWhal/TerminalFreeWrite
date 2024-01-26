@@ -10,7 +10,7 @@ import keymaps
 
 #initialize some vars
 logging.basicConfig(level=logging.INFO)
-font18 = ImageFont.truetype('Font.ttc', 13)
+font18 = ImageFont.truetype('Courier Prime.ttf', 18)
 text = " "
 chars_per_line = 45
 lines_on_screen = 25
