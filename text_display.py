@@ -55,10 +55,6 @@ def get_text(e):
         handle_delete_word()
     elif e.name == 'delete' and shift_active:
         handle_delete_line()
-    elif e.name == 'ctrl': #if control is released
-        control_active = False 
-    elif e.name == 'shift': #if shift is released
-        shift_active = False
     elif e.name == 'tab':
         char= '   '
     elif e.name == 'enter':
