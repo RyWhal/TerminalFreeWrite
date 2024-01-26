@@ -44,11 +44,6 @@ def get_text(e):
     global text_lines, current_line, shift_active, control_active
     if e.name == 'backspace':
         handle_backspace()
-    elif e.name == 'ctrl': #if control is released
-        control_active = False 
-    elif e.name == 'shift': #if shift is released
-        shift_active = False
-        logging.info("shift ON - shift_active: " + str(shift_active))
     elif e.name == 'delete' and control_active:
         handle_delete_word()
     elif e.name == 'delete' and shift_active:
