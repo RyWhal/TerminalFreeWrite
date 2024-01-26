@@ -56,7 +56,11 @@ def handle_key_up(e):
         
 def get_text(e):
     global text_lines, current_line, shift_active, control_active,filename
-    if e.name == 'backspace':
+    event = keyboard.read_event()
+    if event.event_type == keyboard.KEY_DOWN:
+        key = event.name
+        logging.info("key is: " + key)
+    elif e.name == 'backspace':
         handle_backspace()
     elif e.name == 'delete' and control_active:
         handle_delete_word()
