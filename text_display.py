@@ -48,7 +48,11 @@ def handle_key_down(e, shift_active, control_active): #keys being held, ie modif
 
 def get_text(e):
     global text_lines, current_line, filename, shift_active, control_active
+
+    #check shift key
     shift_active,control_active = handle_key_down(e, shift_active, control_active)
+
+    # Actions for differet key combos
     if e.name == 'backspace':
         handle_backspace()
     elif e.name == 'delete' and control_active:
@@ -66,7 +70,7 @@ def get_text(e):
             char = ' '
             if len(text_lines[current_line]) < chars_per_line:
                 text_lines[current_line] += char
-    elif len(e.name) == 1 and control_active == False:  # Regular character
+    elif len(e.name) == 1 and control_active == False:  # Regular character input
         char = e.name
         logging.info("if len(e.name) shift_active: " + str(shift_active))
         if shift_active:
@@ -81,7 +85,9 @@ def get_text(e):
         if current_line >= len(text_lines):
             text_lines.append("")
 
+    # Debounce
     time.sleep(.05)
+    
     #control_active = False    
 
 def handle_backspace():
@@ -139,8 +145,6 @@ def main():
     epd = init_display() #initialize the display one time. 
     draw, draw_image = init_image(epd)
     keyboard.on_press(get_text, suppress=True) #handles keyboard input
-    keyboard.on_press(handle_key_down, suppress=True) 
-    #keyboard.on_press(handle_key_up, suppress=True)
 
     while True:
         time.sleep(.1)
