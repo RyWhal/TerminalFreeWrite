@@ -40,7 +40,11 @@ def handle_key_down(e, shift_active, control_active): #keys being held, ie modif
 # Not currently working. This method is displaying some of the CLI for some reason. 
 def get_input_text(e):
     global text
+    global shift_active
+    global control_active
+
     shift_active,control_active = handle_key_down(e,shift_active,control_active)
+    
     if e.name == 'enter':
         logging.info("\nKey Pressed:" + e.name)
         e.name += '\n'
