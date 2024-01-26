@@ -57,6 +57,7 @@ def get_input_text(e):
         if shift_active:
             char = keymaps.shift_mapping.get(e.name)
             text += char
+            shift_active = False
         else:
             text += e.name
     time.sleep(.05)
