@@ -45,13 +45,13 @@ def handle_key_down(e):
     if e.name == 'ctrl':
         control_active = True
 
-def handle_key_up(e):
+'''def handle_key_up(e):
     global shift_active, control_active
     if e.name == 'shift':
         shift_active = False
         logging.info("shift OFF")
     if e.name == 'ctrl':
-        control_active = False
+        control_active = False'''
         
 def get_text(e):
     global text_lines, current_line, shift_active, control_active,filename
