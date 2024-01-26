@@ -55,6 +55,10 @@ def get_text(e):
         handle_delete_word()
     elif e.name == 'delete' and shift_active:
         handle_delete_line()
+    if e.name == 'ctrl': #if control is released
+        control_active = False 
+    if e.name == 'shift': #if shift is released
+        shift_active = False
     elif e.name == 'tab':
         char= '   '
     elif e.name == 'enter':
@@ -75,7 +79,7 @@ def get_text(e):
             char = keymaps.shift_mapping.get(e.name) 
         if len(text_lines[current_line]) < chars_per_line:
             text_lines[current_line] += char
-        shift_active = False
+        #shift_active = False
     
     # Check and wrap to the next line if the current line is full
     if len(text_lines[current_line]) >= chars_per_line:
