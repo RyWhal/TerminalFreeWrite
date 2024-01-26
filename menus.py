@@ -32,42 +32,42 @@ def init__menu_image(epd):
     draw = ImageDraw.Draw(draw_image)
     return draw,draw_image
 
-def get_keyboard_input(e, epd):
+def get_keyboard_input(e):
     global current_selection, main_menu_options
     if e.name == 'up': 
-        if current_selection >= 0 and current_selection < menu_length:
-            current_selection += 1
+        current_selection = (current_selection - 1) % menu_length
     elif e.name == 'down':
-
-        if current_selection <= menu_length and current_selection > 0:
-            current_selection -= 1
+        current_selection = (current_selection + 1) % menu_length
     elif e.name == 'enter':
         trigger_function_based_on_selection()
     elif e.name == 'esc':
-        cleanup(epd)
+        #cleanup(epd)
+        pass
 
 def display_full_menu(epd,draw,draw_image):
-    # Drawing the complete menu
-    for i,option in enumerate(main_menu_options):
-        if i == current_selection:
-            draw.text((1, 1 + 30 * i), "> " + option, font=font20, fill=0)
-        else:
-            draw.text((1, 1 + 30 * i), "  " + option, font=font20, fill=0)
+    padding = 20  # Adjust padding as needed
+    for i, option in enumerate(main_menu_options):
+        draw.text((padding, 1 + 30 * i), option, font=font20, fill=0)
     epd.display(epd.getbuffer(draw_image))
 
 def partial_update_menu(epd, draw, draw_image):
     global current_selection, previous_selection
-    #logging.info("partial_update_start")
-    draw.rectangle((0, 0, 400, 300), fill = 255)
-
-    # Redraw the menu options with the updated selection
-    for i, option in enumerate(main_menu_options):
-        if i == current_selection:
-            draw.text((1, 1 + 30 * i), "> " + option, font=font20, fill=0)
-        elif i == previous_selection:
-            draw.text((1, 1 + 30 * i), "  " + option, font=font20, fill=0)
     
-    epd.display_Fast(epd.getbuffer(draw_image))
+    # Calculate the y-coordinates for the previous and current selections
+    y_prev = 1 + 30 * previous_selection
+    y_current = 1 + 30 * current_selection
+
+    # Clear the area where the previous and current indicators are displayed
+    indicator_width = 15  # Width of the area to clear for the indicator
+    draw.rectangle((0, y_prev, indicator_width, y_prev + 30), fill=255)
+    draw.rectangle((0, y_current, indicator_width, y_current + 30), fill=255)
+
+    # Draw the indicator only for the current selection
+    draw.text((1, y_current), ">", font=font20, fill=0)
+
+    #partial update
+    epd.display_Partial(epd.getbuffer(draw_image))
+
     previous_selection = current_selection
 
 # Function to be called based on the selection
@@ -88,54 +88,6 @@ def cleanup(epd):
     epd.init()
     epd.Clear()
     epd.sleep()
-
-'''    def on_key_press( key):
-        try:
-            key_char = key.char
-        except AttributeError:
-            print("key inpout error")
-            key_char = key
-
-        if key_char == keyboard.Key.up or key_char == 'w':
-            print("up arrow")
-            current_selection = (current_selection - 1 + len(options)) % len(options)
-            update_selection()
-        elif key_char == keyboard.Key.down or key_char == 's':
-            print("down arrow")
-            current_selection = (current_selection + 1) % len(options)
-            update_selection()
-        elif key_char == keyboard.Key.enter:
-            print("enter")
-            listener.stop()
-            return options[current_selection]'''
-        
-'''class main_menu(base_menu):
-    def __init__(:
-        super().__init__("Main Menu", ["New freewrite", "Continue a freewrite", "Settings", "TypeWryter Manual"])
-    
-    def handle_user_input(user_input):
-        if user_choice == "New freewrite":
-            #new_freewrite()
-            pass
-        elif user_choice == "Continue a freewrite":
-            #continue_freewrite()
-            pass
-        elif user_choice == "Settings":
-            #settings()
-            pass
-        elif user_choice == "TypeWryter Manual":
-            #manual()
-            pass'''
-
-'''class MenuManager:
-    def __init__(:
-        current_menu = main_menu()
-
-    def run(:
-        while True:
-            current_menu.display_menu()
-            user_input = current_menu.get_user_input()
-            current_menu = current_menu.handle_user_input(user_input)'''
 
 # Initialize and run the app
 
