@@ -59,14 +59,14 @@ def update_menu(epd, draw, draw_image):
 
     # Clear the area where the previous and current indicators are displayed
     indicator_width = 15  # Width of the area to clear for the indicator
-    draw.rectangle((0, y_prev, indicator_width, y_prev + 30), fill=255)
-    draw.rectangle((0, y_current, indicator_width, y_current + 30), fill=255)
+    draw.rectangle((1,1,20,300), fill=255)
+    #draw.rectangle((0, y_current, indicator_width, y_current + 30), fill=255)
 
     # Draw the indicator only for the current selection
     draw.text((1, y_current), ">", font=font20, fill=0)
 
     #partial update
-    epd.display_Fast(epd.getbuffer(draw_image))
+    epd.display_Partial(epd.getbuffer(draw_image))
 
     previous_selection = current_selection
 
