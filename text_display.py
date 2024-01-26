@@ -39,47 +39,14 @@ def init_image(epd):
     if e.name == 'ctrl': #if shift is pressed
         control_active = True'''
 
-
-'''def get_input_text(e):
-    global text
-    global shift_active
-    global control_active
-
-    shift_active,control_active = handle_key_down(e,shift_active,control_active)
-    
-    if e.name == 'enter':
-        text += '\n'
-    elif e.name == 'backspace':
-        text = text[:-1]
-    elif e.name == 'space':
-        text += ' '
-    elif len(e.name) == 1 and control_active == False: 
-        if shift_active:
-            char = keymaps.shift_mapping.get(e.name)
-            text += char
-            shift_active = False
-        else:
-            text += e.name
-    time.sleep(.05)'''
-
 def get_text(e):
     global text_lines, current_line, shift_active, control_active
-    #logging.info("get_text")
-    '''while True:
-    event = keyboard.read_event()
-    if event.event_type == keyboard.KEY_DOWN:
-        key = event.name
-    if e.name == 'shift':
-        shift_active = True
-        logging.info("Shift pressed: " + str(shift_active) )
-    elif e.name == 'ctrl':
-        control_active = True'''
     if e.name == 'backspace':
         handle_backspace()
-    if e.name == 'ctrl': #if control is released
-        control_active = False 
-    if e.name == 'shift': #if shift is released
-        shift_active = False
+    elif e.name == 'ctrl': #if control is released
+        control_active = True 
+    elif e.name == 'shift': #if shift is released
+        shift_active = True
         logging.info("shift ON")
     elif e.name == 'delete' and control_active:
         handle_delete_word()
