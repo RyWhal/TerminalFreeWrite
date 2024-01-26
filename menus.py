@@ -36,7 +36,7 @@ def display_full_menu(draw,draw_image):
         if i == current_selection:
             draw.text((1, 1 + 30 * i), "> " + option, font=font20, fill=0)
         else:
-            draw.text((1, 1 + 30 * i), "  " + option, font=font, fill=0)
+            draw.text((1, 1 + 30 * i), "  " + option, font=font20, fill=0)
     
     epd.display(epd.getbuffer(draw_image))
 
