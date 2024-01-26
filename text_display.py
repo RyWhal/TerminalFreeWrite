@@ -10,10 +10,11 @@ import keymaps
 
 #initialize some vars
 logging.basicConfig(level=logging.INFO)
-font18 = ImageFont.truetype('Courier Prime.ttf', 18)
-text = " "
+font16 = ImageFont.truetype('Courier Prime.ttf', 16)
+#text = " "
+text_lines = [""]  # List of text lines
 chars_per_line = 45
-lines_on_screen = 25
+max_lines_on_screen = 25
 current_line = 0
 shift_active = False
 control_active = False
@@ -38,7 +39,7 @@ def handle_key_down(e, shift_active, control_active): #keys being held, ie modif
     return shift_active,control_active
 
 # Not currently working. This method is displaying some of the CLI for some reason. 
-def get_input_text(e):
+'''def get_input_text(e):
     global text
     global shift_active
     global control_active
@@ -58,19 +59,76 @@ def get_input_text(e):
             shift_active = False
         else:
             text += e.name
-    time.sleep(.05)
-    
+    time.sleep(.05)'''
 
-def partial_update_text(draw, draw_image,text, epd):
+def get_text(e):
+    global text_lines, current_line
+    while True:
+        event = keyboard.read_event()
+        if event.event_type == keyboard.KEY_DOWN:
+            key = event.name
+            if e.name == 'shift':
+                shift_active = True
+            elif e.name == 'ctrl':
+                control_active = True
+            elif e.name == 'backspace':
+                handle_backspace()
+            elif e.name == 'delete' and control_active:
+                handle_delete_word()
+            elif e.name == 'delete' and shift_active:
+                handle_delete_line()
+            elif e.name == 'enter':
+                current_line += 1
+                if current_line >= len(text_lines):
+                    text_lines.append("")
+            elif len(e.name) == 1:  # Regular character
+                char = keymaps.shift_mapping[e.name] if shift_active else e.name
+                if len(text_lines[current_line]) < chars_per_line:
+                    text_lines[current_line] += char
+            #partial_update_text(epd, text_lines)
+            if key == 'shift' or key == 'ctrl':
+                shift_active = False
+                control_active = False
+
+
+
+def handle_backspace():
+    global text_lines, current_line
+    if len(text_lines[current_line]) > 0:
+        text_lines[current_line] = text_lines[current_line][:-1]
+    elif current_line > 0:
+        current_line -= 1
+
+def handle_delete_word():
+    global text_lines, current_line
+    words = text_lines[current_line].split()
+    if words:
+        text_lines[current_line] = ' '.join(words[:-1])
+    elif current_line > 0:
+        current_line -= 1
+    
+def handle_delete_line():
+    global text_lines, current_line
+    if current_line > 0:
+        text_lines.pop(current_line)
+        current_line -= 1
+
+def partial_update_text(epd, draw, draw_image, text_lines):
     logging.info("draw text")
     draw.rectangle((0, 0, 400, 300), fill = 255)
-    draw.text((0, 0), text, font = font18, fill=0)
+    #draw.text((0, 0), text, font = font16, fill=0)
+    #epd.display_Partial(epd.getbuffer(draw_image))
+
+    # Draw text lines on the image
+    for i, line in enumerate(text_lines[-max_lines_on_screen:]):
+        draw.text((10, 10 + i * 20), line, font=font16, fill=0)
+    
     epd.display_Partial(epd.getbuffer(draw_image))
 
 def full_update_text(draw, draw_image,text, epd):
     logging.info("full update")
     draw.rectangle((0, 0, 400, 300), fill = 255)
-    draw.text((0, 0), text, font = font18, fill=0)
+    draw.text((0, 0), text, font = font16, fill=0)
     epd.display(epd.getbuffer(draw_image))
 
 def cleanup(epd):
@@ -80,22 +138,22 @@ def cleanup(epd):
     epd.sleep()
 
 # start keyboard listener and callback to get_input_text method
+def main():
+    epd = init_display() #initialize the display one time. 
+    draw, draw_image = init_image(epd)
+    keyboard.on_press(get_text, suppress=True) #handles keyboard input
 
-epd = init_display() #initialize the display one time. 
-draw, draw_image = init_image(epd)
-keyboard.on_press(get_input_text, suppress=True) #handles keyboard input
-
-try:
     while True:
         time.sleep(.1)
-        partial_update_text(draw, draw_image, text, epd)
-    
+        partial_update_text(epd, draw, draw_image, text_lines)
 
-except IOError as e:
-    logging.info(e)
-    
-except KeyboardInterrupt:    
-    logging.info("ctrl + c:")
-    epd4in2_V2.epdconfig.module_exit(cleanup=True)
-    cleanup(epd) 
-    exit()
+
+if __name__ == '__main__':
+    try:
+        main()
+    except IOError as e:
+        logging.info(e)
+    except KeyboardInterrupt:
+        logging.info("ctrl + c:")
+        epd4in2_V2.epdconfig.module_exit()
+        exit()
