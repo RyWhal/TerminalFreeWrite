@@ -2,7 +2,7 @@ import RPi.GPIO as GPIO
 from PIL import Image, ImageDraw, ImageFont
 from waveshare_epd import epd4in2_V2  # Adjust based on specific model
 import datetime
-from pynput import keyboard
+import keyboard
 import os
 import time
 from datetime import datetime
@@ -48,7 +48,7 @@ class TypeWryting:
     
     def on_key_press(self, key):
         try:
-            if key == keyboard.Key.enter:
+            if e.name == "enter":
                 self.add_text(self.current_line)
                 self.current_line = ""
                 self.save_content()
