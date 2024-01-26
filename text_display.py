@@ -85,6 +85,8 @@ def get_text(e):
     elif len(e.name) == 1:  # Regular character
         logging.info("Key Pressed: " + e.name)
         char = keymaps.shift_mapping[e.name] if shift_active else e.name
+        if e.name == 'space':
+            char = ' '
         if len(text_lines[current_line]) < chars_per_line:
             text_lines[current_line] += char
     #partial_update_text(epd, text_lines)
