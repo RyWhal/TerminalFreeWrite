@@ -72,7 +72,6 @@ def get_text(e):
             logging.info("getting shift keymaps")
             logging.info("if shift_active: " + str(shift_active))
             char = keymaps.shift_mapping.get(e.name) 
-            shift_active = False
         if len(text_lines[current_line]) < chars_per_line:
             text_lines[current_line] += char
             
@@ -82,8 +81,8 @@ def get_text(e):
         if current_line >= len(text_lines):
             text_lines.append("")
     
-   
-    #control_active = False
+    shift_active = False
+    control_active = False
         
 
 def handle_backspace():
