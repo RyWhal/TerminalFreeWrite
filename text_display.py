@@ -47,14 +47,14 @@ def handle_key_down(e):
         control_active = True
         logging.info("control_active:" + str(control_active))
 
-def handle_key_up(e):
+'''def handle_key_up(e):
     global shift_active, control_active
     if e.name == 'shift':
         shift_active = False
         logging.info("shift_active:" + str(shift_active))
     if e.name == 'ctrl':
         control_active = False
-        logging.info("control_active:" + str(control_active))
+        logging.info("control_active:" + str(control_active))'''
 
 def get_text(e):
     global text_lines, current_line, shift_active, control_active,filename
@@ -151,7 +151,7 @@ def main():
     draw, draw_image = init_image(epd)
     keyboard.on_press(get_text, suppress=True) #handles keyboard input
     keyboard.on_press(handle_key_down, suppress=True) 
-    keyboard.on_press(handle_key_up, suppress=True)
+    #keyboard.on_press(handle_key_up, suppress=True)
 
     while True:
         time.sleep(.1)
