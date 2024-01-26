@@ -6,7 +6,7 @@ from PIL import Image,ImageDraw,ImageFont
 import keyboard
 import time
 import keymaps
-import datetime
+from datetime import datetime
 
 
 #initialize some vars
