@@ -46,8 +46,8 @@ def handle_key_down(e, shift_active, control_active): #keys being held, ie modif
 
     return shift_active,control_active
 
-'''def get_text(e):
-    global text_lines, current_line, filename
+def get_text(e):
+    global text_lines, current_line, filename, shift_active, control_active
     shift_active,control_active = handle_key_down(e, shift_active, control_active)
     if e.name == 'backspace':
         handle_backspace()
@@ -83,26 +83,7 @@ def handle_key_down(e, shift_active, control_active): #keys being held, ie modif
             text_lines.append("")
     
     shift_active = False
-    control_active = False'''
-
-def get_text(e):
-    global text
-    shift_active,control_active = handle_key_down(e,shift_active,control_active)
-    if e.name == 'enter':
-        logging.info("\nKey Pressed:" + e.name)
-        e.name += '\n'
-    elif e.name == 'backspace':
-        logging.info("\nKey Pressed:" + e.name)
-        text = text[:-1]
-    elif e.name == 'space':
-        text += ' '
-    elif len(e.name) == 1 and control_active == False: 
-        if shift_active:
-            char = keymaps.shift_mapping.get(e.name)
-            text += char
-        else:
-            text += e.name
-    time.sleep(.05)
+    control_active = False
         
 
 def handle_backspace():
