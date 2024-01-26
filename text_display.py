@@ -70,7 +70,7 @@ def get_text(e):
         #key = event.name
     if e.name == 'shift':
         shift_active = True
-        logging.info("Shift pressed: " + shift_active )
+        logging.info("Shift pressed: " + str(shift_active) )
     elif e.name == 'ctrl':
         control_active = True
     elif e.name == 'backspace':
@@ -90,9 +90,8 @@ def get_text(e):
     elif len(e.name) == 1:  # Regular character
         logging.info("Key Pressed: " + e.name)
         #char = keymaps.shift_mapping[e.name] if shift_active else e.name
-        
         char = e.name
-        if shift_active:
+        if shift_active == True:
             char = keymaps.shift_mapping.get(e.name) 
         if len(text_lines[current_line]) < chars_per_line:
             text_lines[current_line] += char
@@ -100,7 +99,7 @@ def get_text(e):
     if e.name == 'shift' or e.name == 'ctrl':
         shift_active = False
         control_active = False
-        logging.info("Key Pressed: " + shift_active)
+        logging.info("Key Pressed: " + str(shift_active))
 
 def handle_backspace():
     logging.info("handle backspace")
