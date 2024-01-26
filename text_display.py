@@ -17,8 +17,6 @@ text_lines = [""]  # List of text lines
 chars_per_line = 40
 max_lines_on_screen = 15
 current_line = 0
-shift_active = False
-control_active = False
 filename = datetime.now().strftime("Text_%Y%m%d_%H%M%S.txt")
 
 def init_display():
@@ -47,7 +45,9 @@ def handle_key_down(e, shift_active, control_active): #keys being held, ie modif
 
 def get_text(e):
     global text_lines, current_line, filename
-    shift_active,control_active = handle_key_down(e,shift_active,control_active)
+    shift_active = False
+    control_active = False
+    shift_active,control_active = handle_key_down(e, shift_active, control_active)
     if e.name == 'backspace':
         handle_backspace()
     elif e.name == 'delete' and control_active:
