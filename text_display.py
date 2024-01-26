@@ -7,6 +7,7 @@ import keyboard
 import time
 import signal
 import keymaps
+import signal
 
 #initialize some vars
 logging.basicConfig(level=logging.INFO)
@@ -31,22 +32,22 @@ def init_image(epd):
     draw = ImageDraw.Draw(draw_image)
     return draw,draw_image
 
-'''def handle_key_down(e): #keys being held, ie modifier keys
-    global shift_active,control_active
-    if e.name == 'shift': #if shift is pressed
-        shift_active = True
-        logging.info("shift ON")
-    if e.name == 'ctrl': #if shift is pressed
-        control_active = True'''
-
+def handle_key_up(e):
+    global shift_active, control_active
+    if e.name == 'shift':
+        shift_active = False
+        logging.info("shift OFF")
+    if e.name == 'ctrl':
+        control_active = False
+        
 def get_text(e):
     global text_lines, current_line, shift_active, control_active
     if e.name == 'backspace':
         handle_backspace()
     elif e.name == 'ctrl': #if control is released
-        control_active = True 
+        control_active = False 
     elif e.name == 'shift': #if shift is released
-        shift_active = True
+        shift_active = False
         logging.info("shift ON - shift_active: " + str(shift_active))
     elif e.name == 'delete' and control_active:
         handle_delete_word()
@@ -69,8 +70,13 @@ def get_text(e):
             char = keymaps.shift_mapping.get(e.name) 
         if len(text_lines[current_line]) < chars_per_line:
             text_lines[current_line] += char
-    #partial_update_text(epd, text_lines)
-  
+            
+    # Check and wrap to the next line if the current line is full
+    if len(text_lines[current_line]) >= chars_per_line:
+        current_line += 1
+        if current_line >= len(text_lines):
+            text_lines.append("")
+    
     shift_active = False
     control_active = False
         
@@ -123,6 +129,7 @@ def cleanup(epd):
     epd.init()
     epd.Clear()
     epd.sleep()
+
 
 # start keyboard listener and callback to get_input_text method
 def main():
