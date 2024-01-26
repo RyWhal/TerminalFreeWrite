@@ -38,6 +38,7 @@ def get_keyboard_input(e):
         if current_selection >= 0 and current_selection < menu_length:
             current_selection += 1
     elif e.name == 'down':
+
         if current_selection <= menu_length and current_selection > 0:
             current_selection -= 1
     elif e.name == 'enter':
@@ -55,6 +56,7 @@ def display_full_menu(epd,draw,draw_image):
     epd.display(epd.getbuffer(draw_image))
 
 def partial_update_menu(epd, draw, draw_image):
+    global current_selection, previous_selection
     #logging.info("partial_update_start")
     draw.rectangle((0, 0, 400, 300), fill = 255)
 
