@@ -16,8 +16,8 @@ text_lines = [""]  # List of text lines
 chars_per_line = 40
 max_lines_on_screen = 15
 current_line = 0
-#shift_active = False
-#control_active = False
+shift_active = False
+control_active = False
 
 def init_display():
     #initialize and clear display
