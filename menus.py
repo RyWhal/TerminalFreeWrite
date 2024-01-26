@@ -1,11 +1,12 @@
 import RPi.GPIO as GPIO
 from PIL import Image, ImageDraw, ImageFont
 from waveshare_epd import epd4in2_V2  # Adjust based on your specific Waveshare model
-#import keyboard
-import threading
+import keyboard
+import time
+import logging
 
 
-
+logging.basicConfig(level=logging.INFO)
 font20 = ImageFont.truetype('Courier Prime.ttf', 20)
 
 # Initialize vars
@@ -17,6 +18,7 @@ previous_selection = 0
 prev_image = None
 
 main_menu_options = ["New freewrite", "Continue a freewrite", "Settings", "TypeWryter Manual"]
+menu_length = len(main_menu_options)
 
 def init_display():
     #initialize and clear display
@@ -30,46 +32,61 @@ def init__menu_image(epd):
     draw = ImageDraw.Draw(draw_image)
     return draw,draw_image
 
-def display_full_menu(draw,draw_image):
+def get_keyboard_input(e):
+    global current_selection, main_menu_options
+    if e.name == 'up': 
+        if current_selection >= 0 and current_selection < menu_length:
+            current_selection += 1
+    elif e.name == 'down':
+        if current_selection <= menu_length and current_selection > 0:
+            current_selection -= 1
+    elif e.name == 'enter':
+        trigger_function_based_on_selection()
+    elif e.name == 'esc':
+        cleanup()
+
+def display_full_menu(epd,draw,draw_image):
     # Drawing the complete menu
     for i,option in enumerate(main_menu_options):
         if i == current_selection:
             draw.text((1, 1 + 30 * i), "> " + option, font=font20, fill=0)
         else:
             draw.text((1, 1 + 30 * i), "  " + option, font=font20, fill=0)
-    
     epd.display(epd.getbuffer(draw_image))
 
-def partial_update_text(epd, draw, draw_image, text_lines):
+def partial_update_menu(epd, draw, draw_image):
     #logging.info("partial_update_start")
     draw.rectangle((0, 0, 400, 300), fill = 255)
+
+    # Redraw the menu options with the updated selection
+    for i, option in enumerate(main_menu_options):
+        if i == current_selection:
+            draw.text((1, 1 + 30 * i), "> " + option, font=font20, fill=0)
+        elif i == previous_selection:
+            draw.text((1, 1 + 30 * i), "  " + option, font=font20, fill=0)
+    
     epd.display_Partial(epd.getbuffer(draw_image))
+    previous_selection = current_selection
 
-def full_update_text(draw, draw_image,text, epd):
-    #logging.info("full update")
-    draw.rectangle((0, 0, 400, 300), fill = 255)
-    draw.text((0, 0), text, font = font16, fill=0)
-    epd.display(epd.getbuffer(draw_image))
+# Function to be called based on the selection
+def trigger_function_based_on_selection():
+    global current_selection
+    if current_selection == 0:
+        print("option 1")
+        # Trigger function for "New freewrite"
+        pass
+    elif current_selection == 1:
+        # Trigger function for "Continue a freewrite"
+        print ("option 2")
+        pass
+    # ... and so on for other options
 
-''' def update_selection(:
-        # Create a partial image for updating the selection
-        new_image = Image.new('1', (epd.width, 30), 255)
-        new_draw = ImageDraw.Draw(new_image)
+def cleanup(epd):
+    # Cleanup and sleep
+    epd.init()
+    epd.Clear()
+    epd.sleep()
 
-        # Redraw only current and previous selections
-        for i in [current_selection, previous_selection]:
-            y_position = 10 + 30 * i  # Calculate the y position based on the selection
-            if i == current_selection:
-                new_draw.text((10, y_position), "> " + options[i], font=font, fill=0)
-            else:
-                new_draw.text((10, y_position), "  " + options[i], font=font, fill=0)
-
-        # Update the e-paper display with the new partial image
-        epd.display(epd.getbuffer(new_image))
-
-        prev_image = new_image
-        previous_selection = current_selection
-'''
 '''    def on_key_press( key):
         try:
             key_char = key.char
@@ -120,12 +137,24 @@ def full_update_text(draw, draw_image,text, epd):
 
 # Initialize and run the app
 
-epd = init_display()
-draw,draw_image = init__menu_image(epd)
-display_full_menu(draw,draw_image)
+# start keyboard listener and callback to get_input_text method
+def main():
+    epd = init_display()
+    draw,draw_image = init__menu_image(epd)
+    display_full_menu(epd,draw,draw_image)
+    keyboard.on_press(get_keyboard_input, suppress=True) #handles keyboard input
 
-'''
-while True:
-    user_choice = app.get_user_input()
-    app.handle_user_input(user_choice)
-    '''
+    while True:
+        time.sleep(.1)
+        partial_update_menu(epd, draw, draw_image)
+
+
+if __name__ == '__main__':
+    try:
+        main()
+    except IOError as e:
+        logging.info(e)
+    except KeyboardInterrupt:
+        logging.info("ctrl + c:")
+        epd4in2_V2.epdconfig.module_exit()
+        exit()
