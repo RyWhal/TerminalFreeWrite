@@ -47,7 +47,7 @@ def get_text(e):
         control_active = True 
     elif e.name == 'shift': #if shift is released
         shift_active = True
-        logging.info("shift ON")
+        logging.info("shift ON - shift_active: " + str(shift_active))
     elif e.name == 'delete' and control_active:
         handle_delete_word()
     elif e.name == 'delete' and shift_active:
@@ -62,8 +62,10 @@ def get_text(e):
                 text_lines[current_line] += char
     elif len(e.name) == 1 and control_active == False:  # Regular character
         char = e.name
+        logging.info("if len(e.name) shift_active: " + str(shift_active))
         if shift_active == True:
             logging.info("getting shift keymaps")
+            logging.info("if shift_active: " + str(shift_active))
             char = keymaps.shift_mapping.get(e.name) 
         if len(text_lines[current_line]) < chars_per_line:
             text_lines[current_line] += char
