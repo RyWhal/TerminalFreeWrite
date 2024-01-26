@@ -43,6 +43,7 @@ def handle_key_down(e, shift_active, control_active): #keys being held, ie modif
         shift_active = True
     if e.name == 'ctrl': #if shift is released
         control_active = True
+    time.sleep(.1)
     return shift_active,control_active
 
 def get_text(e):
