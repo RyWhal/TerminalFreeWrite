@@ -4,8 +4,6 @@ from waveshare_epd import epd4in2_V2
 from PIL import ImageFont
 
 logging.basicConfig(level=logging.INFO)
-logging.info("set font object")
-font18 = ImageFont.truetype('Font.ttc', 18)
 
 def init_display():
     epd = epd4in2_V2.EPD()
