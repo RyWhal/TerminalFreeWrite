@@ -136,7 +136,7 @@ def cleanup(epd):
 
 
 # start keyboard listener and callback to get_input_text method
-def main():
+def main_loop():
     epd = init_display() #initialize the display one time. 
     draw, draw_image = init_image(epd)
     keyboard.on_press(get_text, suppress=True) #handles keyboard input
@@ -148,7 +148,7 @@ def main():
 
 if __name__ == '__main__':
     try:
-        main()
+        main_loop()
     except IOError as e:
         logging.info(e)
     except KeyboardInterrupt:

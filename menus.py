@@ -4,6 +4,7 @@ from waveshare_epd import epd4in2_V2  # Adjust based on your specific Waveshare 
 import keyboard
 import time
 import logging
+from text_display import main_loop
 
 
 logging.basicConfig(level=logging.INFO)
@@ -74,9 +75,7 @@ def update_menu(epd, draw, draw_image):
 def trigger_function_based_on_selection():
     global current_selection
     if current_selection == 0:
-        print("option 1")
-        # Trigger function for "New freewrite"
-        pass
+        main_loop()
     elif current_selection == 1:
         # Trigger function for "Continue a freewrite"
         print ("option 2")
