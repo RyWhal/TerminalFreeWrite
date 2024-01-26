@@ -16,8 +16,8 @@ text_lines = [""]  # List of text lines
 chars_per_line = 40
 max_lines_on_screen = 15
 current_line = 0
-shift_active = False
-control_active = False
+#shift_active = False
+#control_active = False
 
 def init_display():
     #initialize and clear display
@@ -31,13 +31,13 @@ def init_image(epd):
     draw = ImageDraw.Draw(draw_image)
     return draw,draw_image
 
-def handle_key_down(e, shift_active, control_active): #keys being held, ie modifier keys
+'''def handle_key_down(e, shift_active, control_active): #keys being held, ie modifier keys
     #global shift_active,control_active
     if e.name == 'shift': #if shift is released
         shift_active = True
     if e.name == 'ctrl': #if shift is released
         control_active = True
-    return shift_active,control_active
+    return shift_active,control_active'''
 
 
 '''def get_input_text(e):
@@ -63,18 +63,20 @@ def handle_key_down(e, shift_active, control_active): #keys being held, ie modif
     time.sleep(.05)'''
 
 def get_text(e):
-    global text_lines, current_line, shift_active, control_active
+    global text_lines, current_line
+    shift_active = False
+    control_active = False
     logging.info("get_text")
     '''while True:
     event = keyboard.read_event()
     if event.event_type == keyboard.KEY_DOWN:
-        key = event.name
+        key = event.name'''
     if e.name == 'shift':
         shift_active = True
         logging.info("Shift pressed: " + str(shift_active) )
     elif e.name == 'ctrl':
-        control_active = True'''
-    if e.name == 'backspace':
+        control_active = True
+    elif e.name == 'backspace':
         handle_backspace()
     elif e.name == 'delete' and control_active:
         handle_delete_word()
