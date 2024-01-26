@@ -8,21 +8,14 @@ from utils import display_web_window
 class FileManager:
     def __init__(self, directory):
         self.directory = directory
+        self.folder_name = "TypeWrytes"
+        self.create_save_folder(self.folder_name)
 
-    def ensure_freewrites_directory():
-        freewrites_dir = os.path.join(os.getcwd(), "TypeWrytes")
-        if not os.path.exists(freewrites_dir):
-            os.makedirs(freewrites_dir)
-            return freewrites_dir
-
-    def check_freewrites_not_empty(self, files):
-        # Check if there are any files to clear
-        if not files:
-            screen.clear()
-            screen.addstr(0, 0, "No files available.")
-            screen.refresh()
-            screen.getch()  # Wait for key press
-            return
+    def ensure_typewrytes_directory():
+        typewrytes_dir = os.path.join(os.getcwd(), "TypeWrytes")
+        if not os.path.exists(typewrytes_dir):
+            os.makedirs(typewrytes_dir)
+            return typewrytes_dir
 
     def view_free_writes(self, screen):
         height, width = screen.getmaxyx()  # Adjust the size as needed

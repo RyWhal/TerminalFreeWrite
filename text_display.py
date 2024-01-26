@@ -17,6 +17,8 @@ text_lines = [""]  # List of text lines
 chars_per_line = 40
 max_lines_on_screen = 15
 current_line = 0
+shift_active = False
+control_active = False
 filename = datetime.now().strftime("Text_%Y%m%d_%H%M%S.txt")
 
 def init_display():
@@ -39,14 +41,18 @@ def save_text_to_file(text_lines, filename):
 def handle_key_down(e, shift_active, control_active): #keys being held, ie modifier keys
     if e.name == 'shift': #if shift is released
         shift_active = True
+    else:
+        shift_active = False
+
     if e.name == 'ctrl': #if shift is released
         control_active = True
+    else:
+        control_active = False
+
     return shift_active,control_active
 
 def get_text(e):
     global text_lines, current_line, filename
-    shift_active = False
-    control_active = False
     shift_active,control_active = handle_key_down(e, shift_active, control_active)
     if e.name == 'backspace':
         handle_backspace()
