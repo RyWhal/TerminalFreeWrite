@@ -62,7 +62,7 @@ def init_image(epd):
     time.sleep(.05)'''
 
 def get_text(e):
-    global text_lines, current_line
+    global text_lines, current_line, shift_active, control_active
     logging.info("get_text")
     #while True:
     #event = keyboard.read_event()
