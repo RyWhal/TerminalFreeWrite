@@ -13,8 +13,8 @@ logging.basicConfig(level=logging.INFO)
 font16 = ImageFont.truetype('Courier Prime.ttf', 16)
 #text = " "
 text_lines = [""]  # List of text lines
-chars_per_line = 45
-max_lines_on_screen = 25
+chars_per_line = 40
+max_lines_on_screen = 20
 current_line = 0
 shift_active = False
 control_active = False
@@ -126,7 +126,7 @@ def partial_update_text(epd, draw, draw_image, text_lines):
 
     # Draw text lines on the image
     for i, line in enumerate(text_lines[-max_lines_on_screen:]):
-        draw.text((10, 10 + i * 20), line, font=font16, fill=0)
+        draw.text((0, 0 + i * 20), line, font=font16, fill=0)
     
     epd.display_Partial(epd.getbuffer(draw_image))
     logging.info("partial_update_complete")
