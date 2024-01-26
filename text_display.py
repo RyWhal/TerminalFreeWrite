@@ -19,7 +19,7 @@ max_lines_on_screen = 15
 current_line = 0
 shift_active = False
 control_active = False
-filename = ""
+filename = datetime.now().strftime("Text_%Y%m%d_%H%M%S.txt")
 
 def init_display():
     #initialize and clear display
@@ -32,11 +32,6 @@ def init_image(epd):
     draw_image = Image.new('1', (epd.width, epd.height), 255)  # 255: clear the frame
     draw = ImageDraw.Draw(draw_image)
     return draw,draw_image
-
-def get_filename():
-    global filename
-    # Generates a filename based on the current datetime
-    filename = datetime.now().strftime("Text_%Y%m%d_%H%M%S.txt")
 
 def save_text_to_file(text_lines, filename):
     # Saves the text to a file
@@ -63,7 +58,7 @@ def get_text(e):
         char= '   '
     elif e.name == 'enter':
         current_line += 1
-        save_text_to_file(text_lines, get_filename())
+        save_text_to_file(text_lines, filename)
         if current_line >= len(text_lines):
             text_lines.append("")
     elif e.name == 'space':
