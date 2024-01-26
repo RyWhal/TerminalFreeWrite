@@ -38,26 +38,16 @@ def save_text_to_file(text_lines, filename):
     with open(filename, 'w') as file:
         file.write('\n'.join(text_lines))
 
-def handle_key_down(e):
-    global shift_active, control_active
-    if e.name == 'shift':
+def handle_key_down(e, shift_active, control_active): #keys being held, ie modifier keys
+    if e.name == 'shift': #if shift is released
         shift_active = True
-        logging.info("shift_active:" + str(shift_active))
-    if e.name == 'ctrl':
+    if e.name == 'ctrl': #if shift is released
         control_active = True
-        logging.info("control_active:" + str(control_active))
-
-'''def handle_key_up(e):
-    global shift_active, control_active
-    if e.name == 'shift':
-        shift_active = False
-        logging.info("shift_active:" + str(shift_active))
-    if e.name == 'ctrl':
-        control_active = False
-        logging.info("control_active:" + str(control_active))'''
+    return shift_active,control_active
 
 def get_text(e):
-    global text_lines, current_line, shift_active, control_active,filename
+    global text_lines, current_line, filename
+    shift_active,control_active = handle_key_down(e,shift_active,control_active)
     if e.name == 'backspace':
         handle_backspace()
     elif e.name == 'delete' and control_active:
@@ -78,7 +68,7 @@ def get_text(e):
     elif len(e.name) == 1 and control_active == False:  # Regular character
         char = e.name
         logging.info("if len(e.name) shift_active: " + str(shift_active))
-        if shift_active == True:
+        if shift_active:
             logging.info("getting shift keymaps")
             logging.info("if shift_active: " + str(shift_active))
             char = keymaps.shift_mapping.get(e.name) 
