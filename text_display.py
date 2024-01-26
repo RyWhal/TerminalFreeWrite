@@ -90,6 +90,7 @@ def get_text(e):
     elif len(e.name) == 1:  # Regular character
         logging.info("Key Pressed: " + e.name)
         #char = keymaps.shift_mapping[e.name] if shift_active else e.name
+        logging.info("Shift pressed: " + str(shift_active) )
         char = e.name
         if shift_active == True:
             logging.info("getting shift keymaps")
