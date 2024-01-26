@@ -23,7 +23,7 @@ menu_length = len(main_menu_options)
 def init_display():
     #initialize and clear display
     epd = epd4in2_V2.EPD()
-    epd.init_fast()
+    epd.init_fast(epd.Seconds_1_5S)
     epd.Clear()
     return epd 
 
