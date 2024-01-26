@@ -38,6 +38,14 @@ def save_text_to_file(text_lines, filename):
     with open(filename, 'w') as file:
         file.write('\n'.join(text_lines))
 
+def handle_key_down(e):
+    global shift_active, control_active
+    if e.name == 'shift':
+        shift_active = True
+        logging.info("shift ON")
+    if e.name == 'ctrl':
+        control_active = True
+
 def handle_key_up(e):
     global shift_active, control_active
     if e.name == 'shift':
