@@ -35,6 +35,7 @@ def handle_key_down(e): #keys being held, ie modifier keys
     global shift_active,control_active
     if e.name == 'shift': #if shift is pressed
         shift_active = True
+        logging.info("shift ON")
     if e.name == 'ctrl': #if shift is pressed
         control_active = True
 
@@ -63,7 +64,7 @@ def handle_key_down(e): #keys being held, ie modifier keys
 
 def get_text(e):
     global text_lines, current_line, shift_active, control_active
-    logging.info("get_text")
+    #logging.info("get_text")
     '''while True:
     event = keyboard.read_event()
     if event.event_type == keyboard.KEY_DOWN:
@@ -79,6 +80,7 @@ def get_text(e):
         control_active = False 
     if e.name == 'shift': #if shift is released
         shift_active = False
+        logging.info("shift OFF")
     elif e.name == 'delete' and control_active:
         handle_delete_word()
     elif e.name == 'delete' and shift_active:
