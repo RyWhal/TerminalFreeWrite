@@ -3,9 +3,6 @@ from PIL import Image, ImageDraw, ImageFont
 from waveshare_epd import epd4in2_V2  # Adjust based on your specific Waveshare model
 #import keyboard
 import threading
-import evdev
-
-
 
 class base_menu:
     def __init__(self, title, options):

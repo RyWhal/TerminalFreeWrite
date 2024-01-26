@@ -88,7 +88,9 @@ def get_text(e):
                 text_lines[current_line] += char
     elif len(e.name) == 1:  # Regular character
         logging.info("Key Pressed: " + e.name)
-        char = keymaps.shift_mapping[e.name] if shift_active else e.name
+        #char = keymaps.shift_mapping[e.name] if shift_active else e.name
+        if shift_active:
+            char = keymaps.shift_mapping.get(e.name) 
         if len(text_lines[current_line]) < chars_per_line:
             text_lines[current_line] += char
     #partial_update_text(epd, text_lines)
