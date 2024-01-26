@@ -47,7 +47,7 @@ def handle_key_down(e):
         control_active = True
         logging.info("control_active:" + str(control_active))
 
-def handle_key_down(e):
+def handle_key_up(e):
     global shift_active, control_active
     if e.name == 'shift':
         shift_active = False
