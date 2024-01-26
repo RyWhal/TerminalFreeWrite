@@ -70,12 +70,10 @@ def get_text(e):
         char = e.name
         logging.info("if len(e.name) shift_active: " + str(shift_active))
         if shift_active:
-            logging.info("getting shift keymaps")
-            logging.info("if shift_active: " + str(shift_active))
             char = keymaps.shift_mapping.get(e.name) 
+            shift_active = False
         if len(text_lines[current_line]) < chars_per_line:
             text_lines[current_line] += char
-        #shift_active = False
     
     # Check and wrap to the next line if the current line is full
     if len(text_lines[current_line]) >= chars_per_line:
