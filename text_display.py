@@ -43,7 +43,6 @@ def handle_key_down(e, shift_active, control_active): #keys being held, ie modif
         shift_active = True
     if e.name == 'ctrl': #if shift is released
         control_active = True
-    time.sleep(.1)
     return shift_active,control_active
 
 def get_text(e):
@@ -55,9 +54,9 @@ def get_text(e):
     # Actions for differet key combos
     if e.name == 'backspace':
         handle_backspace()
-    elif e.name == 'delete' and control_active:
+    elif e.name == 'backspace' and control_active:
         handle_delete_word()
-    elif e.name == 'delete' and shift_active:
+    elif e.name == 'backspace' and shift_active:
         handle_delete_line()
     elif e.name == 'tab':
         char= '   '
@@ -87,7 +86,6 @@ def get_text(e):
 
     # Debounce
     time.sleep(.05)
-    
     #control_active = False    
 
 def handle_backspace():
@@ -117,15 +115,12 @@ def handle_delete_line():
 def partial_update_text(epd, draw, draw_image, text_lines):
     #logging.info("partial_update_start")
     draw.rectangle((0, 0, 400, 300), fill = 255)
-    #draw.text((0, 0), text, font = font16, fill=0)
-    #epd.display_Partial(epd.getbuffer(draw_image))
 
     # Draw text lines on the image
     for i, line in enumerate(text_lines[-max_lines_on_screen:]):
         draw.text((1, 1 + i * 20), line, font=font16, fill=0)
     
     epd.display_Partial(epd.getbuffer(draw_image))
-    #logging.info("partial_update_complete")
 
 def full_update_text(draw, draw_image,text, epd):
     #logging.info("full update")
