@@ -6,3 +6,4 @@ client_secret.json
 web_server.log
 .DS_store
 waveshare_epd/.DS_Store
+Text_*

@@ -5,9 +5,9 @@ from waveshare_epd import epd4in2_V2
 from PIL import Image,ImageDraw,ImageFont
 import keyboard
 import time
-import signal
 import keymaps
-import signal
+import datetime
+
 
 #initialize some vars
 logging.basicConfig(level=logging.INFO)
@@ -19,6 +19,7 @@ max_lines_on_screen = 15
 current_line = 0
 shift_active = False
 control_active = False
+filename = ""
 
 def init_display():
     #initialize and clear display
@@ -32,6 +33,16 @@ def init_image(epd):
     draw = ImageDraw.Draw(draw_image)
     return draw,draw_image
 
+def get_filename():
+    global filename
+    # Generates a filename based on the current datetime
+    filename = datetime.now().strftime("Text_%Y%m%d_%H%M%S.txt")
+
+def save_text_to_file(text_lines, filename):
+    # Saves the text to a file
+    with open(filename, 'w') as file:
+        file.write('\n'.join(text_lines))
+
 def handle_key_up(e):
     global shift_active, control_active
     if e.name == 'shift':
@@ -41,15 +52,18 @@ def handle_key_up(e):
         control_active = False
         
 def get_text(e):
-    global text_lines, current_line, shift_active, control_active
+    global text_lines, current_line, shift_active, control_active,filename
     if e.name == 'backspace':
         handle_backspace()
     elif e.name == 'delete' and control_active:
         handle_delete_word()
     elif e.name == 'delete' and shift_active:
         handle_delete_line()
+    elif e.name == 'tab':
+        char= '   '
     elif e.name == 'enter':
         current_line += 1
+        save_text_to_file(text_lines, get_filename())
         if current_line >= len(text_lines):
             text_lines.append("")
     elif e.name == 'space':
