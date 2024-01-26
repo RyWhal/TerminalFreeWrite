@@ -82,6 +82,7 @@ def get_text(e):
         if current_line >= len(text_lines):
             text_lines.append("")
 
+    time.sleep(.05)
     #control_active = False    
 
 def handle_backspace():
