@@ -23,7 +23,7 @@ menu_length = len(main_menu_options)
 def init_display():
     #initialize and clear display
     epd = epd4in2_V2.EPD()
-    epd.init()
+    epd.init_fast()
     epd.Clear()
     return epd 
 
@@ -50,7 +50,7 @@ def display_full_menu(epd,draw,draw_image):
         draw.text((padding, 1 + 30 * i), option, font=font20, fill=0)
     epd.display(epd.getbuffer(draw_image))
 
-def partial_update_menu(epd, draw, draw_image):
+def update_menu(epd, draw, draw_image):
     global current_selection, previous_selection
     
     # Calculate the y-coordinates for the previous and current selections
@@ -66,7 +66,7 @@ def partial_update_menu(epd, draw, draw_image):
     draw.text((1, y_current), ">", font=font20, fill=0)
 
     #partial update
-    epd.display_Partial(epd.getbuffer(draw_image))
+    epd.display_Fast(epd.getbuffer(draw_image))
 
     previous_selection = current_selection
 
@@ -100,7 +100,7 @@ def main():
 
     while True:
         time.sleep(.1)
-        partial_update_menu(epd, draw, draw_image)
+        update_menu(epd, draw, draw_image)
 
 if __name__ == '__main__':
     try:
