@@ -77,7 +77,7 @@ class text_display:
                 self.char = keymaps.shift_mapping.get(e.name) 
                 shift_active = False
             if len(self.text_lines[self.current_line]) < self.chars_per_line:
-                self.text_lines[self.current_line] += char
+                self.text_lines[self.current_line] += self.char
         
         # Check and wrap to the next line if the current line is full
         if len(self.text_lines[self.current_line]) >= self.chars_per_line:
