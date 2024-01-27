@@ -29,6 +29,14 @@ class text_display:
         self.epd.init()
         self.epd.Clear()
         return self.epd
+    
+    def refresh_display(self):
+        #initialize and clear display
+        #self.epd = epd4in2_V2.EPD()
+        self.epd.init()
+        self.epd.Clear()
+        self.draw.rectangle((0, 0, 400, 300), fill = 255)
+        #return self.epd
 
     def init_image(self):
         self.draw_image = Image.new('1', (self.epd.width, self.epd.height), 255)  # 255: clear the frame
@@ -139,7 +147,7 @@ class text_display:
 
     # start keyboard listener and callback to get_input_text method
     def loop(self):
-        self.epd = self.init_display() #initialize the display one time. 
+        #self.epd = self.init_display() #initialize the display one time. 
         self.draw, self.draw_image = self.init_image()
         keyboard.on_press(self.get_text, suppress=True) #handles keyboard input
 
