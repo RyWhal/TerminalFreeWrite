@@ -90,7 +90,8 @@ class TypeWryter:
         self.typewrytes_dir = os.path.join(os.getcwd(), "TypeWrytes")
         self.data_dir = os.path.join(os.getcwd(), "data")
         self.cache_file_path = os.path.join(os.path.dirname(__file__), self.data_dir, 'cache.txt')
-        self.file_path = "" 
+        
+        #self.file_path = "" 
         self.filename = ""
     
     def initialize(self):
@@ -153,7 +154,7 @@ class TypeWryter:
 
     def load_file_into_previous_lines(self):
         #file_path = os.path.join(os.path.dirname(__file__), self.typewrytes_dir, filename)
-        self.file_path = os.path.join(os.path.dirname(__file__), self.typewrytes_dir, self.filename)
+        
         print("File Path: " + self.file_path)
         print("Load file into previous lines File Name: " + self.filename)
         try:
@@ -244,6 +245,7 @@ class TypeWryter:
             return []
 
     def save_previous_lines(self, lines):
+      self.file_path = os.path.join(os.path.dirname(__file__), self.typewrytes_dir, self.filename)
       print("save previous lines file path:" + self.file_path)
       try:
           # Ensure the directory exists
