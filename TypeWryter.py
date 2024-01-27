@@ -316,6 +316,8 @@ class TypeWryter:
         self.epd.display_Partial(partial_buffer)
 
     def show_file_browse_menu(self):
+        self.load_menu.addItem("Back", self.hide_child_menu)
+
         print("starting web server")
         self.parent_menu = self.menu
         start_server()
@@ -325,6 +327,7 @@ class TypeWryter:
 
         local_ip = get_local_ip_address()
 
+        #Generate QR Code
         qr = qrcode.QRCode(
                 error_correction=qrcode.constants.ERROR_CORRECT_L,
                 box_size=2,
@@ -332,26 +335,29 @@ class TypeWryter:
         qr.add_data(local_ip)
         qr.make(fit=True)
         qr_img = qr.make_image(fill='black', back_color='white')
+
         # Convert QR code image to match the display's image mode
         qr_img_converted = qr_img.convert('1')
+
         # Save QR code to the filesystem
         qr_img_save_path = os.path.join(os.path.dirname(__file__), 'data', 'qr_code.png')
         qr_img.save(qr_img_save_path)
         print(f"QR code saved to {qr_img_save_path}")
 
-        # SAVE QR CODE
-
-
         # Calculate position to center QR code on the display
         qr_x = (self.epd.width - qr_img_converted.width) // 2
         qr_y = (self.epd.height - qr_img_converted.height) // 2
-        # Clear the display image
+        
+        # Clear the current display image
         self.display_draw.rectangle((0, 0, self.epd.width, self.epd.height), fill=255)
+
         # Paste the QR code onto the display image
         self.display_image.paste(qr_img_converted, (qr_x, qr_y))
+
         # Update the display with the new image
         partial_buffer = self.epd.getbuffer(self.display_image)
         self.epd.display(partial_buffer)
+        self.load_menu.addItem("Back", self.hide_child_menu)
 
 
     def update_display(self):
