@@ -137,7 +137,7 @@ class main_menu:
 
 
     # start keyboard listener and callback to get_input_text method
-    def main_loop(self):
+    def loop(self):
         self.epd = self.init_display() #initialize the display one time. 
         self.draw, self.draw_image = self.init_image(self.epd)
         keyboard.on_press(self.get_text, suppress=True) #handles keyboard input
@@ -147,12 +147,12 @@ class main_menu:
             self.partial_update_text(self.epd, self.draw, self.draw_image, self.text_lines)
 
 
-
-    try:
-        main_loop()
-    except IOError as e:
-        logging.info(e)
-    except KeyboardInterrupt:
-        logging.info("ctrl + c:")
-        epd4in2_V2.epdconfig.module_exit()
-        exit()
+    def run(self):
+        try:
+            self.loop()
+        except IOError as e:
+            logging.info(e)
+        except KeyboardInterrupt:
+            logging.info("ctrl + c:")
+            epd4in2_V2.epdconfig.module_exit()
+            exit()
