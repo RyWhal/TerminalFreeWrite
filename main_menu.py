@@ -80,7 +80,7 @@ class main_menu:
         #global current_selection
         if self.current_selection == 0:
             logging.info("trigger text display")
-            text_display().run_text_display(self)
+            text_display().run_text_display()
         elif self.current_selection == 1:
             # Trigger function for "Continue a freewrite"
             print ("option 2")
