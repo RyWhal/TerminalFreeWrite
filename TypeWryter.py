@@ -406,7 +406,7 @@ class TypeWryter:
 
         if e.name == "w" and self.control_active: #ctrl+m
             wc = self.get_word_count
-            self.console_message = f"Word Count: " + wc
+            self.console_message = f"Word Count: " + str(wc)
             self.update_display()
             time.sleep(2)
             self.console_message = ""
