@@ -32,7 +32,7 @@ class text_display:
     def init_image(self):
         self.draw_image = Image.new('1', (self.epd.width, self.epd.height), 255)  # 255: clear the frame
         self.draw = ImageDraw.Draw(self.draw_image)
-        return self.draw,self.draw_image
+        #return self.draw,self.draw_image
 
     def save_text_to_file(self, text_lines, filename):
         # Saves the text to a file
