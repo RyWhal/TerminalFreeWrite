@@ -243,7 +243,7 @@ class TypeWryter:
             print("error")
             return []
 
-    def save_previous_lines(self):
+    def save_previous_lines(self, lines):
       print("save previous lines file path:" + self.file_path)
       try:
           # Ensure the directory exists
@@ -494,7 +494,8 @@ class TypeWryter:
                 self.cursor_position=0
                 #save the file when enter is pressed
                 print("Enter key path:" + self.cache_file_path)
-                self.save_previous_lines(self.cache_file_path, self.previous_lines)
+                print("File Name: " + self.filename)
+                self.save_previous_lines(self.previous_lines)
                 self.needs_display_update = True
             
         if e.name == 'ctrl': #if control is released
