@@ -22,6 +22,7 @@ main_menu_options = ["New freewrite", "Continue a freewrite", "Settings", "TypeW
 menu_length = len(main_menu_options)
 
 def init_display():
+    logging.info("init screen")
     #initialize and clear display
     epd = epd4in2_V2.EPD()
     epd.init_fast(epd.Seconds_1_5S)
@@ -46,35 +47,36 @@ def get_keyboard_input(e):
         pass
 
 def display_full_menu(epd,draw,draw_image):
+    logging.info("Display initial menu")
     padding = 20  # Adjust padding as needed
     for i, option in enumerate(main_menu_options):
         draw.text((padding, 1 + 30 * i), option, font=font20, fill=0)
     epd.display(epd.getbuffer(draw_image))
 
 def update_menu(epd, draw, draw_image):
+    logging.info("update menu")
     global current_selection, previous_selection
-    
-    # Calculate the y-coordinates for the previous and current selections
-    y_prev = 1 + 30 * previous_selection
+
+    #current y-axis
     y_current = 1 + 30 * current_selection
 
-    # Clear the area where the previous and current indicators are displayed
-    indicator_width = 15  # Width of the area to clear for the indicator
+    # Clear the area where the indicators are displayed
     draw.rectangle((1,1,20,300), fill=255)
-    #draw.rectangle((0, y_current, indicator_width, y_current + 30), fill=255)
 
     # Draw the indicator only for the current selection
     draw.text((1, y_current), ">", font=font20, fill=0)
 
-    #partial update
+    #partial update screen
     epd.display_Partial(epd.getbuffer(draw_image))
 
     previous_selection = current_selection
 
 # Function to be called based on the selection
 def trigger_function_based_on_selection():
+    logging.info("choose function")
     global current_selection
     if current_selection == 0:
+        logging.info("trigger text display")
         main_loop()
     elif current_selection == 1:
         # Trigger function for "Continue a freewrite"
