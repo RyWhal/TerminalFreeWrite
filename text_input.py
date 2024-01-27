@@ -120,7 +120,7 @@ class text_display:
 
         # Draw text lines on the image
         for i, line in enumerate(self.text_lines[-self.max_lines_on_screen:]):
-            draw.text((1, 1 + i * 20), line, font=self.font16, fill=0)
+            self.draw.text((1, 1 + i * 20), line, font=self.font16, fill=0)
         
         self.epd.display_Partial(self.epd.getbuffer(self.draw_image))
 
