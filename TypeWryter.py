@@ -161,6 +161,7 @@ class TypeWryter:
                 time.sleep(1)
                 self.console_message = ""
                 self.update_display()
+                print("loaded: " + self.filename)
         except Exception as e:
             self.console_message = f"[Error loading file]"
             print(f"Failed to load file {self.filename}: {e}")
@@ -252,6 +253,12 @@ class TypeWryter:
       except IOError as e:
           self.console_message = f"[Error saving file]"
           print("Failed to save file:", e)
+
+    def get_word_count(self):
+        with open(self.filename, 'r') as file:
+            self.content = file.read()
+            self.words = self.content.split()
+            return len(self.words)
 
     def hide_menu(self):
       print('hiding menu')
@@ -390,12 +397,20 @@ class TypeWryter:
             
             self.console_message = f"[Saved]"
             self.update_display()
-            time.sleep(1)
+            time.sleep(2)
             self.console_message = ""
             self.update_display()
         
         if e.name == "m" and self.control_active: #ctrl+m
             self.show_menu()
+
+        if e.name == "w" and self.control_active: #ctrl+m
+            wc = self.get_word_count
+            self.console_message = f"Word Count: " + wc
+            self.update_display()
+            time.sleep(2)
+            self.console_message = ""
+            self.update_display()
 
         #new file (clear) via ctrl + n
         if e.name== "n" and self.control_active: #ctrl+n
