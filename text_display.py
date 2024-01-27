@@ -44,7 +44,7 @@ class text_display:
             self.shift_active = True
         if e.name == 'ctrl': #if shift is released
             self.control_active = True
-        #return shift_active,control_active
+        return self.shift_active,self.control_active
 
     def get_text(self,e):
         #global text_lines, current_line, filename, shift_active, control_active
@@ -57,7 +57,7 @@ class text_display:
             self.handle_backspace()
         elif e.name == 'backspace' and self.control_active:
             self.handle_delete_word()
-        elif e.name == 'backspace' and shift_active:
+        elif e.name == 'backspace' and self.shift_active:
             self.handle_delete_line()
         elif e.name == 'tab':
             self.char= '   '
