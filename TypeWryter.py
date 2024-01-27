@@ -243,7 +243,7 @@ class TypeWryter:
             print("error")
             return []
 
-    def save_previous_lines(self, lines):
+    def save_previous_lines(self):
       print("save previous lines file path:" + self.file_path)
       try:
           # Ensure the directory exists
