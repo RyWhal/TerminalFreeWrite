@@ -4,7 +4,7 @@ from waveshare_epd import epd4in2_V2  # Adjust based on your specific Waveshare 
 import keyboard
 import time
 import logging
-import text_display
+from text_input import text_display
 
 
 logging.basicConfig(level=logging.DEBUG)
