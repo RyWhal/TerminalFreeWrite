@@ -13,6 +13,7 @@ type_wryter = TypeWryter()
 try:
   type_wryter.epd = epd4in2_V2.EPD()
   type_wryter.keyboard = keyboard
+  type_wryter.ensure_typewrytes_directory()
   type_wryter.initialize()
   type_wryter.run()
 
@@ -25,16 +26,4 @@ finally:
     time.sleep(1)
     type_wryter.epd.Clear()
     type_wryter.epd.sleep()
-
-#from text_display import text_display
-'''from main_menu import main_menu
-
-def main():
-    #app = text_display()
-    #app.run_text_display()
-    app = main_menu()
-    app.run_main_menu()
-
-if __name__ == "__main__":
-    main()'''
 

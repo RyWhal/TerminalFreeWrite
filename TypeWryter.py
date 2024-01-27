@@ -68,8 +68,9 @@ class TypeWryter:
         self.menu = None
         self.parent_menu = None # used to store the menu that was open before the load menu was opened
         self.font13 = ImageFont.truetype('Courier Prime.ttf', 13)
+        self.typewrytes_dir = ""
         
-        self.cache_file_path = os.path.join(os.path.dirname(__file__), 'data', 'cache.txt')
+        self.cache_file_path = os.path.join(os.path.dirname(__file__), 'TypeWrytes', 'cache.txt')
     
     def initialize(self):
         self.epd.init()
@@ -93,6 +94,12 @@ class TypeWryter:
         self.load_menu = Menu(self.display_draw, self.epd, self.display_image)
         self.populate_load_menu()
 
+    def ensure_typewrytes_directory(self):
+        self.typewrytes_dir = os.path.join(os.getcwd(), "TypeWrytes")
+        if not os.path.exists(self.typewrytes_dir):
+            os.makedirs(self.typewrytes_dir)
+            return self.typewrytes_dir
+
     def show_load_menu(self):
         self.parent_menu = self.menu
         self.populate_load_menu()
@@ -106,7 +113,7 @@ class TypeWryter:
 
     def populate_load_menu(self):
         self.load_menu.menu_items.clear()
-        data_folder_path = os.path.join(os.path.dirname(__file__), 'data')
+        data_folder_path = os.path.join(os.path.dirname(__file__), 'TypeWrytes')
         try:
             # List all files in the data folder
             files = [f for f in os.listdir(data_folder_path) if os.path.isfile(os.path.join(data_folder_path, f)) and f.endswith('.txt')]
@@ -122,7 +129,7 @@ class TypeWryter:
             print(f"Failed to list files in {data_folder_path}: {e}")
 
     def load_file_into_previous_lines(self, filename):
-        file_path = os.path.join(os.path.dirname(__file__), 'data', filename)
+        file_path = os.path.join(os.path.dirname(__file__), 'TypeWrytes', filename)
         try:
             with open(file_path, 'r') as file:
                 lines = file.readlines()
@@ -145,12 +152,10 @@ class TypeWryter:
             self.menu = self.parent_menu
             self.hide_menu()
 
-
-
     def new_file(self):
         #save the cache first
         timestamp = time.strftime("%Y%m%d%H%M%S")  # Format: YYYYMMDDHHMMSS
-        filename = os.path.join(os.path.dirname(__file__), 'data', f'zw_{timestamp}.txt')
+        filename = os.path.join(os.path.dirname(__file__), 'TypeWrytes', f'zw_{timestamp}.txt')
         self.save_previous_lines(filename, self.previous_lines)
         
         #create a blank doc
@@ -319,7 +324,7 @@ class TypeWryter:
         temp_content = self.input_content[:cursor_index] + "|" + self.input_content[cursor_index:]
 
         #draw input line text
-        self.display_draw.text((10, 270), str(temp_content), font=self.font13, fill=0)
+        self.display_draw.text((2, 270), str(temp_content), font=self.font13, fill=0)
         
         #generate display buffer for input line
         self.updating_input_area = True
@@ -358,7 +363,7 @@ class TypeWryter:
             prefix = ''.join(self.previous_lines)[:30]
             alphanum_prefix = ''.join(ch for ch in prefix if ch.isalnum())
             
-            filename = os.path.join(os.path.dirname(__file__), 'data', f'zw_{timestamp}_{alphanum_prefix}.txt')
+            filename = os.path.join(os.path.dirname(__file__), 'TypeWrytes', f'zw_{timestamp}_{alphanum_prefix}.txt')
             self.save_previous_lines(filename, self.previous_lines)
             
             self.console_message = f"[Saved]"
