@@ -10,7 +10,7 @@ from datetime import datetime
 
 logging.basicConfig(level=logging.INFO)
 
-class main_menu:
+class text_display:
     def __init__(self):
         #initialize some vars
         self.font16 = ImageFont.truetype('Courier Prime.ttf', 16)

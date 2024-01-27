@@ -1,30 +1,9 @@
-from TypeWryter import main_app_loop
+from text_display import text_display
 
 def main():
-    main_app_loop()
+    app = text_display()
+    app.run()
 
 if __name__ == "__main__":
     main()
 
-'''
-from menus import main_menu
-
-def main():
-    main_menu()
-    # Logic to display and interact with the main menu
-
-if __name__ == "__main__":
-    main()
-
-
-# main.py
-from menu2 import display_menu
-
-def main():
-    menu = display_menu()
-    menu.navigate_menu()
-    #menu.cleanup()
-
-if __name__ == '__main__':
-    main()
-    '''
