@@ -72,7 +72,7 @@ class TypeWryter:
         self.previous_lines = []
         self.needs_display_update = True
         self.needs_input_update = True
-        self.chars_per_line = 40
+        self.chars_per_line = 50
         self.lines_on_screen = 15
         self.font_size = 13
         self.line_spacing = 22
@@ -308,7 +308,7 @@ class TypeWryter:
         self.display_draw.rectangle((0, 0, 400, 300), fill=255)
         
         # Display the previous lines
-        y_position = 270 - self.line_spacing  # leaves room for cursor input
+        y_position = 280 - self.line_spacing  # leaves room for cursor input
 
         #Make a temp array from previous_lines. And then reverse it and display as usual.
         current_line=max(0,len(self.previous_lines)-self.lines_on_screen*self.scrollindex)
@@ -321,8 +321,8 @@ class TypeWryter:
 
         #Display Console Message
         if self.console_message != "":
-            self.display_draw.rectangle((300, 270, 400, 300), fill=255)
-            self.display_draw.text((300, 270), self.console_message, font=self.font13, fill=0)
+            self.display_draw.rectangle((300, 280, 400, 300), fill=255)
+            self.display_draw.text((300, 280), self.console_message, font=self.font13, fill=0)
             self.console_message = ""
         
         #generate display buffer for display
@@ -341,7 +341,7 @@ class TypeWryter:
         temp_content = self.input_content[:cursor_index] + "|" + self.input_content[cursor_index:]
 
         #draw input line text
-        self.display_draw.text((2, 270), str(temp_content), font=self.font13, fill=0)
+        self.display_draw.text((2, 280), str(temp_content), font=self.font13, fill=0)
         
         #generate display buffer for input line
         self.updating_input_area = True
