@@ -111,7 +111,7 @@ class main_menu:
         keyboard.on_press(self.get_keyboard_input, suppress=True) #handles keyboard input
 
         # Main app loop
-        while True:
+        while self.show_menu:
             time.sleep(.1)
             self.update_menu()
 
