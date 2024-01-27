@@ -86,7 +86,9 @@ class TypeWryter:
         self.parent_menu = None # used to store the menu that was open before the load menu was opened
         self.font13 = ImageFont.truetype('Courier Prime.ttf', 13)
         self.typewrytes_dir = ""
-        self.filename = ""
+
+        self.timestamp = time.strftime("%Y%m%d%H%M%S")  # Format: YYYYMMDDHHMMSS
+        self.filename = os.path.join(os.path.dirname(__file__), 'TypeWrytes', f'typewryte_{self.timestamp}.txt')
         
         self.cache_file_path = os.path.join(os.path.dirname(__file__), 'TypeWrytes', 'cache.txt')
     
@@ -146,22 +148,22 @@ class TypeWryter:
         except Exception as e:
             print(f"Failed to list files in {data_folder_path}: {e}")
 
-    def load_file_into_previous_lines(self, filename):
+    def load_file_into_previous_lines(self):
         #self.file_path = os.path.join(os.path.dirname(__file__), 'TypeWrytes', filename)
         try:
-            with open(self.file_path, 'r') as file:
+            with open(self.filename, 'r') as file:
                 lines = file.readlines()
                 self.previous_lines = [line.strip() for line in lines]
                 self.input_content = ""
                 self.cursor_position = 0
-                self.console_message = f"[Loaded {filename}]"
+                self.console_message = f"[Loaded {self.filename}]"
                 self.update_display()
                 time.sleep(1)
                 self.console_message = ""
                 self.update_display()
         except Exception as e:
             self.console_message = f"[Error loading file]"
-            print(f"Failed to load file {self.file_path}: {e}")
+            print(f"Failed to load file {self.filename}: {e}")
             self.update_display()
             time.sleep(1)
             self.console_message = ""
@@ -235,16 +237,16 @@ class TypeWryter:
             print("error")
             return []
 
-    def save_previous_lines(self, file_path, lines):
+    def save_previous_lines(self, file, lines):
       try:
           # Ensure the directory exists
-          os.makedirs(os.path.dirname(file_path), exist_ok=True)
+          os.makedirs(os.path.dirname(self.filename), exist_ok=True)
           # Check if the file is writable or create it if it doesn't exist
-          with open(file_path, 'a') as file:
+          with open(self.filename, 'a') as file:
               pass
           # Clear the file content before writing
-          with open(file_path, 'w') as file:
-              print("Saving to file:", file_path)
+          with open(self.filename, 'w') as file:
+              print("Saving to file:", self.filename)
               for line in lines:
                   file.write(line + '\n')
       except IOError as e:
@@ -376,13 +378,13 @@ class TypeWryter:
 
     def handle_key_press(self, e):
         if e.name== "s" and self.control_active:
-            timestamp = time.strftime("%Y%m%d%H%M%S")  # Format: YYYYMMDDHHMMSS
+            #timestamp = time.strftime("%Y%m%d%H%M%S")  # Format: YYYYMMDDHHMMSS
 
             ## first 30 chars of previous_lines
             #prefix = ''.join(self.previous_lines)[:self.chars_per_line]
             #alphanum_prefix = ''.join(ch for ch in prefix if ch.isalnum())
             
-            self.filename = os.path.join(os.path.dirname(__file__), 'TypeWrytes', f'typewryte_{timestamp}.txt')
+            #self.filename = os.path.join(os.path.dirname(__file__), 'TypeWrytes', f'typewryte_{timestamp}.txt')
             
             self.save_previous_lines(self.filename, self.previous_lines)
             
