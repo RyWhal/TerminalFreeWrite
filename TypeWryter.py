@@ -87,12 +87,7 @@ class TypeWryter:
         self.font13 = ImageFont.truetype('Courier Prime.ttf', 13)
         self.typewrytes_dir = ""
         
-        self.typewrytes_dir = os.path.join(os.getcwd(), "TypeWrytes")
-        self.data_dir = os.path.join(os.getcwd(), "data")
-        self.cache_file_path = os.path.join(os.path.dirname(__file__), self.data_dir, 'cache.txt')
-        
-        #self.file_path = "" 
-        self.filename = ""
+        self.cache_file_path = os.path.join(os.path.dirname(__file__), 'TypeWrytes', 'cache.txt')
     
     def initialize(self):
         self.epd.init()
@@ -103,7 +98,6 @@ class TypeWryter:
 
         self.keyboard.on_press(self.handle_key_down, suppress=False) #handles modifiers and shortcuts
         self.keyboard.on_release(self.handle_key_press, suppress=True)
-
       
         self.menu = Menu(self.display_draw, self.epd, self.display_image)
         self.menu.addItem("New", lambda: self.new_file())
@@ -118,11 +112,10 @@ class TypeWryter:
         self.populate_load_menu()
 
     def ensure_sub_dirs(self):
+        self.typewrytes_dir = os.path.join(os.getcwd(), "TypeWrytes")
         if not os.path.exists(self.typewrytes_dir):
             os.makedirs(self.typewrytes_dir)
-        if not os.path.exists(self.data_dir):
-            os.makedirs(self.data_dir)
-        return self.typewrytes_dir, self.data_dir
+            return self.typewrytes_dir
 
     def show_load_menu(self):
         self.parent_menu = self.menu
@@ -137,12 +130,12 @@ class TypeWryter:
 
     def populate_load_menu(self):
         self.load_menu.menu_items.clear()
-        #data_folder_path = os.path.join(os.path.dirname(__file__), 'TypeWrytes')
+        data_folder_path = os.path.join(os.path.dirname(__file__), 'TypeWrytes')
         try:
-            # List all files in the TypeWrytes folder
-            files = [f for f in os.listdir(self.typewrytes_dir) if os.path.isfile(os.path.join(self.typewrytes_dir, f)) and f.endswith('.txt')]
+            # List all files in the data folder
+            files = [f for f in os.listdir(data_folder_path) if os.path.isfile(os.path.join(data_folder_path, f)) and f.endswith('.txt')]
             # Sort files by modification time
-            files.sort(key=lambda x: os.path.getmtime(os.path.join(self.typewrytes_dir, x)), reverse=True)
+            files.sort(key=lambda x: os.path.getmtime(os.path.join(data_folder_path, x)), reverse=True)
 
             self.load_menu.addItem("Back", self.hide_child_menu)
 
@@ -150,27 +143,24 @@ class TypeWryter:
             for filename in files:
                 self.load_menu.addItem(filename, lambda f=filename: self.load_file_into_previous_lines(f))
         except Exception as e:
-            print(f"Failed to list files in {self.typewrytes_dir}: {e}")
+            print(f"Failed to list files in {data_folder_path}: {e}")
 
-    def load_file_into_previous_lines(self):
-        #file_path = os.path.join(os.path.dirname(__file__), self.typewrytes_dir, filename)
-        
-        print("File Path: " + self.file_path)
-        print("Load file into previous lines File Name: " + self.filename)
+    def load_file_into_previous_lines(self, filename):
+        file_path = os.path.join(os.path.dirname(__file__), 'TypeWrytes', filename)
         try:
-            with open(self.file_path, 'r') as file:
+            with open(file_path, 'r') as file:
                 lines = file.readlines()
                 self.previous_lines = [line.strip() for line in lines]
                 self.input_content = ""
                 self.cursor_position = 0
-                self.console_message = f"[Loaded {self.filename}]"
+                self.console_message = f"[Loaded {filename}]"
                 self.update_display()
                 time.sleep(1)
                 self.console_message = ""
                 self.update_display()
         except Exception as e:
             self.console_message = f"[Error loading file]"
-            print(f"Failed to load file {self.file_path}: {e}")
+            print(f"Failed to load file {file_path}: {e}")
             self.update_display()
             time.sleep(1)
             self.console_message = ""
@@ -181,11 +171,10 @@ class TypeWryter:
 
     def new_file(self):
         #save the cache first
-        self.timestamp = time.strftime("%Y%m%d%H%M%S")  # Format: YYYYMMDDHHMMSS
-        self.filename = os.path.join(os.path.dirname(__file__), 'TypeWrytes', f'zw_{self.timestamp}.txt')
-        self.save_previous_lines(self.filename, self.previous_lines)
+        timestamp = time.strftime("%Y%m%d%H%M%S")  # Format: YYYYMMDDHHMMSS
+        filename = os.path.join(os.path.dirname(__file__), 'TypeWrytes', f'zw_{timestamp}.txt')
+        self.save_previous_lines(filename, self.previous_lines)
         
-        print("File Name: " + self.filename)
         #create a blank doc
         self.previous_lines.clear()
         self.input_content = ""
@@ -195,7 +184,6 @@ class TypeWryter:
         time.sleep(1)
         self.console_message = ""
         self.update_display()
-        return
 
     def power_down(self):
         #run powerdown script
@@ -245,19 +233,16 @@ class TypeWryter:
             print("error")
             return []
 
-    def save_previous_lines(self, lines):
-      self.file_path = os.path.join(os.path.dirname(__file__), self.typewrytes_dir, self.filename)
-      print("save previous lines file path:" + self.file_path)
-      print("save previous lines filename:" + self.filename)
+    def save_previous_lines(self, file_path, lines):
       try:
           # Ensure the directory exists
-          os.makedirs(os.path.dirname(self.file_path), exist_ok=True)
+          os.makedirs(os.path.dirname(file_path), exist_ok=True)
           # Check if the file is writable or create it if it doesn't exist
-          with open(self.file_path, 'a') as file:
+          with open(file_path, 'a') as file:
               pass
           # Clear the file content before writing
-          with open(self.file_path, 'w') as file:
-              print("Saving to file:", self.file_path)
+          with open(file_path, 'w') as file:
+              print("Saving to file:", file_path)
               for line in lines:
                   file.write(line + '\n')
       except IOError as e:
@@ -298,7 +283,7 @@ class TypeWryter:
         # Convert QR code image to match the display's image mode
         qr_img_converted = qr_img.convert('1')
         # Save QR code to the filesystem
-        qr_img_save_path = os.path.join(os.path.dirname(__file__),self.data_dir, 'qr_code.png')
+        qr_img_save_path = os.path.join(os.path.dirname(__file__), 'data', 'qr_code.png')
         qr_img.save(qr_img_save_path)
         print(f"QR code saved to {qr_img_save_path}")
 
@@ -389,14 +374,14 @@ class TypeWryter:
 
     def handle_key_press(self, e):
         if e.name== "s" and self.control_active:
-            #timestamp = time.strftime("%Y%m%d%H%M%S")  # Format: YYYYMMDDHHMMSS
+            timestamp = time.strftime("%Y%m%d%H%M%S")  # Format: YYYYMMDDHHMMSS
 
             ## first 30 chars of previous_lines
-            #prefix = ''.join(self.previous_lines)[:self.chars_per_line]
-            #alphanum_prefix = ''.join(ch for ch in prefix if ch.isalnum())
+            prefix = ''.join(self.previous_lines)[:self.chars_per_line]
+            alphanum_prefix = ''.join(ch for ch in prefix if ch.isalnum())
             
-            #self.filename = os.path.join(os.path.dirname(__file__), self.typewrytes_dir, f'zw_{timestamp}_{alphanum_prefix}.txt')
-            self.save_previous_lines(self.filename, self.previous_lines)
+            filename = os.path.join(os.path.dirname(__file__), 'TypeWrytes', f'zw_{timestamp}_{alphanum_prefix}.txt')
+            self.save_previous_lines(filename, self.previous_lines)
             
             self.console_message = f"[Saved]"
             self.update_display()
@@ -497,9 +482,7 @@ class TypeWryter:
                 self.input_content = "" #clears input content
                 self.cursor_position=0
                 #save the file when enter is pressed
-                print("Enter key path:" + self.cache_file_path)
-                print("File Name: " + self.filename)
-                self.save_previous_lines(self.previous_lines)
+                self.save_previous_lines(self.cache_file_path, self.previous_lines)
                 self.needs_display_update = True
             
         if e.name == 'ctrl': #if control is released
