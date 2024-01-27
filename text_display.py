@@ -50,7 +50,7 @@ class text_display:
         #global text_lines, current_line, filename, shift_active, control_active
 
         #check shift key
-        self.shift_active,self.control_active = self.handle_key_down(e, shift_active, self.control_active)
+        self.shift_active,self.control_active = self.handle_key_down(e, self.shift_active, self.control_active)
 
         # Actions for differet key combos
         if e.name == 'backspace':
