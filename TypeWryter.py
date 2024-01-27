@@ -72,8 +72,8 @@ class TypeWryter:
         self.previous_lines = []
         self.needs_display_update = True
         self.needs_input_update = True
-        self.chars_per_line = 32
-        self.lines_on_screen = 12
+        self.chars_per_line = 40
+        self.lines_on_screen = 15
         self.font_size = 13
         self.line_spacing = 22
         self.scrollindex = 1
@@ -335,7 +335,7 @@ class TypeWryter:
 
     def update_input_area(self):
         cursor_index = self.cursor_position
-        self.display_draw.rectangle((0, 270, 400, 300), fill=255)  # Clear display
+        self.display_draw.rectangle((0, 280, 400, 300), fill=255)  # Clear display
         
         #add cursor
         temp_content = self.input_content[:cursor_index] + "|" + self.input_content[cursor_index:]
