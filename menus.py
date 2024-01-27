@@ -91,7 +91,7 @@ def cleanup(epd):
 # Initialize and run the app
 
 # start keyboard listener and callback to get_input_text method
-def main_loop():
+def main():
     epd = init_display()
     draw,draw_image = init__menu_image(epd)
     display_full_menu(epd,draw,draw_image)
@@ -101,12 +101,12 @@ def main_loop():
         time.sleep(.1)
         update_menu(epd, draw, draw_image)
 
-
-try:
-    main_loop()
-except IOError as e:
-    logging.info(e)
-except KeyboardInterrupt:
-    logging.info("ctrl + c:")
-    epd4in2_V2.epdconfig.module_exit()
-    exit()
+if __name__ == '__main__':
+    try:
+        main()
+    except IOError as e:
+        logging.info(e)
+    except KeyboardInterrupt:
+        logging.info("ctrl + c:")
+        epd4in2_V2.epdconfig.module_exit()
+        exit()
