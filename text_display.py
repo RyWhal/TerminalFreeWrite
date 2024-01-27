@@ -139,7 +139,7 @@ class text_display:
     # start keyboard listener and callback to get_input_text method
     def loop(self):
         self.epd = self.init_display() #initialize the display one time. 
-        self.draw, self.draw_image = self.init_image(self.epd)
+        self.draw, self.draw_image = self.init_image()
         keyboard.on_press(self.get_text, suppress=True) #handles keyboard input
 
         while True:
