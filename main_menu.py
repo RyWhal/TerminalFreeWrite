@@ -4,7 +4,7 @@ from waveshare_epd import epd4in2_V2  # Adjust based on your specific Waveshare 
 import keyboard
 import time
 import logging
-#from text_display import main_loop
+from text_display import main_loop
 
 
 logging.basicConfig(level=logging.INFO)
@@ -75,8 +75,7 @@ def update_menu(epd, draw, draw_image):
 def trigger_function_based_on_selection():
     global current_selection
     if current_selection == 0:
-        #main_loop()
-        pass
+        main_loop()
     elif current_selection == 1:
         # Trigger function for "Continue a freewrite"
         print ("option 2")
@@ -91,13 +90,19 @@ def cleanup(epd):
 
 # Initialize and run the app
 
-# start keyboard listener and callback to get_input_text method
+
 def main():
+    #initialize e-ink screen
     epd = init_display()
     draw,draw_image = init__menu_image(epd)
+
+    #draw menu to e-ink screen
     display_full_menu(epd,draw,draw_image)
+
+    # start keyboard listener and callback to get_input_text method
     keyboard.on_press(get_keyboard_input, suppress=True) #handles keyboard input
 
+    # Main app loop
     while True:
         time.sleep(.1)
         update_menu(epd, draw, draw_image)
