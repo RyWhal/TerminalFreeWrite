@@ -178,8 +178,8 @@ class TypeWryter:
 
     def new_file(self):
         #save the cache first
-        timestamp = time.strftime("%Y%m%d%H%M%S")  # Format: YYYYMMDDHHMMSS
-        self.filename = os.path.join(os.path.dirname(__file__), 'TypeWrytes', f'zw_{timestamp}.txt')
+        self.timestamp = time.strftime("%Y%m%d%H%M%S")  # Format: YYYYMMDDHHMMSS
+        self.filename = os.path.join(os.path.dirname(__file__), 'TypeWrytes', f'zw_{self.timestamp}.txt')
         self.save_previous_lines(self.filename, self.previous_lines)
         
         #create a blank doc
@@ -244,13 +244,13 @@ class TypeWryter:
       print(file_path)
       try:
           # Ensure the directory exists
-          os.makedirs(os.path.dirname(file_path), exist_ok=True)
+          os.makedirs(os.path.dirname(self.file_path), exist_ok=True)
           # Check if the file is writable or create it if it doesn't exist
-          with open(file_path, 'a') as file:
+          with open(self.file_path, 'a') as file:
               pass
           # Clear the file content before writing
-          with open(file_path, 'w') as file:
-              print("Saving to file:", file_path)
+          with open(self.file_path, 'w') as file:
+              print("Saving to file:", self.file_path)
               for line in lines:
                   file.write(line + '\n')
       except IOError as e:
@@ -382,11 +382,11 @@ class TypeWryter:
 
     def handle_key_press(self, e):
         if e.name== "s" and self.control_active:
-            timestamp = time.strftime("%Y%m%d%H%M%S")  # Format: YYYYMMDDHHMMSS
+            #timestamp = time.strftime("%Y%m%d%H%M%S")  # Format: YYYYMMDDHHMMSS
 
             ## first 30 chars of previous_lines
-            prefix = ''.join(self.previous_lines)[:self.chars_per_line]
-            alphanum_prefix = ''.join(ch for ch in prefix if ch.isalnum())
+            #prefix = ''.join(self.previous_lines)[:self.chars_per_line]
+            #alphanum_prefix = ''.join(ch for ch in prefix if ch.isalnum())
             
             #self.filename = os.path.join(os.path.dirname(__file__), self.typewrytes_dir, f'zw_{timestamp}_{alphanum_prefix}.txt')
             self.save_previous_lines(self.filename, self.previous_lines)
@@ -490,6 +490,7 @@ class TypeWryter:
                 self.input_content = "" #clears input content
                 self.cursor_position=0
                 #save the file when enter is pressed
+                print(self.cache_file_path)
                 self.save_previous_lines(self.cache_file_path, self.previous_lines)
                 self.needs_display_update = True
             
