@@ -13,7 +13,7 @@ type_wryter = TypeWryter()
 try:
   type_wryter.epd = epd4in2_V2.EPD()
   type_wryter.keyboard = keyboard
-  type_wryter.ensure_typewrytes_directory()
+  type_wryter.ensure_sub_dirs()
   type_wryter.initialize()
   type_wryter.run()
 
