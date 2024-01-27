@@ -75,7 +75,7 @@ class text_display:
             logging.info("if len(e.name) shift_active: " + str(self.shift_active))
             if self.shift_active:
                 self.char = keymaps.shift_mapping.get(e.name) 
-                shift_active = False
+                self.shift_active = False
             if len(self.text_lines[self.current_line]) < self.chars_per_line:
                 self.text_lines[self.current_line] += self.char
         
