@@ -8,150 +8,151 @@ import time
 import keymaps
 from datetime import datetime
 
-
-#initialize some vars
 logging.basicConfig(level=logging.INFO)
-font16 = ImageFont.truetype('Courier Prime.ttf', 16)
 
-text_lines = [""]  # List of text lines
-chars_per_line = 40
-max_lines_on_screen = 15
-current_line = 0
-shift_active = False
-control_active = False
-filename = datetime.now().strftime("Text_%Y%m%d_%H%M%S.txt")
+class main_menu:
+    def __init__(self):
+        #initialize some vars
+        self.font16 = ImageFont.truetype('Courier Prime.ttf', 16)
+        self.text_lines = [""]  # List of text lines
+        self.chars_per_line = 40
+        self.max_lines_on_screen = 15
+        self.current_line = 0
+        self.shift_active = False
+        self.control_active = False
+        self.filename = datetime.now().strftime("Text_%Y%m%d_%H%M%S.txt")
 
-def init_display():
-    #initialize and clear display
-    epd = epd4in2_V2.EPD()
-    epd.init()
-    epd.Clear()
-    return epd 
+    def init_display(self):
+        #initialize and clear display
+        self.epd = epd4in2_V2.EPD()
+        self.epd.init()
+        self.epd.Clear()
+        #return epd 
 
-def init_image(epd):
-    draw_image = Image.new('1', (epd.width, epd.height), 255)  # 255: clear the frame
-    draw = ImageDraw.Draw(draw_image)
-    return draw,draw_image
+    def init_image(self):
+        self.draw_image = Image.new('1', (self.epd.width, self.epd.height), 255)  # 255: clear the frame
+        self.draw = ImageDraw.Draw(self.draw_image)
+        return self.draw,self.draw_image
 
-def save_text_to_file(text_lines, filename):
-    # Saves the text to a file
-    with open(filename, 'w') as file:
-        file.write('\n'.join(text_lines))
+    def save_text_to_file(self, text_lines, filename):
+        # Saves the text to a file
+        with open(filename, 'w') as file:
+            file.write('\n'.join(self.text_lines))
 
-def handle_key_down(e, shift_active, control_active): #keys being held, ie modifier keys
-    if e.name == 'shift': #if shift is released
-        shift_active = True
-    if e.name == 'ctrl': #if shift is released
-        control_active = True
-    return shift_active,control_active
+    def handle_key_down(self, e, shift_active, control_active): #keys being held, ie modifier keys
+        if e.name == 'shift': #if shift is released
+            self.shift_active = True
+        if e.name == 'ctrl': #if shift is released
+            self.control_active = True
+        #return shift_active,control_active
 
-def get_text(e):
-    global text_lines, current_line, filename, shift_active, control_active
+    def get_text(self,e):
+        #global text_lines, current_line, filename, shift_active, control_active
 
-    #check shift key
-    shift_active,control_active = handle_key_down(e, shift_active, control_active)
+        #check shift key
+        self.shift_active,self.control_active = self.handle_key_down(e, shift_active, self.control_active)
 
-    # Actions for differet key combos
-    if e.name == 'backspace':
-        handle_backspace()
-    elif e.name == 'backspace' and control_active:
-        handle_delete_word()
-    elif e.name == 'backspace' and shift_active:
-        handle_delete_line()
-    elif e.name == 'tab':
-        char= '   '
-    elif e.name == 'enter':
-        current_line += 1
-        save_text_to_file(text_lines, filename)
-        if current_line >= len(text_lines):
-            text_lines.append("")
-    elif e.name == 'space':
-            char = ' '
-            if len(text_lines[current_line]) < chars_per_line:
-                text_lines[current_line] += char
-    elif len(e.name) == 1 and control_active == False:  # Regular character input
-        char = e.name
-        logging.info("if len(e.name) shift_active: " + str(shift_active))
-        if shift_active:
-            char = keymaps.shift_mapping.get(e.name) 
-            shift_active = False
-        if len(text_lines[current_line]) < chars_per_line:
-            text_lines[current_line] += char
-    
-    # Check and wrap to the next line if the current line is full
-    if len(text_lines[current_line]) >= chars_per_line:
-        current_line += 1
-        if current_line >= len(text_lines):
-            text_lines.append("")
+        # Actions for differet key combos
+        if e.name == 'backspace':
+            self.handle_backspace()
+        elif e.name == 'backspace' and self.control_active:
+            self.handle_delete_word()
+        elif e.name == 'backspace' and shift_active:
+            self.handle_delete_line()
+        elif e.name == 'tab':
+            self.char= '   '
+        elif e.name == 'enter':
+            self.current_line += 1
+            self.save_text_to_file(self.text_lines, self.filename)
+            if self.current_line >= len(self.text_lines):
+                self.text_lines.append("")
+        elif e.name == 'space':
+                char = ' '
+                if len(self.text_lines[self.current_line]) < self.chars_per_line:
+                    self.text_lines[self.current_line] += char
+        elif len(e.name) == 1 and self.control_active == False:  # Regular character input
+            self.char = e.name
+            logging.info("if len(e.name) shift_active: " + str(self.shift_active))
+            if self.shift_active:
+                self.char = keymaps.shift_mapping.get(e.name) 
+                shift_active = False
+            if len(self.text_lines[self.current_line]) < self.chars_per_line:
+                self.text_lines[self.current_line] += char
+        
+        # Check and wrap to the next line if the current line is full
+        if len(self.text_lines[self.current_line]) >= self.chars_per_line:
+            self.current_line += 1
+            if self.current_line >= len(self.text_lines):
+                self.text_lines.append("")
 
-    # Debounce
-    time.sleep(.05)
-    #control_active = False    
+        # Debounce
+        time.sleep(.05)
+        #control_active = False    
 
-def handle_backspace():
-    logging.info("handle backspace")
-    global text_lines, current_line
-    if len(text_lines[current_line]) > 0:
-        text_lines[current_line] = text_lines[current_line][:-1]
-    elif current_line > 0:
-        current_line -= 1
+    def handle_backspace(self):
+        logging.info("handle backspace")
+        #global text_lines, current_line
+        if len(self.text_lines[self.current_line]) > 0:
+            self.text_lines[self.current_line] = self.text_lines[self.current_line][:-1]
+        elif self.current_line > 0:
+            self.current_line -= 1
 
-def handle_delete_word():
-    logging.info("handle_delete_word")
-    global text_lines, current_line
-    words = text_lines[current_line].split()
-    if words:
-        text_lines[current_line] = ' '.join(words[:-1])
-    elif current_line > 0:
-        current_line -= 1
-    
-def handle_delete_line():
-    logging.info("handle_delete_line")
-    global text_lines, current_line
-    if current_line > 0:
-        text_lines.pop(current_line)
-        current_line -= 1
+    def handle_delete_word(self):
+        logging.info("handle_delete_word")
+        #global text_lines, current_line
+        self.words = self.text_lines[self.current_line].split()
+        if self.words:
+            self.text_lines[self.current_line] = ' '.join(self.words[:-1])
+        elif self.current_line > 0:
+            self.current_line -= 1
+        
+    def handle_delete_line(self):
+        logging.info("handle_delete_line")
+        #global text_lines, current_line
+        if self.current_line > 0:
+            self.text_lines.pop(self.current_line)
+            self.current_line -= 1
 
-def partial_update_text(epd, draw, draw_image, text_lines):
-    #logging.info("partial_update_start")
-    draw.rectangle((0, 0, 400, 300), fill = 255)
+    def partial_update_text(self, epd, draw, draw_image, text_lines):
+        #logging.info("partial_update_start")
+        self.draw.rectangle((0, 0, 400, 300), fill = 255)
 
-    # Draw text lines on the image
-    for i, line in enumerate(text_lines[-max_lines_on_screen:]):
-        draw.text((1, 1 + i * 20), line, font=font16, fill=0)
-    
-    epd.display_Partial(epd.getbuffer(draw_image))
+        # Draw text lines on the image
+        for i, line in enumerate(self.text_lines[-self.max_lines_on_screen:]):
+            draw.text((1, 1 + i * 20), line, font=self.font16, fill=0)
+        
+        self.epd.display_Partial(self.epd.getbuffer(self.draw_image))
 
-def full_update_text(draw, draw_image,text, epd):
-    #logging.info("full update")
-    draw.rectangle((0, 0, 400, 300), fill = 255)
-    draw.text((0, 0), text, font = font16, fill=0)
-    epd.display(epd.getbuffer(draw_image))
+    def full_update_text(self, draw, draw_image,text, epd):
+        #logging.info("full update")
+        self.draw.rectangle((0, 0, 400, 300), fill = 255)
+        self.draw.text((0, 0), text, font = self.font16, fill=0)
+        self.epd.display(self.epd.getbuffer(self.draw_image))
 
-def cleanup(epd):
-    # Cleanup and sleep
-    epd.init()
-    epd.Clear()
-    epd.sleep()
-
-
-# start keyboard listener and callback to get_input_text method
-def main_loop():
-    epd = init_display() #initialize the display one time. 
-    draw, draw_image = init_image(epd)
-    keyboard.on_press(get_text, suppress=True) #handles keyboard input
-
-    while True:
-        time.sleep(.1)
-        partial_update_text(epd, draw, draw_image, text_lines)
+    def cleanup(self):
+        # Cleanup and sleep
+        self.epd.init()
+        self.epd.Clear()
+        self.epd.sleep()
 
 
+    # start keyboard listener and callback to get_input_text method
+    def main_loop(self):
+        self.epd = self.init_display() #initialize the display one time. 
+        self.draw, self.draw_image = self.init_image(self.epd)
+        keyboard.on_press(self.get_text, suppress=True) #handles keyboard input
 
-try:
-    main_loop()
-except IOError as e:
-    logging.info(e)
-except KeyboardInterrupt:
-    logging.info("ctrl + c:")
-    epd4in2_V2.epdconfig.module_exit()
-    exit()
+        while True:
+            time.sleep(.1)
+            self.partial_update_text(self.epd, self.draw, self.draw_image, self.text_lines)
+
+
+
+    try:
+        main_loop()
+    except IOError as e:
+        logging.info(e)
+    except KeyboardInterrupt:
+        logging.info("ctrl + c:")
+        epd4in2_V2.epdconfig.module_exit()
+        exit()
