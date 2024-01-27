@@ -4,7 +4,7 @@ from waveshare_epd import epd4in2_V2  # Adjust based on your specific Waveshare 
 import keyboard
 import time
 import logging
-from text_input import text_display
+from text_input import text_display as td
 
 
 logging.basicConfig(level=logging.DEBUG)
@@ -80,8 +80,7 @@ class main_menu:
         #global current_selection
         if self.current_selection == 0:
             logging.info("trigger text display")
-            text_input = text_display.run_text_display()
-            text_input()
+            td.run_text_display()
         elif self.current_selection == 1:
             # Trigger function for "Continue a freewrite"
             print ("option 2")
