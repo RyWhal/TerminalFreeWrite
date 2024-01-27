@@ -77,7 +77,7 @@ def trigger_function_based_on_selection():
     global current_selection
     if current_selection == 0:
         logging.info("trigger text display")
-        main_loop()
+        #main_loop()
     elif current_selection == 1:
         # Trigger function for "Continue a freewrite"
         print ("option 2")
