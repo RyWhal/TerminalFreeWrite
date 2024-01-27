@@ -1,3 +1,20 @@
+#
+# TypeWryter
+#
+# This code is a heavily modified version of zerowriter. Feel free to modify and redistribute as you want.
+# Participate on reddit in r/zerowriter if you want.
+# Zerowriter GitHub: https://github.com/zerowriter/zerowriter1/tree/main
+#
+# Using the new4in2part library
+#
+# a python e-typewriter using eink and a USB keyboard
+# this program outputs directly to the SPI eink screen, and is driven by a
+# raspberry pi zero (or any pi). technically, it operates headless as the OS has no
+# access to the SPI screen. it handles keyboard input directly via keyboard library.
+#
+# currently ONLY supports waveshare 4in2
+#
+
 import time
 import keymaps
 import qrcode
@@ -37,7 +54,7 @@ class Menu:
         y_position = 10
         for index, item in enumerate(self.menu_items):
             prefix = self.selected_item == index and "> " or "  "
-            self.display_draw.text((10, y_position), prefix + item['text'], font=self.font13, fill=0)
+            self.display_draw.text((2, y_position), prefix + item['text'], font=self.font13, fill=0)
             y_position += 30
         partial_buffer = self.epd.getbuffer(self.display_image)
         self.epd.display_Partial(partial_buffer)
