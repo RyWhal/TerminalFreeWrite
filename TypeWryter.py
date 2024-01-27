@@ -147,9 +147,9 @@ class TypeWryter:
             print(f"Failed to list files in {data_folder_path}: {e}")
 
     def load_file_into_previous_lines(self, filename):
-        file_path = os.path.join(os.path.dirname(__file__), 'TypeWrytes', filename)
+        #self.file_path = os.path.join(os.path.dirname(__file__), 'TypeWrytes', filename)
         try:
-            with open(file_path, 'r') as file:
+            with open(self.file_path, 'r') as file:
                 lines = file.readlines()
                 self.previous_lines = [line.strip() for line in lines]
                 self.input_content = ""
@@ -161,12 +161,13 @@ class TypeWryter:
                 self.update_display()
         except Exception as e:
             self.console_message = f"[Error loading file]"
-            print(f"Failed to load file {file_path}: {e}")
+            print(f"Failed to load file {self.file_path}: {e}")
             self.update_display()
             time.sleep(1)
             self.console_message = ""
             self.update_display()
         finally:
+
             self.menu = self.parent_menu
             self.hide_menu()
 
@@ -174,7 +175,7 @@ class TypeWryter:
         #save the cache first
         timestamp = time.strftime("%Y%m%d%H%M%S")  # Format: YYYYMMDDHHMMSS
         self.filename = os.path.join(os.path.dirname(__file__), 'TypeWrytes', f'typewryte_{timestamp}.txt')
-        self.save_previous_lines(filename, self.previous_lines)
+        self.save_previous_lines(self.filename, self.previous_lines)
         
         #create a blank doc
         self.previous_lines.clear()
@@ -381,7 +382,8 @@ class TypeWryter:
             #prefix = ''.join(self.previous_lines)[:self.chars_per_line]
             #alphanum_prefix = ''.join(ch for ch in prefix if ch.isalnum())
             
-            #filename = os.path.join(os.path.dirname(__file__), 'TypeWrytes', f'zw_{timestamp}_{alphanum_prefix}.txt')
+            self.filename = os.path.join(os.path.dirname(__file__), 'TypeWrytes', f'typewryte_{timestamp}.txt')
+            
             self.save_previous_lines(self.filename, self.previous_lines)
             
             self.console_message = f"[Saved]"
