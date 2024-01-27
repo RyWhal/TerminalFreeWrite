@@ -145,7 +145,7 @@ class text_display:
 
         while True:
             time.sleep(.1)
-            self.partial_update_text(self.epd, self.draw, self.draw_image, self.text_lines)
+            self.partial_update_text()
 
 
     def run_text_display(self):
