@@ -114,7 +114,7 @@ class text_display:
             self.text_lines.pop(self.current_line)
             self.current_line -= 1
 
-    def partial_update_text(self,draw):
+    def partial_update_text(self):
         #logging.info("partial_update_start")
         self.draw.rectangle((0, 0, 400, 300), fill = 255)
 
