@@ -144,7 +144,7 @@ class TypeWryter:
 
             # Add each file to the load menu
             for filename in files:
-                self.load_menu.addItem(filename, lambda f=filename: self.load_file_into_previous_lines(f))
+                self.load_menu.addItem(filename, lambda f=filename: self.load_file_into_previous_lines())
         except Exception as e:
             print(f"Failed to list files in {data_folder_path}: {e}")
 
