@@ -4,27 +4,27 @@ import keymaps
 from PIL import Image, ImageDraw, ImageFont
 from waveshare_epd import epd4in2_V2
 
-from TypeWryter import ZeroWriter
+from TypeWryter import TypeWryter
 
 
-# Instantiate ZeroWriter with the default configuration
-zero_writer = ZeroWriter()
+# Instantiate TypeWryter with the default configuration
+type_wryter = TypeWryter()
 
 try:
-  zero_writer.epd = epd4in2_V2.EPD()
-  zero_writer.keyboard = keyboard
-  zero_writer.initialize()
-  zero_writer.run()
+  type_wryter.epd = epd4in2_V2.EPD()
+  type_wryter.keyboard = keyboard
+  type_wryter.initialize()
+  type_wryter.run()
 
 except KeyboardInterrupt:
     pass
 
 finally:
     keyboard.unhook_all()
-    zero_writer.epd.init()
+    type_wryter.epd.init()
     time.sleep(1)
-    zero_writer.epd.Clear()
-    zero_writer.epd.sleep()
+    type_wryter.epd.Clear()
+    type_wryter.epd.sleep()
 
 #from text_display import text_display
 '''from main_menu import main_menu

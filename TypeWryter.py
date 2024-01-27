@@ -5,9 +5,6 @@ from PIL import Image, ImageDraw, ImageFont
 import os
 import subprocess
 
-
-
-
 class Menu:
     def __init__(self, display_draw, epd, display_image):
         self.display_draw = display_draw
@@ -46,7 +43,7 @@ class Menu:
         self.epd.display_Partial(partial_buffer)
 
 
-class ZeroWriter:
+class TypeWryter:
     def __init__(self):
         self.epd = None
         self.display_image = None
@@ -90,7 +87,7 @@ class ZeroWriter:
         self.menu.addItem("Save", lambda: print("implement save"))
         self.menu.addItem("QR Code", self.display_qr_code)
         self.menu.addItem("Power Off", self.power_down)
-        self.menu.addItem("Update ZeroWriter", self.update_zerowriter)
+        self.menu.addItem("Update TypeWryter", self.update_TypeWryter)
         self.menu.addItem("Exit", self.hide_menu)
 
         self.load_menu = Menu(self.display_draw, self.epd, self.display_image)
@@ -169,7 +166,7 @@ class ZeroWriter:
     def power_down(self):
         #run powerdown script
         self.display_draw.rectangle((0, 0, 400, 300), fill=255)  # Clear display
-        self.display_draw.text((55, 150), "ZeroWriter Powered Down.", font=self.font13, fill=0)
+        self.display_draw.text((55, 150), "TypeWryter Powered Down.", font=self.font13, fill=0)
         partial_buffer = self.epd.getbuffer(self.display_image)
         self.epd.display_Partial(partial_buffer)
         time.sleep(3)
@@ -178,8 +175,8 @@ class ZeroWriter:
         self.needs_display_update = True
         self.needs_input_update = True
 
-    def update_zerowriter(self):
-        print("updating zerowriter")
+    def update_TypeWryter(self):
+        print("updating TypeWryter")
         self.console_message = f"[Updating]"
         self.update_display()
 
@@ -407,8 +404,8 @@ class ZeroWriter:
 
         #powerdown - could add an autosleep if you want to save battery
         if e.name == "esc" and self.control_active: #ctrl+esc
-            self.power_down()
-        
+            #self.power_down()
+            pass
         if e.name == "r" and self.control_active: #ctrl+r
             self.update_display()
         if e.name == "q" and self.control_active: #ctrl+r
