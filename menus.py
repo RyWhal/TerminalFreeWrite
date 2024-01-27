@@ -40,7 +40,7 @@ def get_keyboard_input(e):
     elif e.name == 'down':
         current_selection = (current_selection + 1) % menu_length
     elif e.name == 'enter':
-        trigger_function_based_on_selection()
+        main_loop()
     elif e.name == 'esc':
         #cleanup(epd)
         pass
@@ -91,7 +91,7 @@ def cleanup(epd):
 # Initialize and run the app
 
 # start keyboard listener and callback to get_input_text method
-def main():
+def main_loop():
     epd = init_display()
     draw,draw_image = init__menu_image(epd)
     display_full_menu(epd,draw,draw_image)
@@ -101,12 +101,12 @@ def main():
         time.sleep(.1)
         update_menu(epd, draw, draw_image)
 
-if __name__ == '__main__':
-    try:
-        main()
-    except IOError as e:
-        logging.info(e)
-    except KeyboardInterrupt:
-        logging.info("ctrl + c:")
-        epd4in2_V2.epdconfig.module_exit()
-        exit()
+
+try:
+    main_loop()
+except IOError as e:
+    logging.info(e)
+except KeyboardInterrupt:
+    logging.info("ctrl + c:")
+    epd4in2_V2.epdconfig.module_exit()
+    exit()

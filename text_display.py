@@ -146,12 +146,12 @@ def main_loop():
         partial_update_text(epd, draw, draw_image, text_lines)
 
 
-if __name__ == '__main__':
-    try:
-        main_loop()
-    except IOError as e:
-        logging.info(e)
-    except KeyboardInterrupt:
-        logging.info("ctrl + c:")
-        epd4in2_V2.epdconfig.module_exit()
-        exit()
+
+try:
+    main_loop()
+except IOError as e:
+    logging.info(e)
+except KeyboardInterrupt:
+    logging.info("ctrl + c:")
+    epd4in2_V2.epdconfig.module_exit()
+    exit()
