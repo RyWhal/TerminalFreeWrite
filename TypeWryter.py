@@ -154,6 +154,8 @@ class TypeWryter:
     def load_file_into_previous_lines(self):
         #file_path = os.path.join(os.path.dirname(__file__), self.typewrytes_dir, filename)
         self.file_path = os.path.join(os.path.dirname(__file__), self.typewrytes_dir, self.filename)
+        print("File Path: " + self.file_path)
+        print("Load file into previous lines File Name: " + self.filename)
         try:
             with open(self.file_path, 'r') as file:
                 lines = file.readlines()
@@ -182,6 +184,7 @@ class TypeWryter:
         self.filename = os.path.join(os.path.dirname(__file__), 'TypeWrytes', f'zw_{self.timestamp}.txt')
         self.save_previous_lines(self.filename, self.previous_lines)
         
+        print("File Name: " + self.filename)
         #create a blank doc
         self.previous_lines.clear()
         self.input_content = ""
@@ -240,8 +243,8 @@ class TypeWryter:
             print("error")
             return []
 
-    def save_previous_lines(self, file_path, lines):
-      print(file_path)
+    def save_previous_lines(self, lines):
+      print("save previous lines file path:" + self.file_path)
       try:
           # Ensure the directory exists
           os.makedirs(os.path.dirname(self.file_path), exist_ok=True)
@@ -490,7 +493,7 @@ class TypeWryter:
                 self.input_content = "" #clears input content
                 self.cursor_position=0
                 #save the file when enter is pressed
-                print(self.cache_file_path)
+                print("Enter key path:" + self.cache_file_path)
                 self.save_previous_lines(self.cache_file_path, self.previous_lines)
                 self.needs_display_update = True
             
