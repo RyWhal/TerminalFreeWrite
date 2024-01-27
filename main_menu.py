@@ -48,14 +48,14 @@ class main_menu:
             #cleanup(epd)
             pass
 
-    def display_full_menu(self,epd,draw,draw_image):
+    def display_full_menu(self):
         logging.info("Display initial menu")
         self.padding = 20  # Adjust padding as needed
         for i, self.option in enumerate(self.main_menu_options):
             self.draw.text((self.padding, 1 + 30 * i), self.option, font=self.font20, fill=0)
         self.epd.display(self.epd.getbuffer(self.draw_image))
 
-    def update_menu(self, epd, draw, draw_image):
+    def update_menu(self):
         logging.info("update menu")
         #global current_selection, previous_selection
 
@@ -100,7 +100,7 @@ class main_menu:
         self.draw,self.draw_image = self.init_menu_image()
 
         #draw menu to e-ink screen
-        self.display_full_menu(self.draw, self.draw_image)
+        self.display_full_menu()
 
         # start keyboard listener and callback to get_input_text method
         keyboard.on_press(self.get_keyboard_input, suppress=True) #handles keyboard input
