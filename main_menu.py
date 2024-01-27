@@ -7,7 +7,7 @@ import logging
 from text_display import main_loop
 
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 font20 = ImageFont.truetype('Courier Prime.ttf', 20)
 
 # Initialize vars
