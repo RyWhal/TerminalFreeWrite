@@ -100,7 +100,7 @@ class main_menu:
         self.draw,self.draw_image = self.init_menu_image()
 
         #draw menu to e-ink screen
-        self.display_full_menu(self)
+        self.display_full_menu(self.draw, self.draw_image)
 
         # start keyboard listener and callback to get_input_text method
         keyboard.on_press(self.get_keyboard_input, suppress=True) #handles keyboard input
