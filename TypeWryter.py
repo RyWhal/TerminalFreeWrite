@@ -86,6 +86,7 @@ class TypeWryter:
         self.parent_menu = None # used to store the menu that was open before the load menu was opened
         self.font13 = ImageFont.truetype('Courier Prime.ttf', 13)
         self.typewrytes_dir = ""
+        self.filename = ""
         
         self.cache_file_path = os.path.join(os.path.dirname(__file__), 'TypeWrytes', 'cache.txt')
     
@@ -172,7 +173,7 @@ class TypeWryter:
     def new_file(self):
         #save the cache first
         timestamp = time.strftime("%Y%m%d%H%M%S")  # Format: YYYYMMDDHHMMSS
-        filename = os.path.join(os.path.dirname(__file__), 'TypeWrytes', f'zw_{timestamp}.txt')
+        self.filename = os.path.join(os.path.dirname(__file__), 'TypeWrytes', f'typewryte_{timestamp}.txt')
         self.save_previous_lines(filename, self.previous_lines)
         
         #create a blank doc
@@ -377,11 +378,11 @@ class TypeWryter:
             timestamp = time.strftime("%Y%m%d%H%M%S")  # Format: YYYYMMDDHHMMSS
 
             ## first 30 chars of previous_lines
-            prefix = ''.join(self.previous_lines)[:self.chars_per_line]
-            alphanum_prefix = ''.join(ch for ch in prefix if ch.isalnum())
+            #prefix = ''.join(self.previous_lines)[:self.chars_per_line]
+            #alphanum_prefix = ''.join(ch for ch in prefix if ch.isalnum())
             
-            filename = os.path.join(os.path.dirname(__file__), 'TypeWrytes', f'zw_{timestamp}_{alphanum_prefix}.txt')
-            self.save_previous_lines(filename, self.previous_lines)
+            #filename = os.path.join(os.path.dirname(__file__), 'TypeWrytes', f'zw_{timestamp}_{alphanum_prefix}.txt')
+            self.save_previous_lines(self.filename, self.previous_lines)
             
             self.console_message = f"[Saved]"
             self.update_display()
