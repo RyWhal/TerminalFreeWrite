@@ -7,113 +7,115 @@ import logging
 
 
 logging.basicConfig(level=logging.DEBUG)
-font20 = ImageFont.truetype('Courier Prime.ttf', 20)
 
-# Initialize vars
-title = "title"
-option = "option"
-selected_index = 0
-current_selection = 0
-previous_selection = 0
-prev_image = None
+class main_menu:
+    def __init__(self):
+        self.font20 = ImageFont.truetype('Courier Prime.ttf', 20)
 
-main_menu_options = ["New freewrite", "Continue a freewrite", "Settings", "TypeWryter Manual"]
-menu_length = len(main_menu_options)
+        # Initialize vars
+        self.title = "title"
+        self.option = "option"
+        self.selected_index = 0
+        self.current_selection = 0
+        self.previous_selection = 0
+        self.prev_image = None
 
-def init_display():
-    logging.info("init screen")
-    #initialize and clear display
-    epd = epd4in2_V2.EPD()
-    epd.init_fast(epd.Seconds_1_5S)
-    epd.Clear()
-    return epd 
+        self.main_menu_options = ["New freewrite", "Continue a freewrite", "Settings", "TypeWryter Manual"]
+        self.menu_length = len(self.main_menu_options)
 
-def init__menu_image(epd):
-    draw_image = Image.new('1', (epd.width, epd.height), 255)  # 255: clear the frame
-    draw = ImageDraw.Draw(draw_image)
-    return draw,draw_image
+    def init_display(self):
+        logging.info("init screen")
+        #initialize and clear display
+        self.epd = epd4in2_V2.EPD()
+        self.epd.init_fast(self.epd.Seconds_1_5S)
+        self.epd.Clear()
+        return self.epd 
 
-def get_keyboard_input(e):
-    global current_selection, main_menu_options
-    if e.name == 'up': 
-        current_selection = (current_selection - 1) % menu_length
-    elif e.name == 'down':
-        current_selection = (current_selection + 1) % menu_length
-    elif e.name == 'enter':
-        trigger_function_based_on_selection()
-    elif e.name == 'esc':
-        #cleanup(epd)
-        pass
+    def init_menu_image(self):
+        self.draw_image = Image.new('1', (self.epd.width, self.epd.height), 255)  # 255: clear the frame
+        self.draw = ImageDraw.Draw(self.draw_image)
+        return self.draw,self.draw_image
 
-def display_full_menu(epd,draw,draw_image):
-    logging.info("Display initial menu")
-    padding = 20  # Adjust padding as needed
-    for i, option in enumerate(main_menu_options):
-        draw.text((padding, 1 + 30 * i), option, font=font20, fill=0)
-    epd.display(epd.getbuffer(draw_image))
+    def get_keyboard_input(self,e):
+        #global current_selection, main_menu_options
+        if e.name == 'up': 
+            self.current_selection = (self.current_selection - 1) % self.menu_length
+        elif e.name == 'down':
+            self.current_selection = (self.current_selection + 1) % self.menu_length
+        elif e.name == 'enter':
+            self.trigger_function_based_on_selection()
+        elif e.name == 'esc':
+            #cleanup(epd)
+            pass
 
-def update_menu(epd, draw, draw_image):
-    logging.info("update menu")
-    global current_selection, previous_selection
+    def display_full_menu(self,epd,draw,draw_image):
+        logging.info("Display initial menu")
+        self.padding = 20  # Adjust padding as needed
+        for i, self.option in enumerate(self.main_menu_options):
+            self.draw.text((self.padding, 1 + 30 * i), self.option, font=self.font20, fill=0)
+        self.epd.display(self.epd.getbuffer(self.draw_image))
 
-    #current y-axis
-    y_current = 1 + 30 * current_selection
+    def update_menu(self, epd, draw, draw_image):
+        logging.info("update menu")
+        #global current_selection, previous_selection
 
-    # Clear the area where the indicators are displayed
-    draw.rectangle((1,1,20,300), fill=255)
+        #current y-axis
+        self.y_current = 1 + 30 * self.current_selection
 
-    # Draw the indicator only for the current selection
-    draw.text((1, y_current), ">", font=font20, fill=0)
+        # Clear the area where the indicators are displayed
+        self.draw.rectangle((1,1,20,300), fill=255)
 
-    #partial update screen
-    epd.display_Partial(epd.getbuffer(draw_image))
+        # Draw the indicator only for the current selection
+        self.draw.text((1, self.y_current), ">", font=self.font20, fill=0)
 
-    previous_selection = current_selection
+        #partial update screen
+        self.epd.display_Partial(self.epd.getbuffer(self.draw_image))
 
-# Function to be called based on the selection
-def trigger_function_based_on_selection():
-    logging.info("choose function")
-    global current_selection
-    if current_selection == 0:
-        logging.info("trigger text display")
-        #main_loop()
-    elif current_selection == 1:
-        # Trigger function for "Continue a freewrite"
-        print ("option 2")
-        pass
-    # ... and so on for other options
+        self.previous_selection = self.current_selection
 
-def cleanup(epd):
-    # Cleanup and sleep
-    epd.init()
-    epd.Clear()
-    epd.sleep()
+    # Function to be called based on the selection
+    def trigger_function_based_on_selection(self):
+        logging.info("choose function")
+        #global current_selection
+        if self.current_selection == 0:
+            logging.info("trigger text display")
+            #main_loop()
+        elif self.current_selection == 1:
+            # Trigger function for "Continue a freewrite"
+            print ("option 2")
+            pass
+        # ... and so on for other options
 
-# Initialize and run the app
+    #cleanup e-ink screen and turn it to sleep
+    def cleanup(self):
+        # Cleanup and sleep
+        self.epd.init()
+        self.epd.Clear()
+        self.epd.sleep()
 
+    # Initialize and run the app
+    def loop(self):
+        #initialize e-ink screen
+        self.epd = self.init_display()
+        self.draw,self.draw_image = self.init_menu_image()
 
-def main():
-    #initialize e-ink screen
-    epd = init_display()
-    draw,draw_image = init__menu_image(epd)
+        #draw menu to e-ink screen
+        self.display_full_menu(self)
 
-    #draw menu to e-ink screen
-    display_full_menu(epd,draw,draw_image)
+        # start keyboard listener and callback to get_input_text method
+        keyboard.on_press(self.get_keyboard_input, suppress=True) #handles keyboard input
 
-    # start keyboard listener and callback to get_input_text method
-    keyboard.on_press(get_keyboard_input, suppress=True) #handles keyboard input
+        # Main app loop
+        while True:
+            time.sleep(.1)
+            self.update_menu()
 
-    # Main app loop
-    while True:
-        time.sleep(.1)
-        update_menu(epd, draw, draw_image)
-
-if __name__ == '__main__':
-    try:
-        main()
-    except IOError as e:
-        logging.info(e)
-    except KeyboardInterrupt:
-        logging.info("ctrl + c:")
-        epd4in2_V2.epdconfig.module_exit()
-        exit()
+    def run_main_menu(self):
+        try:
+            self.loop()
+        except IOError as e:
+            logging.info(e)
+        except KeyboardInterrupt:
+            logging.info("ctrl + c:")
+            epd4in2_V2.epdconfig.module_exit()
+            exit()

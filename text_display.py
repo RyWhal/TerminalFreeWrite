@@ -34,12 +34,12 @@ class text_display:
         self.draw = ImageDraw.Draw(self.draw_image)
         return self.draw,self.draw_image
 
-    def save_text_to_file(self, text_lines, filename):
+    def save_text_to_file(self, filename):
         # Saves the text to a file
         with open(filename, 'w') as file:
             file.write('\n'.join(self.text_lines))
 
-    def handle_key_down(self, e, shift_active, control_active): #keys being held, ie modifier keys
+    def handle_key_down(self, e): #keys being held, ie modifier keys
         if e.name == 'shift': #if shift is released
             self.shift_active = True
         if e.name == 'ctrl': #if shift is released
@@ -113,7 +113,7 @@ class text_display:
             self.text_lines.pop(self.current_line)
             self.current_line -= 1
 
-    def partial_update_text(self, epd, draw, draw_image, text_lines):
+    def partial_update_text(self,draw):
         #logging.info("partial_update_start")
         self.draw.rectangle((0, 0, 400, 300), fill = 255)
 
@@ -123,7 +123,7 @@ class text_display:
         
         self.epd.display_Partial(self.epd.getbuffer(self.draw_image))
 
-    def full_update_text(self, draw, draw_image,text, epd):
+    def full_update_text(self,text):
         #logging.info("full update")
         self.draw.rectangle((0, 0, 400, 300), fill = 255)
         self.draw.text((0, 0), text, font = self.font16, fill=0)
@@ -147,7 +147,7 @@ class text_display:
             self.partial_update_text(self.epd, self.draw, self.draw_image, self.text_lines)
 
 
-    def run(self):
+    def run_text_display(self):
         try:
             self.loop()
         except IOError as e:
