@@ -90,6 +90,8 @@ class TypeWryter:
         self.typewrytes_dir = os.path.join(os.getcwd(), "TypeWrytes")
         self.data_dir = os.path.join(os.getcwd(), "data")
         self.cache_file_path = os.path.join(os.path.dirname(__file__), self.data_dir, 'cache.txt')
+        self.file_path = "" 
+        self.filename = ""
     
     def initialize(self):
         self.epd.init()
@@ -149,22 +151,23 @@ class TypeWryter:
         except Exception as e:
             print(f"Failed to list files in {self.typewrytes_dir}: {e}")
 
-    def load_file_into_previous_lines(self, filename):
-        file_path = os.path.join(os.path.dirname(__file__), self.typewrytes_dir, filename)
+    def load_file_into_previous_lines(self):
+        #file_path = os.path.join(os.path.dirname(__file__), self.typewrytes_dir, filename)
+        self.file_path = os.path.join(os.path.dirname(__file__), self.typewrytes_dir, self.filename)
         try:
-            with open(file_path, 'r') as file:
+            with open(self.file_path, 'r') as file:
                 lines = file.readlines()
                 self.previous_lines = [line.strip() for line in lines]
                 self.input_content = ""
                 self.cursor_position = 0
-                self.console_message = f"[Loaded {filename}]"
+                self.console_message = f"[Loaded {self.filename}]"
                 self.update_display()
                 time.sleep(1)
                 self.console_message = ""
                 self.update_display()
         except Exception as e:
             self.console_message = f"[Error loading file]"
-            print(f"Failed to load file {file_path}: {e}")
+            print(f"Failed to load file {self.file_path}: {e}")
             self.update_display()
             time.sleep(1)
             self.console_message = ""
@@ -176,8 +179,8 @@ class TypeWryter:
     def new_file(self):
         #save the cache first
         timestamp = time.strftime("%Y%m%d%H%M%S")  # Format: YYYYMMDDHHMMSS
-        filename = os.path.join(os.path.dirname(__file__), 'TypeWrytes', f'zw_{timestamp}.txt')
-        self.save_previous_lines(filename, self.previous_lines)
+        self.filename = os.path.join(os.path.dirname(__file__), 'TypeWrytes', f'zw_{timestamp}.txt')
+        self.save_previous_lines(self.filename, self.previous_lines)
         
         #create a blank doc
         self.previous_lines.clear()
@@ -238,6 +241,7 @@ class TypeWryter:
             return []
 
     def save_previous_lines(self, file_path, lines):
+      print(file_path)
       try:
           # Ensure the directory exists
           os.makedirs(os.path.dirname(file_path), exist_ok=True)
@@ -384,8 +388,8 @@ class TypeWryter:
             prefix = ''.join(self.previous_lines)[:self.chars_per_line]
             alphanum_prefix = ''.join(ch for ch in prefix if ch.isalnum())
             
-            filename = os.path.join(os.path.dirname(__file__), self.typewrytes_dir, f'zw_{timestamp}_{alphanum_prefix}.txt')
-            self.save_previous_lines(filename, self.previous_lines)
+            #self.filename = os.path.join(os.path.dirname(__file__), self.typewrytes_dir, f'zw_{timestamp}_{alphanum_prefix}.txt')
+            self.save_previous_lines(self.filename, self.previous_lines)
             
             self.console_message = f"[Saved]"
             self.update_display()
