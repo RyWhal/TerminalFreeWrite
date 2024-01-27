@@ -195,6 +195,7 @@ class TypeWryter:
         time.sleep(1)
         self.console_message = ""
         self.update_display()
+        return
 
     def power_down(self):
         #run powerdown script
@@ -247,6 +248,7 @@ class TypeWryter:
     def save_previous_lines(self, lines):
       self.file_path = os.path.join(os.path.dirname(__file__), self.typewrytes_dir, self.filename)
       print("save previous lines file path:" + self.file_path)
+      print("save previous lines filename:" + self.filename)
       try:
           # Ensure the directory exists
           os.makedirs(os.path.dirname(self.file_path), exist_ok=True)
