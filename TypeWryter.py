@@ -75,7 +75,7 @@ class TypeWryter:
         self.chars_per_line = 50
         self.lines_on_screen = 15
         self.font_size = 13
-        self.line_spacing = 22
+        self.line_spacing = 20
         self.scrollindex = 1
         self.console_message = ""
         self.updating_input_area = False
@@ -341,7 +341,7 @@ class TypeWryter:
         temp_content = self.input_content[:cursor_index] + "|" + self.input_content[cursor_index:]
 
         #draw input line text
-        self.display_draw.text((2, 280), str(temp_content), font=self.font13, fill=0)
+        self.display_draw.text((0, 280), str(temp_content), font=self.font13, fill=0)
         
         #generate display buffer for input line
         self.updating_input_area = True
@@ -377,7 +377,7 @@ class TypeWryter:
             timestamp = time.strftime("%Y%m%d%H%M%S")  # Format: YYYYMMDDHHMMSS
 
             ## first 30 chars of previous_lines
-            prefix = ''.join(self.previous_lines)[:30]
+            prefix = ''.join(self.previous_lines)[:self.chars_per_line]
             alphanum_prefix = ''.join(ch for ch in prefix if ch.isalnum())
             
             filename = os.path.join(os.path.dirname(__file__), 'TypeWrytes', f'zw_{timestamp}_{alphanum_prefix}.txt')
