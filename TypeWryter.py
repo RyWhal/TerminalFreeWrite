@@ -87,7 +87,9 @@ class TypeWryter:
         self.font13 = ImageFont.truetype('Courier Prime.ttf', 13)
         self.typewrytes_dir = ""
         
-        self.cache_file_path = os.path.join(os.path.dirname(__file__), 'TypeWrytes', 'cache.txt')
+        self.typewrytes_dir = os.path.join(os.getcwd(), "TypeWrytes")
+        self.data_dir = os.path.join(os.getcwd(), "data")
+        self.cache_file_path = os.path.join(os.path.dirname(__file__), self.data_dir, 'cache.txt')
     
     def initialize(self):
         self.epd.init()
@@ -98,6 +100,7 @@ class TypeWryter:
 
         self.keyboard.on_press(self.handle_key_down, suppress=False) #handles modifiers and shortcuts
         self.keyboard.on_release(self.handle_key_press, suppress=True)
+
       
         self.menu = Menu(self.display_draw, self.epd, self.display_image)
         self.menu.addItem("New", lambda: self.new_file())
@@ -111,11 +114,12 @@ class TypeWryter:
         self.load_menu = Menu(self.display_draw, self.epd, self.display_image)
         self.populate_load_menu()
 
-    def ensure_typewrytes_directory(self):
-        self.typewrytes_dir = os.path.join(os.getcwd(), "TypeWrytes")
+    def ensure_sub_dirs(self):
         if not os.path.exists(self.typewrytes_dir):
             os.makedirs(self.typewrytes_dir)
-            return self.typewrytes_dir
+        if not os.path.exists(self.data_dir):
+            os.makedirs(self.data_dir)
+        return self.typewrytes_dir, self.data_dir
 
     def show_load_menu(self):
         self.parent_menu = self.menu
@@ -130,12 +134,12 @@ class TypeWryter:
 
     def populate_load_menu(self):
         self.load_menu.menu_items.clear()
-        data_folder_path = os.path.join(os.path.dirname(__file__), 'TypeWrytes')
+        #data_folder_path = os.path.join(os.path.dirname(__file__), 'TypeWrytes')
         try:
-            # List all files in the data folder
-            files = [f for f in os.listdir(data_folder_path) if os.path.isfile(os.path.join(data_folder_path, f)) and f.endswith('.txt')]
+            # List all files in the TypeWrytes folder
+            files = [f for f in os.listdir(self.typewrytes_dir) if os.path.isfile(os.path.join(self.typewrytes_dir, f)) and f.endswith('.txt')]
             # Sort files by modification time
-            files.sort(key=lambda x: os.path.getmtime(os.path.join(data_folder_path, x)), reverse=True)
+            files.sort(key=lambda x: os.path.getmtime(os.path.join(self.typewrytes_dir, x)), reverse=True)
 
             self.load_menu.addItem("Back", self.hide_child_menu)
 
@@ -143,10 +147,10 @@ class TypeWryter:
             for filename in files:
                 self.load_menu.addItem(filename, lambda f=filename: self.load_file_into_previous_lines(f))
         except Exception as e:
-            print(f"Failed to list files in {data_folder_path}: {e}")
+            print(f"Failed to list files in {self.typewrytes_dir}: {e}")
 
     def load_file_into_previous_lines(self, filename):
-        file_path = os.path.join(os.path.dirname(__file__), 'TypeWrytes', filename)
+        file_path = os.path.join(os.path.dirname(__file__), self.typewrytes_dir, filename)
         try:
             with open(file_path, 'r') as file:
                 lines = file.readlines()
@@ -283,7 +287,7 @@ class TypeWryter:
         # Convert QR code image to match the display's image mode
         qr_img_converted = qr_img.convert('1')
         # Save QR code to the filesystem
-        qr_img_save_path = os.path.join(os.path.dirname(__file__), 'data', 'qr_code.png')
+        qr_img_save_path = os.path.join(os.path.dirname(__file__),self.data_dir, 'qr_code.png')
         qr_img.save(qr_img_save_path)
         print(f"QR code saved to {qr_img_save_path}")
 
@@ -380,7 +384,7 @@ class TypeWryter:
             prefix = ''.join(self.previous_lines)[:self.chars_per_line]
             alphanum_prefix = ''.join(ch for ch in prefix if ch.isalnum())
             
-            filename = os.path.join(os.path.dirname(__file__), 'TypeWrytes', f'zw_{timestamp}_{alphanum_prefix}.txt')
+            filename = os.path.join(os.path.dirname(__file__), self.typewrytes_dir, f'zw_{timestamp}_{alphanum_prefix}.txt')
             self.save_previous_lines(filename, self.previous_lines)
             
             self.console_message = f"[Saved]"
