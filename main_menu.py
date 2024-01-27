@@ -20,6 +20,7 @@ class main_menu:
         self.current_selection = 0
         self.previous_selection = 0
         self.prev_image = None
+        self.show_menu = True
 
         self.main_menu_options = ["New freewrite", "Continue a freewrite", "Settings", "TypeWryter Manual"]
         self.menu_length = len(self.main_menu_options)
@@ -80,6 +81,8 @@ class main_menu:
         #global current_selection
         if self.current_selection == 0:
             logging.info("trigger text display")
+            keyboard.unhook_all()
+            self.show_menu = False
             text_display().run_text_display()
         elif self.current_selection == 1:
             # Trigger function for "Continue a freewrite"
@@ -97,6 +100,7 @@ class main_menu:
     # Initialize and run the app
     def loop(self):
         #initialize e-ink screen
+        
         self.epd = self.init_display()
         self.draw,self.draw_image = self.init_menu_image()
 
@@ -120,3 +124,9 @@ class main_menu:
             logging.info("ctrl + c:")
             epd4in2_V2.epdconfig.module_exit()
             exit()
+        finally:
+            keyboard.unhook_all()
+            self.epd.init()
+            time.sleep(1)
+            self.epd.Clear()
+            self.epd.sleep()
