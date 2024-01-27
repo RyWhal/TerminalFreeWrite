@@ -40,7 +40,7 @@ def get_keyboard_input(e):
     elif e.name == 'down':
         current_selection = (current_selection + 1) % menu_length
     elif e.name == 'enter':
-        main_loop()
+        trigger_function_based_on_selection()
     elif e.name == 'esc':
         #cleanup(epd)
         pass
@@ -76,6 +76,7 @@ def trigger_function_based_on_selection():
     global current_selection
     if current_selection == 0:
         main_loop()
+        pass
     elif current_selection == 1:
         # Trigger function for "Continue a freewrite"
         print ("option 2")
