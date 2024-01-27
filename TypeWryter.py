@@ -404,8 +404,9 @@ class TypeWryter:
         if e.name == "m" and self.control_active: #ctrl+m
             self.show_menu()
 
-        if e.name == "w" and self.control_active: #ctrl+m
+        if e.name == "w" and self.control_active: #ctrl+w
             wc = self.get_word_count
+            print("Word Count: " + wc)
             self.console_message = "WC: " + str(wc)
             self.update_display()
             time.sleep(2)
