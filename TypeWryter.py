@@ -140,7 +140,7 @@ class TypeWryter:
 
     def splash_screen(self):
         # Starting Y position
-        y_position = 80 
+        y_position = 65 
         # Add each line of the ASCII art to the image
         for line in self.ascii_art_lines:
             self.display_draw.text((50, y_position), line, font=self.font13, fill=0)
