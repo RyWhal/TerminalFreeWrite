@@ -106,7 +106,7 @@ class TypeWryter:
         self.timestamp = time.strftime("%Y%m%d%H%M%S")  # Format: YYYYMMDDHHMMSS
         self.filename = os.path.join(os.path.dirname(__file__), 'TypeWrytes', f'typewryte_{self.timestamp}.txt')
         
-        self.cache_file_path = os.path.join(os.path.dirname(__file__), 'TypeWrytes', 'cache.txt')
+        self.cache_file_path = os.path.join(os.path.dirname(__file__), 'data', 'cache.txt')
     
     def initialize(self):
         self.epd.init()
