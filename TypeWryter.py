@@ -124,7 +124,7 @@ class TypeWryter:
         self.menu.addItem("New", lambda: self.new_file())
         self.menu.addItem("Load", lambda: self.show_load_menu())
         self.menu.addItem("Network File browser", lambda: self.show_server_menu())
-        #self.menu.addItem("Help", self.load_file_into_previous_lines(self.manual))
+        self.menu.addItem("Help", )
         self.menu.addItem("Update TypeWryter", self.update_TypeWryter)
         self.menu.addItem("Power Off", self.power_down)
         self.menu.addItem("Back", self.hide_menu)
@@ -177,7 +177,7 @@ class TypeWryter:
 
             # Add each file to the load menu
             for filename in files:
-                self.load_menu.addItem(filename, lambda f=filename: self.load_file_into_previous_lines(filename))
+                self.load_menu.addItem(filename, lambda f=filename: self.load_file_into_previous_lines())
         except Exception as e:
             print(f"Failed to list files in {data_folder_path}: {e}")
 
@@ -210,23 +210,50 @@ class TypeWryter:
             os.makedirs(self.typewrytes_dir)
             return self.typewrytes_dir
 
-    def load_file_into_previous_lines(self,filename):
+    def load_file_into_previous_lines(self):
         #self.file_path = os.path.join(os.path.dirname(__file__), 'TypeWrytes', filename)
         try:
-            with open(filename, 'r') as file:
+            with open(self.filename, 'r') as file:
                 lines = file.readlines()
                 self.previous_lines = [line.strip() for line in lines]
                 self.input_content = ""
                 self.cursor_position = 0
-                self.console_message = f"[Loaded {filename}]"
+                self.console_message = f"[Loaded {self.filename}]"
                 self.update_display()
                 time.sleep(1)
                 self.console_message = ""
                 self.update_display()
-                print("loaded: " + filename)
+                print("loaded: " + self.filename)
         except Exception as e:
             self.console_message = f"[Error loading file]"
-            print(f"Failed to load file {filename}: {e}")
+            print(f"Failed to load file {self.filename}: {e}")
+            self.update_display()
+            time.sleep(1)
+            self.console_message = ""
+            self.update_display()
+        finally:
+
+            self.menu = self.parent_menu
+            self.hide_menu()
+
+    # This is almost an exact copy of load_file_into_previous_lines() - I'll combine the functions at some point.
+    def load_manual(self):
+        #self.file_path = os.path.join(os.path.dirname(__file__), 'TypeWrytes', filename)
+        try:
+            with open(self.manual, 'r') as file:
+                lines = file.readlines()
+                self.previous_lines = [line.strip() for line in lines]
+                self.input_content = ""
+                self.cursor_position = 0
+                self.console_message = f"[Loaded {self.manual}]"
+                self.update_display()
+                time.sleep(1)
+                self.console_message = ""
+                self.update_display()
+                print("loaded: " + self.filename)
+        except Exception as e:
+            self.console_message = f"[Error loading file]"
+            print(f"Failed to load file {self.manual}: {e}")
             self.update_display()
             time.sleep(1)
             self.console_message = ""
