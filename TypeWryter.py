@@ -328,8 +328,8 @@ class TypeWryter:
         local_ip = get_local_ip_address()
         url = f"http://{local_ip}:5000" # generate full url string
         flask_pass = start_server() 
-        message2 = f"Scan QR, or visit: {url}"
-        message1 = f"password: {flask_pass}"
+        message1 = f"Scan QR, or visit: {url}"
+        message2 = f"password: {flask_pass}"
 
         #Generate QR Code
         qr = qrcode.QRCode(
@@ -368,14 +368,14 @@ class TypeWryter:
 
     def stop_file_server(self):
         #stop Flask server
-        print("stopping file server")
         stop_server()
-
         print("File Server Stopped")
 
-        # Clear the current display image
-        self.display_draw.rectangle((0, 0, 400, 300), fill=255)
+        self.display_draw.rectangle((0, 0, 400, 300), fill=255)  # Clear display
+        
+        # Show a message shutting down file server
         self.display_draw.text((30, 100),"Shutting Down FileServer", font=self.font13, fill=0)
+
         # Update the display with the new image
         partial_buffer = self.epd.getbuffer(self.display_image)
         self.epd.display(partial_buffer)
