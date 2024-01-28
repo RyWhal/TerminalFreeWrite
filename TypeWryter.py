@@ -135,8 +135,7 @@ class TypeWryter:
 
         self.server_menu = Menu(self.display_draw, self.epd, self.display_image)
         self.server_menu.addItem("Start Server", lambda: self.start_file_server())
-        self.server_menu.addItem("Stop Server", lambda: stop_server())
-        self.server_menu.addItem("Back", self.hide_child_menu)
+        self.server_menu.addItem("Stop Server", lambda: self.stop_file_server())
 
     def splash_screen(self):
         # Starting Y position
@@ -357,8 +356,8 @@ class TypeWryter:
         self.display_draw.rectangle((0, 0, 400, 300), fill=255)
         
         # Display messages
-        self.display_draw.text((30, 90),message1, font=self.font13, fill=0)
-        self.display_draw.text((30, 100),message2, font=self.font13, fill=0)
+        self.display_draw.text((30, 100),message1, font=self.font13, fill=0)
+        self.display_draw.text((30, 110),message2, font=self.font13, fill=0)
 
         # Paste the QR code onto the display image
         self.display_image.paste(qr_img_converted, (qr_x, qr_y))
@@ -366,6 +365,20 @@ class TypeWryter:
         # Update the display with the new image
         partial_buffer = self.epd.getbuffer(self.display_image)
         self.epd.display(partial_buffer)
+
+    def stop_file_server(self):
+        #stop Flask server
+        stop_server()
+
+        # Clear the current display image
+        self.display_draw.rectangle((0, 0, 400, 300), fill=255)
+        self.display_draw.text((30, 100),"Shutting Down FileServer", font=self.font13, fill=0)
+        # Update the display with the new image
+        partial_buffer = self.epd.getbuffer(self.display_image)
+        self.epd.display(partial_buffer)
+
+        self.hide_child_menu()
+
 
     def update_display(self):
         self.display_updating = True
