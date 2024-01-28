@@ -238,7 +238,6 @@ class TypeWryter:
 
     # This is almost an exact copy of load_file_into_previous_lines() - I'll combine the functions at some point.
     def load_manual(self):
-        #self.file_path = os.path.join(os.path.dirname(__file__), 'TypeWrytes', filename)
         try:
             with open(self.manual, 'r') as file:
                 lines = file.readlines()
@@ -246,11 +245,35 @@ class TypeWryter:
                 self.input_content = ""
                 self.cursor_position = 0
                 self.console_message = f"[Loaded {self.manual}]"
-                self.update_display()
-                time.sleep(1)
-                self.console_message = ""
-                self.update_display()
-                print("loaded: " + self.filename)
+                self.display_updating = True
+                # Clear the main display area -- also clears input line (270-300)
+                self.display_draw.rectangle((0, 0, 400, 300), fill=255)
+                
+                # Display the previous lines
+                y_position = 280 - self.line_spacing  # leaves room for cursor input
+
+                #Make a temp array from previous_lines. And then reverse it and display as usual.
+                current_line=max(0,len(self.previous_lines)-self.lines_on_screen*self.scrollindex)
+                temp=self.previous_lines[current_line:current_line+self.lines_on_screen]
+                # print(temp)# to debug if you change the font parameters (size, chars per line, etc)
+
+                for line in reversed(temp[-self.lines_on_screen:]):
+                    self.display_draw.text((10, y_position), line[:self.chars_per_line], font=self.font13, fill=0)
+                    y_position -= self.line_spacing
+
+                #Display Console Message
+                if self.console_message != "":
+                    self.display_draw.rectangle((280, 280, 400, 300), fill=255)
+                    self.display_draw.text((280, 280), self.console_message, font=self.font13, fill=0)
+                    self.console_message = ""
+                
+                #generate display buffer for display
+                partial_buffer = self.epd.getbuffer(self.display_image)
+                self.epd.display_Partial(partial_buffer)
+
+                self.last_display_update = time.time()
+                self.display_updating = False
+                self.needs_display_update = False
         except Exception as e:
             self.console_message = f"[Error loading file]"
             print(f"Failed to load file {self.manual}: {e}")
