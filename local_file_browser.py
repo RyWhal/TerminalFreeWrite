@@ -26,12 +26,15 @@ def download_file(filename):
 
 def run_server():
     # Redirect stdout and stderr to a log file
-    log_file = 'web_server.log'
-    with open(log_file, 'a') as log:
-        sys.stdout = log
-        sys.stderr = log
-        app.run(host='0.0.0.0', port=8080, use_reloader=False)
-        print("Server started")
+    try:
+        log_file = 'web_server.log'
+        with open(log_file, 'a') as log:
+            #sys.stdout = log
+            #sys.stderr = log
+            app.run(host='0.0.0.0', port=8080, use_reloader=False)
+            print("Server started")
+    except:
+        print("an error occurred")
 
 def start_server():
     global server_thread

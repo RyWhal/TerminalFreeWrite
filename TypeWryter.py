@@ -483,28 +483,28 @@ class TypeWryter:
             self.menu_down()
             return
 
-          #move scrollindex down
+          '''#move scrollindex down
           self.scrollindex = self.scrollindex - 1
           if self.scrollindex < 1:
                 self.scrollindex = 1
           
           self.console_message = (f'[{round(len(self.previous_lines)/self.lines_on_screen)-self.scrollindex+1}/{round(len(self.previous_lines)/self.lines_on_screen)}]')
           self.update_display()
-          self.console_message = ""
+          self.console_message = ""'''
 
         if e.name== "up" or e.name== "left":
           if (self.menu_mode):
             self.menu_up()
             return
 
-          #move scrollindex up
+          '''#move scrollindex up
           self.scrollindex = self.scrollindex + 1
           if self.scrollindex > round(len(self.previous_lines)/self.lines_on_screen+1):
                 self.scrollindex = round(len(self.previous_lines)/self.lines_on_screen+1)
           
           self.console_message = (f'[{round(len(self.previous_lines)/self.lines_on_screen)-self.scrollindex+1}/{round(len(self.previous_lines)/self.lines_on_screen)}]')
           self.update_display()
-          self.console_message = ""
+          self.console_message = ""'''
 
         #powerdown - could add an autosleep if you want to save battery
         if e.name == "esc" and self.control_active: #ctrl+esc
@@ -517,6 +517,7 @@ class TypeWryter:
             
         if e.name == "tab": 
             #just using two spaces for tab, kind of cheating, whatever.
+            self.insert_character(" ")
             self.insert_character(" ")
             self.insert_character(" ")
             
