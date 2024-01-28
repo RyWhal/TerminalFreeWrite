@@ -2,7 +2,6 @@
 # TypeWryter
 #
 # This code is a heavily modified version of zerowriter. Feel free to modify and redistribute as you want.
-# Participate on reddit in r/zerowriter if you want.
 # Zerowriter GitHub: https://github.com/zerowriter/zerowriter1/tree/main
 #
 # Using the new4in2part library
@@ -13,7 +12,7 @@
 # access to the SPI screen. it handles keyboard input directly via keyboard library.
 #
 # currently ONLY supports waveshare 4in2
-#
+
 
 import time
 import keymaps
@@ -89,6 +88,21 @@ class TypeWryter:
         self.parent_menu = None # used to store the menu that was open before the load menu was opened
         self.font13 = ImageFont.truetype('Courier Prime.ttf', 13)
         self.typewrytes_dir = ""
+        self.ascii_art="""
++-----------------------------------+
+| _____                             |
+||_   _|   _ _ __   ___             |
+|  | || | | | '_ \ / _ \            |
+|  | || |_| | |_) |  __/            |
+|  |_| \__, | .__/ \___|            |
+|__    |___/|_|        _            |
+|\ \      / / __ _   _| |_ ___ _ __ |
+| \ \ /\ / / '__| | | | __/ _ \ '__||
+|  \ V  V /| |  | |_| | ||  __/ |   |
+|   \_/\_/ |_|   \__, |\__\___|_|   |
+|                |___/              |
++-----------------------------------+
+"""
 
         self.timestamp = time.strftime("%Y%m%d%H%M%S")  # Format: YYYYMMDDHHMMSS
         self.filename = os.path.join(os.path.dirname(__file__), 'TypeWrytes', f'typewryte_{self.timestamp}.txt')
@@ -376,7 +390,12 @@ class TypeWryter:
     def update_display(self):
         self.display_updating = True
 
+        
+
         # Clear the main display area -- also clears input line (270-300)
+        self.display_draw.rectangle((0, 0, 400, 300), fill=255)
+        self.display_draw.text((10, 10), self.ascii_art, font=self.font13, fill=0)
+        time.sleep(5)
         self.display_draw.rectangle((0, 0, 400, 300), fill=255)
         
         # Display the previous lines
