@@ -338,13 +338,14 @@ class TypeWryter:
         print("starting web server")
         start_server()
         local_ip = get_local_ip_address()
+        url = f"http://{local_ip}:8080"
 
         #Generate QR Code
         qr = qrcode.QRCode(
                 error_correction=qrcode.constants.ERROR_CORRECT_L,
                 box_size=2,
                 border=4,)
-        qr.add_data(local_ip)
+        qr.add_data(url)
         qr.make(fit=True)
         qr_img = qr.make_image(fill='black', back_color='white')
 
