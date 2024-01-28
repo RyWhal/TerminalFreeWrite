@@ -307,8 +307,7 @@ class TypeWryter:
         #run powerdown script
         self.display_draw.rectangle((0, 0, 400, 300), fill=255)  # Clear display
         self.display_draw.text((55, 150), "TypeWryter Powered Down.", font=self.font13, fill=0)
-        partial_buffer = self.epd.getbuffer(self.display_image)
-        self.epd.display_Partial(partial_buffer)
+        self.partial_update_buffer()
         time.sleep(3)
         subprocess.run(['sudo', 'poweroff', '-f'])
         
@@ -476,8 +475,7 @@ class TypeWryter:
         
         #generate display buffer for input line
         self.updating_input_area = True
-        partial_buffer = self.epd.getbuffer(self.display_image)
-        self.epd.display_Partial(partial_buffer)
+        self.partial_update_buffer()
         self.updating_input_area = False
 
     def insert_character(self, character):
