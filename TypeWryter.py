@@ -128,7 +128,7 @@ class TypeWryter:
         self.menu.addItem("Network File browser", lambda: self.show_server_menu())
         self.menu.addItem("Power Off", self.power_down)
         self.menu.addItem("Update TypeWryter", self.update_TypeWryter)
-        self.menu.addItem("Exit", self.hide_menu)
+        self.menu.addItem("Back", self.hide_menu)
 
         self.load_menu = Menu(self.display_draw, self.epd, self.display_image)
         self.populate_load_menu()
@@ -364,10 +364,13 @@ class TypeWryter:
 
         local_ip = get_local_ip_address()
         url = f"http://{local_ip}:8080"
+        message2 = f"Scan QR, or visit: {url}"
+        
         print(url)
 
         print("starting web server")
-        start_server() 
+        flask_pass = start_server() 
+        message1 = f"password: {flask_pass}"
 
         #Generate QR Code
         qr = qrcode.QRCode(
@@ -389,9 +392,13 @@ class TypeWryter:
         # Calculate position to center QR code on the display
         qr_x = (self.epd.width - qr_img_converted.width) // 2
         qr_y = (self.epd.height - qr_img_converted.height) // 2
-        
+
         # Clear the current display image
-        self.display_draw.rectangle((0, 0, self.epd.width, self.epd.height), fill=255)
+        self.display_draw.text((0, 0, self.epd.width, self.epd.height), fill=255)
+        
+        # Display messages
+        self.display_draw.text((30, 80),message1, font=self.font13, fill=0)
+        self.display_draw.text((30, 120),message2, font=self.font13, fill=0)
 
         # Paste the QR code onto the display image
         self.display_image.paste(qr_img_converted, (qr_x, qr_y))

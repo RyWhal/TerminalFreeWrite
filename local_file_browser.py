@@ -1,15 +1,46 @@
-from flask import Flask, send_from_directory, render_template_string
+from flask import Flask, send_from_directory, render_template_string, request, redirect, url_for, session, render_template_string
 from threading import Thread
 import os
 import requests
 import sys
+import random
+from functools import wraps
 
+# initialize Flask
 app = Flask(__name__)
-app.debug = True
+app.debug = False # Change to 'True' if you need more information
+flask_pass = "{:04d}".format(random.randint(0, 9999)) #generate 4 digit random password
+app.secret_key = flask_pass  # Change to a random secret key
+
 freewrites_dir = os.path.join(os.getcwd(), "TypeWrytes")
 server_thread = None
 
+def require_password(view_function):
+    @wraps(view_function)
+    def decorated_function(*args, **kwargs):
+        if session.get('authenticated') != True:
+            return redirect(url_for('login', next=request.url))
+        return view_function(*args, **kwargs)
+    return decorated_function
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        if request.form['password'] == flask_pass:
+            session['authenticated'] = True
+            next_url = request.args.get('next')
+            return redirect(next_url or url_for('index'))
+        else:
+            return "Incorrect password", 403
+    return render_template_string('''
+        <form method="post">
+            Password: <input type="password" name="password">
+            <input type="submit" value="Login">
+        </form>
+    ''')
+
 @app.route('/')
+@require_password
 def index():
     files = os.listdir(freewrites_dir)
     return render_template_string("""
@@ -21,6 +52,7 @@ def index():
     """, files=files)
 
 @app.route('/files/<filename>')
+@require_password
 def download_file(filename):
     return send_from_directory(freewrites_dir, filename)
 '''
@@ -52,6 +84,7 @@ def start_server():
         server_thread = Thread(target=run_server)
         server_thread.start()
         print("Starting Server")
+    return flask_pass
 
 def stop_server():
     global server_thread
