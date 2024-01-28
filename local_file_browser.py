@@ -40,7 +40,7 @@ def run_server():
     try:
         log_file = 'web_server.log'
         with open(log_file, 'a') as log:
-            app.run(host='0.0.0.0', port=8080, use_reloader=False)
+            app.run(host='0.0.0.0', port=5000, use_reloader=False)
             print("Server started", file=log)
     except Exception as e:
         with open('web_server.log', 'a') as log:
