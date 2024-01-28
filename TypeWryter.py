@@ -292,7 +292,7 @@ class TypeWryter:
         self.populate_load_menu()
 
         self.menu = self.server_menu
-        self.server_menu.display()
+        self.menu.display()
 
     def menu_up(self):
         self.menu.up()
