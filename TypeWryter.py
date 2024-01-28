@@ -574,7 +574,7 @@ class TypeWryter:
                 self.input_content = "" #clears input content
                 self.cursor_position=0
                 #save the file when enter is pressed
-                self.save_previous_lines(self.cache_file_path, self.previous_lines)
+                self.save_previous_lines(self.filename, self.previous_lines)
                 self.needs_display_update = True
             
         if e.name == 'ctrl': #if control is released
