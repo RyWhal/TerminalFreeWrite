@@ -118,20 +118,12 @@ class TypeWryter:
         self.load_menu = Menu(self.display_draw, self.epd, self.display_image)
         self.populate_load_menu()
 
-    def init_server_menu(self):
         self.server_menu = Menu(self.display_draw, self.epd, self.display_image)
         self.server_menu.addItem("Start Server", lambda: self.start_file_server())
         self.server_menu.addItem("Stop Server", lambda: stop_server())
-        self.server_menu.addItem("Back", self.hide_menu)
+        self.server_menu.addItem("Back", self.hide_child_menu)
 
         self.server_menu = Menu(self.display_draw, self.epd, self.display_image)
-
-
-    def ensure_sub_dirs(self):
-        self.typewrytes_dir = os.path.join(os.getcwd(), "TypeWrytes")
-        if not os.path.exists(self.typewrytes_dir):
-            os.makedirs(self.typewrytes_dir)
-            return self.typewrytes_dir
 
     def show_load_menu(self):
         print("showing load menu")
@@ -163,6 +155,35 @@ class TypeWryter:
                 self.load_menu.addItem(filename, lambda f=filename: self.load_file_into_previous_lines())
         except Exception as e:
             print(f"Failed to list files in {data_folder_path}: {e}")
+
+    def hide_menu(self):
+        print("hiding menu")
+        self.menu_mode = False
+        self.update_display()
+
+    def show_menu(self):
+        print("show menu")
+        self.menu_mode = True
+        self.menu.display()
+
+    def show_server_menu(self):
+        print("showing load menu")
+        self.parent_menu = self.menu
+
+        self.menu = self.server_menu
+        self.menu.display()
+
+    def menu_up(self):
+        self.menu.up()
+    
+    def menu_down(self):
+        self.menu.down()
+
+    def ensure_sub_dirs(self):
+        self.typewrytes_dir = os.path.join(os.getcwd(), "TypeWrytes")
+        if not os.path.exists(self.typewrytes_dir):
+            os.makedirs(self.typewrytes_dir)
+            return self.typewrytes_dir
 
     def load_file_into_previous_lines(self):
         #self.file_path = os.path.join(os.path.dirname(__file__), 'TypeWrytes', filename)
@@ -275,29 +296,6 @@ class TypeWryter:
             self.content = file.read()
             self.words = self.content.split()
             return len(self.words)
-
-    def hide_menu(self):
-        print("hiding menu")
-        self.menu_mode = False
-        self.update_display()
-
-    def show_menu(self):
-        print("show menu")
-        self.menu_mode = True
-        self.menu.display()
-
-    def show_server_menu(self):
-        print("showing load menu")
-        self.parent_menu = self.menu
-
-        self.menu = self.server_menu
-        self.menu.display()
-
-    def menu_up(self):
-        self.menu.up()
-    
-    def menu_down(self):
-        self.menu.down()
 
     def display_qr_code(self):
         print("displaying qr code")
