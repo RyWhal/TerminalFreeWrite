@@ -116,6 +116,10 @@ class TypeWryter:
         self.display_draw = ImageDraw.Draw(self.display_image)
         self.last_display_update = time.time()
 
+        self.display_draw.text((10, 10), self.ascii_art, font=self.font13, fill=0)
+        time.sleep(5)
+        self.display_draw.rectangle((0, 0, 400, 300), fill=255)
+
         self.keyboard.on_press(self.handle_key_down, suppress=False) #handles modifiers and shortcuts
         self.keyboard.on_release(self.handle_key_press, suppress=True)
       
@@ -421,11 +425,6 @@ class TypeWryter:
 
     def update_input_area(self):
         cursor_index = self.cursor_position
-        
-        self.display_draw.text((10, 10), self.ascii_art, font=self.font13, fill=0)
-        time.sleep(5)
-        self.display_draw.rectangle((0, 0, 400, 300), fill=255)
-
         self.display_draw.rectangle((0, 280, 400, 300), fill=255)  # Clear display
         
         #add cursor
