@@ -365,7 +365,7 @@ class TypeWryter:
 
         # Update the display with the new image
         partial_buffer = self.epd.getbuffer(self.display_image)
-        self.epd.display(partial_buffer)
+        self.epd.display_partial(partial_buffer)
 
     def stop_file_server(self):
         #stop Flask server
@@ -380,8 +380,6 @@ class TypeWryter:
         # Update the display with the new image
         partial_buffer = self.epd.getbuffer(self.display_image)
         self.epd.display_Partial(partial_buffer)
-
-        self.epd.Clear()
 
         self.hide_child_menu()
 
