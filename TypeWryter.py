@@ -368,7 +368,10 @@ class TypeWryter:
 
     def stop_file_server(self):
         #stop Flask server
+        print("stopping file server")
         stop_server()
+
+        print("File Server Stopped")
 
         # Clear the current display image
         self.display_draw.rectangle((0, 0, 400, 300), fill=255)
