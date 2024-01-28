@@ -30,12 +30,14 @@ def run_server():
         sys.stdout = log
         sys.stderr = log
         app.run(host='0.0.0.0', port=8080, use_reloader=False)
+        print("Server started")
 
 def start_server():
     global server_thread
     if server_thread is None:
         server_thread = Thread(target=run_server)
         server_thread.start()
+        print("Starting Server")
 
 def stop_server():
     global server_thread

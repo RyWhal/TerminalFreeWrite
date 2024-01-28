@@ -339,6 +339,7 @@ class TypeWryter:
         start_server()
         local_ip = get_local_ip_address()
         url = f"http://{local_ip}:8080"
+        print(url)
 
         #Generate QR Code
         qr = qrcode.QRCode(
