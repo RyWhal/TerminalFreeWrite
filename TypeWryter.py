@@ -136,6 +136,7 @@ class TypeWryter:
         self.server_menu = Menu(self.display_draw, self.epd, self.display_image)
         self.server_menu.addItem("Start Server", lambda: self.start_file_server())
         self.server_menu.addItem("Stop Server", lambda: self.stop_file_server())
+        self.server_menu.addItem("Back", lambda: self.hide_child_menu())
 
     def splash_screen(self):
         # Starting Y position
@@ -380,11 +381,7 @@ class TypeWryter:
         partial_buffer = self.epd.getbuffer(self.display_image)
         self.epd.display(partial_buffer)
 
-        # Clear the current display image
-        self.display_draw.rectangle((0, 0, 400, 300), fill=255)
-        # Update the display with the new image
-        partial_buffer = self.epd.getbuffer(self.display_image)
-        self.epd.display(partial_buffer)
+        self.epd.Clear()
 
         self.hide_child_menu()
 
