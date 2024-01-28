@@ -323,53 +323,13 @@ class TypeWryter:
             self.words = self.content.split()
             return len(self.words)
 
-    def display_qr_code(self):
-        print("displaying qr code")
-        
-        # Combine all previous lines into a single string
-        qr_data = 'mailto:example@example.com?body=' + ' '.join(self.previous_lines)
-        # Generate QR code
-        # giving it no version will allow it to auto-detect the smallest version that will fit the data
-        # currently does not handle extremely large files
-        qr = qrcode.QRCode(
-            error_correction=qrcode.constants.ERROR_CORRECT_L,
-            box_size=2,
-            border=4,
-        )
-        qr.add_data(qr_data)
-        qr.make(fit=True)
-        qr_img = qr.make_image(fill='black', back_color='white')
-        # Convert QR code image to match the display's image mode
-        qr_img_converted = qr_img.convert('1')
-        # Save QR code to the filesystem
-        qr_img_save_path = os.path.join(os.path.dirname(__file__), 'data', 'qr_code.png')
-        qr_img.save(qr_img_save_path)
-        print(f"QR code saved to {qr_img_save_path}")
-
-        # SAVE QR CODE
-
-
-        # Calculate position to center QR code on the display
-        qr_x = (self.epd.width - qr_img_converted.width) // 2
-        qr_y = (self.epd.height - qr_img_converted.height) // 2
-        # Clear the display image
-        self.display_draw.rectangle((0, 0, self.epd.width, self.epd.height), fill=255)
-        # Paste the QR code onto the display image
-        self.display_image.paste(qr_img_converted, (qr_x, qr_y))
-        # Update the display with the new image
-        partial_buffer = self.epd.getbuffer(self.display_image)
-        self.epd.display_Partial(partial_buffer)
-
     def start_file_server(self):
 
+        # get local IP
         local_ip = get_local_ip_address()
-        url = f"http://{local_ip}:8080"
-        message2 = f"Scan QR, or visit: {url}"
-        
-        print(url)
-
-        print("starting web server")
+        url = f"http://{local_ip}:5000" # generate full url string
         flask_pass = start_server() 
+        message2 = f"Scan QR, or visit: {url}"
         message1 = f"password: {flask_pass}"
 
         #Generate QR Code
@@ -394,7 +354,7 @@ class TypeWryter:
         qr_y = (self.epd.height - qr_img_converted.height) // 2
 
         # Clear the current display image
-        self.display_draw.text((0, 0, self.epd.width, self.epd.height), fill=255)
+        self.display_draw.rectangle((0, 0, 400, 300), fill=255)
         
         # Display messages
         self.display_draw.text((30, 80),message1, font=self.font13, fill=0)
