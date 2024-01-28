@@ -88,22 +88,21 @@ class TypeWryter:
         self.parent_menu = None # used to store the menu that was open before the load menu was opened
         self.font13 = ImageFont.truetype('Courier Prime.ttf', 13)
         self.typewrytes_dir = ""
-        self.ascii_art="""
-+-----------------------------------+
-| _____                             |
-||_   _|   _ _ __   ___             |
-|  | || | | | '_ \ / _ \            |
-|  | || |_| | |_) |  __/            |
-|  |_| \__, | .__/ \___|            |
-|__    |___/|_|        _            |
-|\ \      / / __ _   _| |_ ___ _ __ |
-| \ \ /\ / / '__| | | | __/ _ \ '__||
-|  \ V  V /| |  | |_| | ||  __/ |   |
-|   \_/\_/ |_|   \__, |\__\___|_|   |
-|                |___/              |
-+-----------------------------------+
-"""
-
+        self.ascii_art_lines = [
+    "+-----------------------------------+",
+    "| _____                             |",
+    "||_   _|   _ _ __   ___             |",
+    "|  | || | | | '_ \\ / _ \\            |",
+    "|  | || |_| | |_) |  __/            |",
+    "|  |_| \\__, | .__/ \\___|            |",
+    "|__    |___/|_|        _            |",
+    "|\\ \\      / / __ _   _| |_ ___ _ __ |",
+    "| \\ \\ /\\ / / '__| | | | __/ _ \\ '__||",
+    "|  \\ V  V /| |  | |_| | ||  __/ |   |",
+    "|   \\_/\\_/ |_|   \\__, |\\__\\___|_|   |",
+    "|                |___/              |",
+    "+-----------------------------------+"
+        ]
         self.timestamp = time.strftime("%Y%m%d%H%M%S")  # Format: YYYYMMDDHHMMSS
         self.filename = os.path.join(os.path.dirname(__file__), 'TypeWrytes', f'typewryte_{self.timestamp}.txt')
         
@@ -116,9 +115,7 @@ class TypeWryter:
         self.display_draw = ImageDraw.Draw(self.display_image)
         self.last_display_update = time.time()
 
-        self.display_draw.text((10, 10), self.ascii_art, font=self.font13, fill=0)
-        time.sleep(5)
-        self.display_draw.rectangle((0, 0, 400, 300), fill=255)
+        self.splash_screen()
 
         self.keyboard.on_press(self.handle_key_down, suppress=False) #handles modifiers and shortcuts
         self.keyboard.on_release(self.handle_key_press, suppress=True)
@@ -141,6 +138,18 @@ class TypeWryter:
         self.server_menu.addItem("Stop Server", lambda: stop_server())
         self.server_menu.addItem("Back", self.hide_child_menu)
 
+    def splash_screen(self):
+        # Starting Y position
+        y_position = 10 
+        # Add each line of the ASCII art to the image
+        for line in self.ascii_art_lines:
+            self.display_draw.text((10, y_position), line, font=self.font13, fill=0)
+            y_position += 12  # Adjust line spacing as needed
+
+        # Update the display with the new image
+        partial_buffer = self.epd.getbuffer(self.display_image)
+        self.epd.display(partial_buffer)
+        time.sleep(5)
 
     def show_load_menu(self):
         print("showing load menu")
