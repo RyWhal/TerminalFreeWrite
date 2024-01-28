@@ -390,12 +390,7 @@ class TypeWryter:
     def update_display(self):
         self.display_updating = True
 
-        
-
         # Clear the main display area -- also clears input line (270-300)
-        self.display_draw.rectangle((0, 0, 400, 300), fill=255)
-        self.display_draw.text((10, 10), self.ascii_art, font=self.font13, fill=0)
-        time.sleep(5)
         self.display_draw.rectangle((0, 0, 400, 300), fill=255)
         
         # Display the previous lines
@@ -426,6 +421,11 @@ class TypeWryter:
 
     def update_input_area(self):
         cursor_index = self.cursor_position
+        
+        self.display_draw.text((10, 10), self.ascii_art, font=self.font13, fill=0)
+        time.sleep(5)
+        self.display_draw.rectangle((0, 0, 400, 300), fill=255)
+
         self.display_draw.rectangle((0, 280, 400, 300), fill=255)  # Clear display
         
         #add cursor
