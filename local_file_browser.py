@@ -5,6 +5,7 @@ import requests
 import sys
 
 app = Flask(__name__)
+app.debug = True
 freewrites_dir = os.path.join(os.getcwd(), "TypeWrytes")
 server_thread = None
 
