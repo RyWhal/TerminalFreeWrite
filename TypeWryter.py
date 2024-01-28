@@ -144,18 +144,10 @@ class TypeWryter:
         partial_buffer = self.epd.getbuffer(self.display_image)
         self.epd.display_Partial(partial_buffer)
 
-        self.last_display_update = time.time()
-        self.display_updating = False
-        self.needs_display_update = False
-
     def full_update_buffer(self):
         # Update the display with the new image
         partial_buffer = self.epd.getbuffer(self.display_image)
         self.epd.display(partial_buffer)
-
-        self.last_display_update = time.time()
-        self.display_updating = False
-        self.needs_display_update = False
 
     def splash_screen(self):
         # Starting Y position
@@ -278,6 +270,11 @@ class TypeWryter:
                 
                 #generate display buffer for display
                 self.partial_update_buffer()
+
+                self.last_display_update = time.time()
+                self.display_updating = False
+                self.needs_display_update = False
+                
         except Exception as e:
             self.console_message = f"[Error loading file]"
             print(f"Failed to load file {self.manual}: {e}")
