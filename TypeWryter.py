@@ -84,6 +84,7 @@ class TypeWryter:
         self.control_active = False
         self.shift_active = False
         self.menu_mode = False
+        self.server_menu = None
         self.menu = None
         self.parent_menu = None # used to store the menu that was open before the load menu was opened
         self.font13 = ImageFont.truetype('Courier Prime.ttf', 13)
@@ -108,14 +109,23 @@ class TypeWryter:
         self.menu.addItem("New", lambda: self.new_file())
         self.menu.addItem("Load", lambda: self.show_load_menu())
         self.menu.addItem("Save", lambda: print("implement save"))
-        self.menu.addItem("QR Code", self.display_qr_code)
-        self.menu.addItem("Network File browser", lambda: self.show_file_browse_menu())
+        #self.menu.addItem("QR Code", self.display_qr_code)
+        self.menu.addItem("Network File browser", lambda: self.show_server_menu())
         self.menu.addItem("Power Off", self.power_down)
         self.menu.addItem("Update TypeWryter", self.update_TypeWryter)
         self.menu.addItem("Exit", self.hide_menu)
 
         self.load_menu = Menu(self.display_draw, self.epd, self.display_image)
         self.populate_load_menu()
+
+    def init_server_menu(self):
+        self.server_menu = Menu(self.display_draw, self.epd, self.display_image)
+        self.server_menu.addItem("Start Server", lambda: self.start_file_server())
+        self.server_menu.addItem("Stop Server", lambda: stop_server)
+        self.server_menu.addItem("Back", self.hide_menu)
+
+        self.server_menu = Menu(self.display_draw, self.epd, self.display_image)
+
 
     def ensure_sub_dirs(self):
         self.typewrytes_dir = os.path.join(os.getcwd(), "TypeWrytes")
@@ -124,6 +134,7 @@ class TypeWryter:
             return self.typewrytes_dir
 
     def show_load_menu(self):
+        print("showing load menu")
         self.parent_menu = self.menu
         self.populate_load_menu()
 
@@ -131,10 +142,12 @@ class TypeWryter:
         self.menu.display()
 
     def hide_child_menu(self):
+        print("hiding child menu")
         self.menu = self.parent_menu
         self.menu.display()
 
     def populate_load_menu(self):
+        print("populate load menu")
         self.load_menu.menu_items.clear()
         data_folder_path = os.path.join(os.path.dirname(__file__), 'TypeWrytes')
         try:
@@ -264,19 +277,28 @@ class TypeWryter:
             return len(self.words)
 
     def hide_menu(self):
-      print('hiding menu')
-      self.menu_mode = False
-      self.update_display()
+        print("hiding menu")
+        self.menu_mode = False
+        self.update_display()
 
     def show_menu(self):
-      self.menu_mode = True
-      self.menu.display()
+        print("show menu")
+        self.menu_mode = True
+        self.menu.display()
+
+    def show_server_menu(self):
+        print("showing load menu")
+        self.parent_menu = self.menu
+        self.populate_load_menu()
+
+        self.menu = self.server_menu
+        self.server_menu.display()
 
     def menu_up(self):
-      self.menu.up()
+        self.menu.up()
     
     def menu_down(self):
-      self.menu.down()
+        self.menu.down()
 
     def display_qr_code(self):
         print("displaying qr code")
@@ -315,14 +337,10 @@ class TypeWryter:
         partial_buffer = self.epd.getbuffer(self.display_image)
         self.epd.display_Partial(partial_buffer)
 
-    def show_file_browse_menu(self):
+    def start_file_server(self):
 
         print("starting web server")
         start_server()
-
-        self.menu = self.load_menu
-        self.menu.display()
-
         local_ip = get_local_ip_address()
 
         #Generate QR Code
@@ -355,8 +373,6 @@ class TypeWryter:
         # Update the display with the new image
         partial_buffer = self.epd.getbuffer(self.display_image)
         self.epd.display(partial_buffer)
-        self.load_menu.addItem("Back", self.hide_child_menu)
-
 
     def update_display(self):
         self.display_updating = True
