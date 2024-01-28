@@ -274,7 +274,7 @@ class TypeWryter:
                 self.last_display_update = time.time()
                 self.display_updating = False
                 self.needs_display_update = False
-                
+
         except Exception as e:
             self.console_message = f"[Error loading file]"
             print(f"Failed to load file {self.manual}: {e}")
@@ -414,8 +414,7 @@ class TypeWryter:
         self.display_image.paste(qr_img_converted, (qr_x, qr_y))
 
         # Update the display with the new image
-        partial_buffer = self.epd.getbuffer(self.display_image)
-        self.epd.display_Partial(partial_buffer)
+        self.partial_update_buffer()
 
     def stop_file_server(self):
         #stop Flask server
@@ -459,8 +458,7 @@ class TypeWryter:
             self.console_message = ""
         
         #generate display buffer for display
-        partial_buffer = self.epd.getbuffer(self.display_image)
-        self.epd.display_Partial(partial_buffer)
+        self.partial_update_buffer()
 
         self.last_display_update = time.time()
         self.display_updating = False
@@ -507,14 +505,6 @@ class TypeWryter:
 
     def handle_key_press(self, e):
         if e.name== "s" and self.control_active:
-            #timestamp = time.strftime("%Y%m%d%H%M%S")  # Format: YYYYMMDDHHMMSS
-
-            ## first 30 chars of previous_lines
-            #prefix = ''.join(self.previous_lines)[:self.chars_per_line]
-            #alphanum_prefix = ''.join(ch for ch in prefix if ch.isalnum())
-            
-            #self.filename = os.path.join(os.path.dirname(__file__), 'TypeWrytes', f'typewryte_{timestamp}.txt')
-            
             self.save_previous_lines(self.filename, self.previous_lines)
             
             self.console_message = f"[Saved]"
@@ -544,28 +534,28 @@ class TypeWryter:
             self.menu_down()
             return
 
-          '''#move scrollindex down
+          #move scrollindex down
           self.scrollindex = self.scrollindex - 1
           if self.scrollindex < 1:
                 self.scrollindex = 1
           
           self.console_message = (f'[{round(len(self.previous_lines)/self.lines_on_screen)-self.scrollindex+1}/{round(len(self.previous_lines)/self.lines_on_screen)}]')
           self.update_display()
-          self.console_message = ""'''
+          self.console_message = ""
 
         if e.name== "up" or e.name== "left":
           if (self.menu_mode):
             self.menu_up()
             return
 
-          '''#move scrollindex up
+          #move scrollindex up
           self.scrollindex = self.scrollindex + 1
           if self.scrollindex > round(len(self.previous_lines)/self.lines_on_screen+1):
                 self.scrollindex = round(len(self.previous_lines)/self.lines_on_screen+1)
           
           self.console_message = (f'[{round(len(self.previous_lines)/self.lines_on_screen)-self.scrollindex+1}/{round(len(self.previous_lines)/self.lines_on_screen)}]')
           self.update_display()
-          self.console_message = ""'''
+          self.console_message = ""
 
         #powerdown - could add an autosleep if you want to save battery
         if e.name == "esc" and self.control_active: #ctrl+esc
