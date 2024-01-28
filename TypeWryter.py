@@ -123,11 +123,9 @@ class TypeWryter:
         self.menu = Menu(self.display_draw, self.epd, self.display_image)
         self.menu.addItem("New", lambda: self.new_file())
         self.menu.addItem("Load", lambda: self.show_load_menu())
-        self.menu.addItem("Save", lambda: print("implement save"))
-        #self.menu.addItem("QR Code", self.display_qr_code)
         self.menu.addItem("Network File browser", lambda: self.show_server_menu())
-        self.menu.addItem("Power Off", self.power_down)
         self.menu.addItem("Update TypeWryter", self.update_TypeWryter)
+        self.menu.addItem("Power Off", self.power_down)
         self.menu.addItem("Back", self.hide_menu)
 
         self.load_menu = Menu(self.display_draw, self.epd, self.display_image)
@@ -317,8 +315,8 @@ class TypeWryter:
           self.console_message = f"[Error saving file]"
           print("Failed to save file:", e)
 
-    def get_word_count(self):
-        with open(self.filename, 'r') as file:
+    def get_word_count(self, file_path):
+        with open(file_path, 'r') as file:
             self.content = file.read()
             self.words = self.content.split()
             return len(self.words)
@@ -477,7 +475,7 @@ class TypeWryter:
             self.show_menu()
 
         if e.name == "w" and self.control_active: #ctrl+w
-            wc = self.get_word_count()
+            wc = self.get_word_count(self.cache_file_path)
             print("Word Count: " + str(wc))
             self.console_message = "WC: " + str(wc)
             self.update_display()
