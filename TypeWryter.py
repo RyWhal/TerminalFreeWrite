@@ -335,11 +335,12 @@ class TypeWryter:
 
     def start_file_server(self):
 
-        print("starting web server")
-        start_server()
         local_ip = get_local_ip_address()
         url = f"http://{local_ip}:8080"
         print(url)
+
+        print("starting web server")
+        start_server() 
 
         #Generate QR Code
         qr = qrcode.QRCode(
