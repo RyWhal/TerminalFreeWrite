@@ -123,7 +123,6 @@ class TypeWryter:
         self.server_menu.addItem("Stop Server", lambda: stop_server())
         self.server_menu.addItem("Back", self.hide_child_menu)
 
-        self.server_menu = Menu(self.display_draw, self.epd, self.display_image)
 
     def show_load_menu(self):
         print("showing load menu")
@@ -167,7 +166,7 @@ class TypeWryter:
         self.menu.display()
 
     def show_server_menu(self):
-        print("showing load menu")
+        print("showing server menu")
         self.parent_menu = self.menu
 
         self.menu = self.server_menu
