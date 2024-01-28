@@ -357,8 +357,8 @@ class TypeWryter:
         self.display_draw.rectangle((0, 0, 400, 300), fill=255)
         
         # Display messages
-        self.display_draw.text((30, 80),message1, font=self.font13, fill=0)
-        self.display_draw.text((30, 120),message2, font=self.font13, fill=0)
+        self.display_draw.text((30, 90),message1, font=self.font13, fill=0)
+        self.display_draw.text((30, 100),message2, font=self.font13, fill=0)
 
         # Paste the QR code onto the display image
         self.display_image.paste(qr_img_converted, (qr_x, qr_y))
