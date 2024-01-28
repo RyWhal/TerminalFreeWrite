@@ -1,5 +1,7 @@
-Hello This is a Manual
-[CTRL+M] 
-[CTRL+S]
-[CTRL+N]
-[CTRL+W]
+Welcome to TypeWryter!
+
+[CTRL+M]   - Show Manual
+[CTRL+S]   - Save current tpying session
+[CTRL+N]   - Start a new typing session
+[CTRL+W]   - Show word count of current session
+[CTRL+esc] - Reboot the device
