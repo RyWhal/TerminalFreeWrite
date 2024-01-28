@@ -357,7 +357,7 @@ class TypeWryter:
         
         # Display messages
         self.display_draw.text((30, 90),message1, font=self.font13, fill=0)
-        self.display_draw.text((30, 100),message2, font=self.font13, fill=0)
+        self.display_draw.text((30, 105),message2, font=self.font13, fill=0)
 
         # Paste the QR code onto the display image
         self.display_image.paste(qr_img_converted, (qr_x, qr_y))
@@ -376,6 +376,12 @@ class TypeWryter:
         # Show a message shutting down file server
         self.display_draw.text((30, 100),"Shutting Down FileServer", font=self.font13, fill=0)
 
+        # Update the display with the new image
+        partial_buffer = self.epd.getbuffer(self.display_image)
+        self.epd.display(partial_buffer)
+
+        # Clear the current display image
+        self.display_draw.rectangle((0, 0, 400, 300), fill=255)
         # Update the display with the new image
         partial_buffer = self.epd.getbuffer(self.display_image)
         self.epd.display(partial_buffer)
