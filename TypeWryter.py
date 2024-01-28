@@ -477,7 +477,7 @@ class TypeWryter:
             self.show_menu()
 
         if e.name == "w" and self.control_active: #ctrl+w
-            wc = self.get_word_count
+            wc = self.get_word_count()
             print("Word Count: " + str(wc))
             self.console_message = "WC: " + str(wc)
             self.update_display()
