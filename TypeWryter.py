@@ -121,7 +121,7 @@ class TypeWryter:
     def init_server_menu(self):
         self.server_menu = Menu(self.display_draw, self.epd, self.display_image)
         self.server_menu.addItem("Start Server", lambda: self.start_file_server())
-        self.server_menu.addItem("Stop Server", lambda: stop_server)
+        self.server_menu.addItem("Stop Server", lambda: stop_server())
         self.server_menu.addItem("Back", self.hide_menu)
 
         self.server_menu = Menu(self.display_draw, self.epd, self.display_image)
@@ -289,7 +289,6 @@ class TypeWryter:
     def show_server_menu(self):
         print("showing load menu")
         self.parent_menu = self.menu
-        self.populate_load_menu()
 
         self.menu = self.server_menu
         self.menu.display()
@@ -394,8 +393,8 @@ class TypeWryter:
 
         #Display Console Message
         if self.console_message != "":
-            self.display_draw.rectangle((300, 280, 400, 300), fill=255)
-            self.display_draw.text((300, 280), self.console_message, font=self.font13, fill=0)
+            self.display_draw.rectangle((280, 280, 400, 300), fill=255)
+            self.display_draw.text((280, 280), self.console_message, font=self.font13, fill=0)
             self.console_message = ""
         
         #generate display buffer for display
