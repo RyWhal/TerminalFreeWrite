@@ -23,7 +23,7 @@ def index():
 @app.route('/files/<filename>')
 def download_file(filename):
     return send_from_directory(freewrites_dir, filename)
-
+'''
 def run_server():
     # Redirect stdout and stderr to a log file
     try:
@@ -34,7 +34,17 @@ def run_server():
             app.run(host='0.0.0.0', port=8080, use_reloader=False)
             print("Server started")
     except:
-        print("an error occurred")
+        print("an error occurred")'''
+
+def run_server():
+    try:
+        log_file = 'web_server.log'
+        with open(log_file, 'a') as log:
+            app.run(host='0.0.0.0', port=8080, use_reloader=False)
+            print("Server started", file=log)
+    except Exception as e:
+        with open('web_server.log', 'a') as log:
+            print(f"An error occurred: {e}", file=log)
 
 def start_server():
     global server_thread
