@@ -1,0 +1,5 @@
+Hello This is a Manual
+[CTRL+M] 
+[CTRL+S]
+[CTRL+N]
+[CTRL+W]

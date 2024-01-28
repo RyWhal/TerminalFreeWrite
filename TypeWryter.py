@@ -105,7 +105,7 @@ class TypeWryter:
         ]
         self.timestamp = time.strftime("%Y%m%d%H%M%S")  # Format: YYYYMMDDHHMMSS
         self.filename = os.path.join(os.path.dirname(__file__), 'TypeWrytes', f'typewryte_{self.timestamp}.txt')
-        
+        self.manual = self.cache_file_path = os.path.join(os.path.dirname(__file__), 'data', 'TypeWryter_Manual.txt')
         self.cache_file_path = os.path.join(os.path.dirname(__file__), 'data', 'cache.txt')
     
     def initialize(self):
@@ -124,6 +124,7 @@ class TypeWryter:
         self.menu.addItem("New", lambda: self.new_file())
         self.menu.addItem("Load", lambda: self.show_load_menu())
         self.menu.addItem("Network File browser", lambda: self.show_server_menu())
+        self.menu.addItem("Help", self.load_file_into_previous_lines(self.manual ))
         self.menu.addItem("Update TypeWryter", self.update_TypeWryter)
         self.menu.addItem("Power Off", self.power_down)
         self.menu.addItem("Back", self.hide_menu)
