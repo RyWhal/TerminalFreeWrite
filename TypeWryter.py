@@ -124,7 +124,7 @@ class TypeWryter:
         self.menu.addItem("New", lambda: self.new_file())
         self.menu.addItem("Load", lambda: self.show_load_menu())
         self.menu.addItem("Network File browser", lambda: self.show_server_menu())
-        self.menu.addItem("Help", )
+        self.menu.addItem("Help", lambda: self.load_manual())
         self.menu.addItem("Update TypeWryter", self.update_TypeWryter)
         self.menu.addItem("Power Off", self.power_down)
         self.menu.addItem("Back", self.hide_menu)
