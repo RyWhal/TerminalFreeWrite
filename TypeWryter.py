@@ -101,7 +101,9 @@ class TypeWryter:
     "|  \\ V  V /| |  | |_| | ||  __/ |   |",
     "|   \\_/\\_/ |_|   \\__, |\\__\\___|_|   |",
     "|                |___/              |",
-    "+-----------------------------------+"
+    "+-----------------------------------+",
+    "                                     ",
+    " CTRL + M -> Show Menu"
         ]
         self.timestamp = time.strftime("%Y%m%d%H%M%S")  # Format: YYYYMMDDHHMMSS
         self.filename = os.path.join(os.path.dirname(__file__), 'TypeWrytes', f'typewryte_{self.timestamp}.txt')
@@ -137,6 +139,24 @@ class TypeWryter:
         self.server_menu.addItem("Stop Server", lambda: self.stop_file_server())
         self.server_menu.addItem("Back", lambda: self.hide_child_menu())
 
+    def partial_update_buffer(self):
+        #generate display buffer for display
+        partial_buffer = self.epd.getbuffer(self.display_image)
+        self.epd.display_Partial(partial_buffer)
+
+        self.last_display_update = time.time()
+        self.display_updating = False
+        self.needs_display_update = False
+
+    def full_update_buffer(self):
+        # Update the display with the new image
+        partial_buffer = self.epd.getbuffer(self.display_image)
+        self.epd.display(partial_buffer)
+
+        self.last_display_update = time.time()
+        self.display_updating = False
+        self.needs_display_update = False
+
     def splash_screen(self):
         # Starting Y position
         y_position = 65 
@@ -146,8 +166,7 @@ class TypeWryter:
             y_position += 13  # Adjust line spacing as needed
 
         # Update the display with the new image
-        partial_buffer = self.epd.getbuffer(self.display_image)
-        self.epd.display(partial_buffer)
+        self.full_update_buffer()
         time.sleep(2)
 
     def show_load_menu(self):
@@ -242,10 +261,7 @@ class TypeWryter:
             with open(self.manual, 'r') as file:
                 lines = file.readlines()
                 self.previous_lines = [line.strip() for line in lines]
-                self.input_content = ""
-                self.cursor_position = 0
-                self.console_message = f"[Loaded {self.manual}]"
-                self.display_updating = True
+
                 # Clear the main display area -- also clears input line (270-300)
                 self.display_draw.rectangle((0, 0, 400, 300), fill=255)
                 
@@ -255,25 +271,13 @@ class TypeWryter:
                 #Make a temp array from previous_lines. And then reverse it and display as usual.
                 current_line=max(0,len(self.previous_lines)-self.lines_on_screen*self.scrollindex)
                 temp=self.previous_lines[current_line:current_line+self.lines_on_screen]
-                # print(temp)# to debug if you change the font parameters (size, chars per line, etc)
 
                 for line in reversed(temp[-self.lines_on_screen:]):
                     self.display_draw.text((10, y_position), line[:self.chars_per_line], font=self.font13, fill=0)
                     y_position -= self.line_spacing
-
-                #Display Console Message
-                if self.console_message != "":
-                    self.display_draw.rectangle((280, 280, 400, 300), fill=255)
-                    self.display_draw.text((280, 280), self.console_message, font=self.font13, fill=0)
-                    self.console_message = ""
                 
                 #generate display buffer for display
-                partial_buffer = self.epd.getbuffer(self.display_image)
-                self.epd.display_Partial(partial_buffer)
-
-                self.last_display_update = time.time()
-                self.display_updating = False
-                self.needs_display_update = False
+                self.partial_update_buffer()
         except Exception as e:
             self.console_message = f"[Error loading file]"
             print(f"Failed to load file {self.manual}: {e}")
