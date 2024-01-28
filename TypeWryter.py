@@ -316,10 +316,8 @@ class TypeWryter:
         self.epd.display_Partial(partial_buffer)
 
     def show_file_browse_menu(self):
-        self.load_menu.addItem("Back", self.hide_child_menu)
 
         print("starting web server")
-        self.parent_menu = self.menu
         start_server()
 
         self.menu = self.load_menu
