@@ -140,16 +140,16 @@ class TypeWryter:
 
     def splash_screen(self):
         # Starting Y position
-        y_position = 50 
+        y_position = 80 
         # Add each line of the ASCII art to the image
         for line in self.ascii_art_lines:
             self.display_draw.text((50, y_position), line, font=self.font13, fill=0)
-            y_position += 12  # Adjust line spacing as needed
+            y_position += 13  # Adjust line spacing as needed
 
         # Update the display with the new image
         partial_buffer = self.epd.getbuffer(self.display_image)
         self.epd.display(partial_buffer)
-        time.sleep(3)
+        time.sleep(2)
 
     def show_load_menu(self):
         print("showing load menu")
