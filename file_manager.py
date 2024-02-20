@@ -2,7 +2,6 @@ import os
 import curses
 from datetime import datetime
 import re
-from local_file_browser import start_server, stop_server
 from utils import display_web_window
 
 class FileManager:
@@ -10,10 +9,11 @@ class FileManager:
         self.directory = directory
 
     def ensure_freewrites_directory():
-        freewrites_dir = os.path.join(os.getcwd(), "TypeWrytes")
+        freewrites_dir = os.path.join(os.getcwd(), "Freewrites")
         if not os.path.exists(freewrites_dir):
             os.makedirs(freewrites_dir)
-            return freewrites_dir
+        return freewrites_dir
+    
 
     def check_freewrites_not_empty(self, files):
         # Check if there are any files to clear
@@ -38,7 +38,7 @@ class FileManager:
     def list_files(self, window):
         max_height, max_width = window.getmaxyx()
         top_line = 0 
-        files = sorted([f for f in os.listdir(self.directory) if f.endswith('.txt')]) # List .txt files and sort alphabetically
+        files = sorted([f for f in os.listdir(self.directory)]) # List .txt files and sort alphabetically
         window.clear()
 
         #window.addstr(0,0, "   [FILENAME]   |  [CREATED]  |  [MODIFIED]  |  [SIZE]  |  [WORDCOUNT]   ")
@@ -84,7 +84,7 @@ class FileManager:
     def select_file(self, window):
         window.clear()
         window.refresh()
-        files = sorted([f for f in os.listdir(self.directory) if f.endswith('.txt')])
+        files = sorted([f for f in os.listdir(self.directory)])
         current_row = 0
 
         def print_files():
@@ -118,7 +118,7 @@ class FileManager:
 
     def rename_file(self, screen):
         # enumerate files
-        files = sorted([f for f in os.listdir(self.directory) if f.endswith('.txt')])
+        files = sorted([f for f in os.listdir(self.directory)])
         self.check_freewrites_not_empty(files) # Check to see if the directory is empty
 
         # Select the file to rename
@@ -135,12 +135,12 @@ class FileManager:
         curses.noecho()
         new_name = new_name_bytes.decode('utf-8')  # Decode to a string
 
-        if new_name and new_name + ".txt" not in os.listdir(self.directory):
+        if new_name not in os.listdir(self.directory):
             pass
         else:
             screen.clear
             screen.addstr(0, 0, "Filename already exists or is invalid. Please enter a different name.")
-            while new_name + ".txt" in os.listdir(self.directory):
+            while new_name in os.listdir(self.directory):
                 # Prompt for a new name
                 screen.refresh()
                 screen.addstr(1, 0, "Enter the new name for the file (without extension): ")
@@ -175,7 +175,7 @@ class FileManager:
 
     def delete_file(self, window):
         # Check if there are files to rename
-        files = sorted([f for f in os.listdir(self.directory) if f.endswith('.txt')])
+        files = sorted([f for f in os.listdir(self.directory)])
         self.check_freewrites_not_empty(files)
 
         filename_to_delete = self.select_file(window)
@@ -223,8 +223,7 @@ class FileManager:
 
     def show_file_management_menu(self, screen):
         
-        file_menu_items = ["<List files>", "<Rename free write>", "<Delete free write>", 
-                           "<Download Files>","<Clean-up blank free writes>" ]
+        file_menu_items = ["<List files>", "<Rename free write>", "<Delete free write>", "<Clean-up blank free writes>" ]
         current_row = 0  # Current highlighted menu item
         # Function to print the menu
         def print_menu():
@@ -254,11 +253,6 @@ class FileManager:
                 elif current_row == 2:
                     self.delete_file(screen)  # Call delete_file method
                 elif current_row == 3:
-                    start_server()  # This starts the Flask server in a separate thread
-                    display_web_window(screen)
-                    #wait_for_escape(screen.getch())
-                    stop_server()
-                elif current_row == 4:
                     screen.clear()
                     self.cleanup_empty_files(screen) # Logic to cleanup empty files
                     screen.refresh()

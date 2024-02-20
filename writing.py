@@ -5,7 +5,7 @@ import threading
 
 class WritingInterface:
     def __init__(self, filename, directory, existing_content=""):
-        self.filename = filename if filename else self.generate_filename()
+        self.filename = filename if filename else self.get_random_name()
         self.directory = directory
         self.text = existing_content
 

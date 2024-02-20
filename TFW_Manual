@@ -1,0 +1,35 @@
+  _____              _           _    
+ |_   _|__ _ _ _ __ (_)_ _  __ _| |   
+   | |/ -_) '_| '  \| | ' \/ _` | |   
+   |_|\___|_| |_|_|_|_|_||_\__,_|_|   
+  ___                       _ _       
+ | __| _ ___ _____ __ ___ _(_) |_ ___ 
+ | _| '_/ -_) -_) V  V / '_| |  _/ -_)
+ |_||_| \___\___|\_/\_/|_| |_|\__\___|
+ 
+A simple, distraction free, writing tool. It's remeniscent of using a type writer, hence the name. 
+Removing most tools for editing forces you to focus on free-writing and making progress with whatever you might be 
+writing. 
+
+Global Controls: 
+    'esc' or 'CTRL+E' will always escape you back to the previous screen.
+
+
+While TypeWryting:
+    CTRL+N - Rename the file you're currently working on (Default name is the date/time the file was created)
+    CTRL+W - Delete the previous word
+    CTRL+L - Delete the entire current line of text
+    CTRL+E - Exit the TypeWryter window (current file is saved on exit)
+    ESC - Exit the TypeWryter window (current file is saved on exit)
+
+
+File Manager:
+    List Files - shows all saved files (Filename | Created Date | Modified Date | Size on Disk | Word Count)
+    Rename - Rename any TypeWryte
+    Delete - Delete any TypeWryte
+    Clean-up - Deletes all TypeWrytes with a size of 0
+
+Saving:
+    While TypeWryting the open file will auto save, overwriting whatever you had, every 60 seconds. It will also 
+    auto-save on a proper exit (ESC or CTRL+E). There is NO VERSIONING; only the most current save is kept. 
+    If you delete, overwrite, or erase something, its GONE. 

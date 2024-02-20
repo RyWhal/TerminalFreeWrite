@@ -1,13 +1,13 @@
 import curses
 import os
 from writing import WritingInterface
-from utils import display_manual, generate_filename, ensure_freewrites_directory
+from utils import display_manual, get_random_name, ensure_freewrites_directory
 from file_manager import FileManager
-from settings_menu import settings_menu_screen
+
 
 def main_menu_screen(screen):
     # Menu items
-    menu_items = ["<New freewrite>", "<Continue a freewrite>", "<Settings>", "<TypeWryter Manual>"]
+    menu_items = ["<New freewrite>", "<Continue a freewrite>", "<File Manager>", "<TFW Manual>"]
     
     # Ensure the freewrites directory is created
     freewrites_directory = ensure_freewrites_directory()
@@ -42,7 +42,7 @@ def main_menu_screen(screen):
     def handle_menu_selection(screen, selection):
         if selection == 0:
             # Start a new free write
-            default_filename = generate_filename()
+            default_filename = get_random_name()
             wi = WritingInterface(default_filename,freewrites_directory)
             wi.run(screen)
         elif selection == 1:
@@ -57,9 +57,9 @@ def main_menu_screen(screen):
             writing_interface = WritingInterface(file_to_continue, freewrites_directory, existing_content)
             writing_interface.run(screen)
         elif selection == 2:
-            settings_menu_screen(screen)
+            file_manager.show_file_management_menu(screen)
         elif selection == 3:
-            display_manual(screen, 'TypeWryter_Manual')
+            display_manual(screen, 'TFW_Manual')
 
 
     # Main loop for menu navigation

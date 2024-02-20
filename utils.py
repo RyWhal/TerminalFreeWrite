@@ -1,17 +1,18 @@
 import os
-from datetime import datetime
+from datetime import date
 import curses
 import requests
 import subprocess
 import socket
+import random
 
-def generate_filename():
+'''def generate_filename():
     """
     Generates a timestamped filename.
     Format: 'YYYYMMDD_HHMMSS.txt'
     """
 
-    return datetime.now().strftime("%Y%m%d_%H%M%S.txt")
+    return datetime.now().strftime("%Y%m%d_%H%M%S.txt")'''
 
 def shutdown_device():
     """
@@ -34,7 +35,7 @@ def connect_wifi():
     pass
 
 def ensure_freewrites_directory():
-    freewrites_dir = os.path.join(os.getcwd(), "TypeWrytes")
+    freewrites_dir = os.path.join(os.getcwd(), "FreeWrites")
     if not os.path.exists(freewrites_dir):
         os.makedirs(freewrites_dir)
     return freewrites_dir
@@ -151,3 +152,56 @@ def display_web_window(screen):
     # Clear and refresh screen before exit
     screen.clear()
     screen.refresh()
+
+def get_random_name():
+    adjectives = [
+        "quick", "lazy", "sleepy", "noisy", "hungry", "bright", "brave", "calm", "dainty", "eager",
+        "fancy", "gentle", "happy", "jolly", "kind", "lively", "merry", "nice", "proud", "silly",
+        "tall", "short", "long", "small", "large", "tiny", "huge", "fat", "thin", "round",
+        "flat", "sharp", "soft", "hard", "smooth", "rough", "cold", "hot", "warm", "cool",
+        "wet", "dry", "heavy", "light", "dark", "bright", "loud", "quiet", "weak", "strong",
+        "sad", "joyful", "angry", "peaceful", "excited", "bored", "busy", "lazy", "careful", "careless",
+        "cheap", "expensive", "rich", "poor", "clean", "dirty", "deep", "shallow", "early", "late",
+        "easy", "difficult", "empty", "full", "good", "bad", "hard", "soft", "high", "low",
+        "important", "trivial", "interesting", "boring", "kind", "cruel", "loose", "tight", "major", "minor",
+        "new", "old", "open", "closed", "public", "private", "quiet", "loud", "rare", "common",
+        "safe", "dangerous", "shy", "outgoing", "single", "married", "slow", "fast", "small", "big",
+        "smooth", "rough", "soft", "hard", "solid", "liquid", "sour", "sweet", "spicy", "bland",
+        "spring", "autumn", "summer", "winter", "tall", "short", "thick", "thin", "tight", "loose",
+        "warm", "cool", "wet", "dry", "young", "old", "happy", "sad", "beautiful", "ugly",
+        "rich", "poor", "smart", "stupid", "funny", "serious", "healthy", "sick", "strong", "weak",
+        "friendly", "hostile", "generous", "stingy", "honest", "deceitful", "loyal", "treacherous", "brave", "cowardly",
+        "calm", "anxious", "content", "dissatisfied", "eager", "reluctant", "excited", "apathetic", "fearful", "bold",
+        "grateful", "ungrateful", "hopeful", "pessimistic", "innocent", "guilty", "joyful", "mournful", "keen", "indifferent",
+        "lively", "lethargic", "motivated", "unmotivated", "optimistic", "cynical", "passionate", "dispassionate", "quiet", "boisterous",
+        "rational", "irrational", "sensible", "foolish", "thoughtful", "thoughtless", "understanding", "unreasonable", "vibrant", "dull",
+        "spunky"
+    ]
+
+    animals = [
+        "aardvark", "albatross", "alligator", "alpaca", "ant", "anteater", "antelope", "ape", "armadillo", "donkey",
+        "baboon", "badger", "barracuda", "bat", "bear", "beaver", "bee", "bison", "boar", "buffalo",
+        "butterfly", "camel", "capybara", "caribou", "cassowary", "cat", "caterpillar", "cattle", "chamois", "cheetah",
+        "chicken", "chimpanzee", "chinchilla", "clam", "cobra", "cockroach", "cod", "coyote", "crab", "crane",
+        "crocodile", "crow", "deer", "dinosaur", "dog", "dolphin", "dove", "dragonfly", "duck", "eagle",
+        "echidna", "eel", "elephant", "elk", "emu", "falcon", "ferret", "finch", "fish", "flamingo",
+        "fly", "fox", "frog", "gazelle", "gerbil", "giraffe", "gnat", "gnu", "goat", "goose",
+        "goldfish", "gorilla", "grasshopper", "grouse", "guineapig", "gull", "hamster", "hare", "hawk", "hedgehog",
+        "heron", "herring", "hippopotamus", "hornet", "horse", "hummingbird", "hyena", "ibex", "iguana", "jackal",
+        "jaguar", "jay", "jellyfish", "kangaroo", "koala", "komododragon", "kookaburra", "lemur", "leopard", "lion",
+        "llama", "lobster", "locust", "loris", "louse", "lyrebird", "magpie", "mallard", "manatee", "mandrill",
+        "marmoset", "marten", "meerkat", "mink", "mole", "mongoose", "monkey", "moose", "mosquito", "mouse",
+        "mule", "narwhal", "newt", "nightingale", "octopus", "okapi", "opossum", "oryx", "ostrich", "otter",
+        "owl", "ox", "oyster", "panda", "panther", "parrot", "partridge", "peafowl", "pelican", "penguin",
+        "pheasant", "pig", "pigeon", "platypus", "pony", "porcupine", "porpoise", "prairie dog", "quail", "quelea",
+        "quokka", "quoll", "rabbit", "raccoon", "rat", "rattlesnake", "reindeer", "rhinoceros", "rook", "salamander",
+        "salmon", "sand dollar", "sandpiper", "sardine", "scorpion", "seahorse", "seal", "shark", "sheep", "shrew",
+        "skunk", "snail"
+    ]
+    animal = animals[random.randint(0, 171)]
+    adjective = adjectives[random.randint(0, 199)]
+    today = date.today().isoformat() # Today's date
+    short_name = adjective + "_" + animal #concatenate an adjective and animal name
+    filename_string = today + "_" + adjective + "_" + animal #add date to animal and adjective
+    print(filename_string)
+    return filename_string
