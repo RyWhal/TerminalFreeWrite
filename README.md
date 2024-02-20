@@ -6,9 +6,3 @@ TypeWryter is a terminal application designed for distraction free writing. It d
 2. Run it with `python main.py`
 3. ????
 4. Write
-
-## Known Issues
-For more info on the current issues, see https://github.com/RyWhal/TypeWryter/issues
-
-1. Unable to connect to wifi-networks*
-2. Unable to connect to bluetooth devices*
