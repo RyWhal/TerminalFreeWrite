@@ -1,4 +1,4 @@
-# TypeWryter
+# Terminal FreeWrite
 TypeWryter is a terminal application designed for distraction free writing. It doesn't allow any fancy editing. You can write and you can backspace, thats it, preventing the urge to go back and edit. Files save once and minute and on escape. 
  
 ## Getting Started
